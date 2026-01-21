@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // API Configuration
 const API_KEY = process.env.API_KEY;
@@ -180,8 +181,18 @@ app.post('/api/cancel', async (req, res) => {
   }
 });
 
+// Serve index.html for root and any non-API routes
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 socialmedia running on http://localhost:${PORT}`);
   console.log(`📡 API Key configured: ${API_KEY ? 'Yes' : 'No'}`);
 });
+
+// Export for Vercel
+module.exports = app;
