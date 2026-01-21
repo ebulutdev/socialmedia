@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ShoppingCart, Check, ArrowLeft } from 'lucide-react'
 import { ServiceLogo } from './ServiceLogos'
-import { Package } from '@/lib/servicesData'
 
 const packageImages = [
   '/images/Ekran Resmi 2026-01-22 01.40.05.png',
@@ -26,6 +25,7 @@ interface Package {
   max?: number
   avgTime?: string
   features?: string[]
+  category?: string
 }
 
 interface Service {
