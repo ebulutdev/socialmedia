@@ -1576,13 +1576,7 @@ html {
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .platform-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .service-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+
 }
 
 @media (max-width: 768px) {
@@ -1642,14 +1636,6 @@ html {
 
     .trust-item span {
         font-size: 0.8rem;
-    }
-
-    .platform-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .service-grid {
-        grid-template-columns: repeat(2, 1fr);
     }
 
     .header-content {
