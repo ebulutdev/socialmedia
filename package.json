@@ -1,7 +1,7 @@
 {
-  "name": "smm-service",
+  "name": "socialmedia",
   "version": "1.0.0",
-  "description": "Social Media Marketing Service Platform",
+  "description": "socialmedia - Profesyonel Sosyal Medya Hizmetleri",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

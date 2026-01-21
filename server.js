@@ -182,6 +182,6 @@ app.post('/api/cancel', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 SMM Service running on http://localhost:${PORT}`);
+  console.log(`🚀 socialmedia running on http://localhost:${PORT}`);
   console.log(`📡 API Key configured: ${API_KEY ? 'Yes' : 'No'}`);
 });

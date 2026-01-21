@@ -716,9 +716,6 @@ function setupEventListeners() {
     // Order form submit
     document.getElementById('orderForm').addEventListener('submit', handleOrderSubmit);
     
-    // Status form submit
-    document.getElementById('statusForm').addEventListener('submit', handleStatusCheck);
-    
     // Search services
     document.getElementById('searchServices').addEventListener('input', filterServicesGrid);
     
@@ -1151,64 +1148,6 @@ function filterServicesGrid() {
     }).join('');
 }
 
-// Handle status check
-async function handleStatusCheck(e) {
-    e.preventDefault();
-    
-    const orderId = document.getElementById('orderId').value;
-    
-    try {
-        const response = await fetch(`/api/order/${orderId}`);
-        const result = await response.json();
-        
-        if (response.ok && !result.error) {
-            displayOrderStatus(result);
-        } else {
-            showToast(result.error || 'Sipariş bulunamadı', 'error');
-        }
-    } catch (error) {
-        console.error('Status check error:', error);
-        showToast('Durum sorgulanırken hata oluştu', 'error');
-    }
-}
-
-// Display order status
-function displayOrderStatus(status) {
-    const statusDiv = document.getElementById('orderStatus');
-    
-    const statusClass = status.status ? 
-        `status-${status.status.toLowerCase().replace(' ', '-')}` : 
-        'status-pending';
-    
-    statusDiv.innerHTML = `
-        <div class="status-card">
-            <div class="status-item">
-                <span class="status-label">Durum:</span>
-                <span class="status-badge ${statusClass}">${status.status || 'Bilinmiyor'}</span>
-            </div>
-            ${status.charge ? `
-                <div class="status-item">
-                    <span class="status-label">Ücret:</span>
-                    <span class="status-value">$${parseFloat(status.charge).toFixed(4)} ${status.currency || 'USD'}</span>
-                </div>
-            ` : ''}
-            ${status.start_count ? `
-                <div class="status-item">
-                    <span class="status-label">Başlangıç Sayısı:</span>
-                    <span class="status-value">${status.start_count}</span>
-                </div>
-            ` : ''}
-            ${status.remains !== undefined ? `
-                <div class="status-item">
-                    <span class="status-label">Kalan:</span>
-                    <span class="status-value">${status.remains}</span>
-                </div>
-            ` : ''}
-        </div>
-    `;
-    
-    statusDiv.classList.add('active');
-}
 
 // Toggle advanced options
 function toggleAdvanced() {
