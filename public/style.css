@@ -871,14 +871,14 @@ html {
     background: linear-gradient(135deg, #059669, #047857);
 }
 
-/* Package Header */
+/* Package Header - Mobile First */
 .package-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
 }
 
 .package-header h1 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
     background: var(--gradient-instagram);
@@ -887,8 +887,36 @@ html {
 }
 
 .package-header p {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+    .package-header {
+        margin-bottom: 2rem;
+    }
+    
+    .package-header h1 {
+        font-size: 2rem;
+    }
+    
+    .package-header p {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .package-header {
+        margin-bottom: 3rem;
+    }
+    
+    .package-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .package-header p {
+        font-size: 1.1rem;
+    }
 }
 
 /* Package Grid - Compact Design */
@@ -901,12 +929,18 @@ html {
 .package-card {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s;
     display: flex;
     flex-direction: column;
     position: relative;
+}
+
+@media (min-width: 1024px) {
+    .package-card {
+        border-radius: 10px;
+    }
 }
 
 .package-card:hover {
@@ -916,48 +950,95 @@ html {
 
 .package-card-header {
     background: var(--gradient-instagram);
-    padding: 0.85rem 0.75rem;
+    padding: 1.25rem 1rem;
     text-align: center;
     flex-shrink: 0;
     position: relative;
 }
 
 .package-card-header i {
-    font-size: 1.2rem;
+    font-size: 1.75rem;
     color: white;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.5rem;
     display: block;
 }
 
 .package-card-header h3 {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: white;
-    line-height: 1.3;
+    line-height: 1.4;
+}
+
+@media (min-width: 1024px) {
+    .package-card-header {
+        padding: 0.85rem 0.75rem;
+    }
+    
+    .package-card-header i {
+        font-size: 1.2rem;
+        margin-bottom: 0.35rem;
+    }
+    
+    .package-card-header h3 {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
 }
 
 .package-card-body {
-    padding: 0.75rem;
+    padding: 1rem;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* Features Grid - Compact Layout */
+@media (min-width: 1024px) {
+    .package-card-body {
+        padding: 0.75rem;
+    }
+}
+
+/* Features Grid - Mobile First */
 .package-features-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+    .package-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .package-features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        margin-bottom: 0.75rem;
+    }
 }
 
 .feature-item {
-    text-align: center;
-    padding: 0.4rem;
+    text-align: left;
+    padding: 0.75rem;
     background: var(--bg-secondary);
     border: 1px solid var(--border-subtle);
-    border-radius: 8px;
+    border-radius: 10px;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+    .feature-item {
+        text-align: center;
+        padding: 0.4rem;
+        border-radius: 8px;
+        display: block;
+    }
 }
 
 .feature-item:hover {
@@ -965,49 +1046,92 @@ html {
 }
 
 .feature-icon {
-    width: 24px;
-    height: 24px;
-    margin: 0 auto 0.3rem;
+    width: 32px;
+    height: 32px;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #10B981;
     background: rgba(16, 185, 129, 0.15);
-    border-radius: 6px;
+    border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .feature-text {
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     color: var(--text-primary);
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.3;
+}
+
+@media (min-width: 1024px) {
+    .feature-icon {
+        width: 24px;
+        height: 24px;
+        margin: 0 auto 0.3rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
+    }
+    
+    .feature-text {
+        font-size: 0.65rem;
+        line-height: 1.2;
+    }
 }
 
 .package-card-footer {
-    padding: 0.75rem;
+    padding: 1rem;
     border-top: 1px solid var(--border-subtle);
     margin-top: auto;
 }
 
-/* Package Options (Price Buttons) - Compact Grid */
+@media (min-width: 1024px) {
+    .package-card-footer {
+        padding: 0.75rem;
+    }
+}
+
+/* Package Options (Price Buttons) - Mobile First */
 .package-options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.4rem;
+    gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+    .package-options {
+        gap: 0.4rem;
+    }
 }
 
 .package-price-btn {
     background: var(--bg-secondary);
     border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 0.55rem 0.35rem;
+    border-radius: 10px;
+    padding: 0.85rem 0.5rem;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.15rem;
+    gap: 0.25rem;
+    min-height: 70px;
+    touch-action: manipulation;
+}
+
+.package-price-btn:active {
+    transform: scale(0.98);
+}
+
+@media (min-width: 1024px) {
+    .package-price-btn {
+        border-radius: 8px;
+        padding: 0.55rem 0.35rem;
+        gap: 0.15rem;
+        min-height: auto;
+    }
 }
 
 .package-price-btn:hover {
@@ -1022,8 +1146,8 @@ html {
 }
 
 .package-price-btn .amount {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: var(--text-primary);
 }
 
@@ -1032,13 +1156,24 @@ html {
 }
 
 .package-price-btn .price {
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-secondary);
 }
 
 .package-price-btn.active .price {
     color: white;
+}
+
+@media (min-width: 1024px) {
+    .package-price-btn .amount {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .package-price-btn .price {
+        font-size: 0.65rem;
+    }
 }
 
 /* Order Modal - Premium */
