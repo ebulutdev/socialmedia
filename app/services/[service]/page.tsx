@@ -42,43 +42,43 @@ function PackageCard({
   }
 
   return (
-    <div className="bg-dark-card rounded-xl p-4 mb-4">
-      <h3 className="text-white font-semibold mb-2 text-lg">{pkg.name}</h3>
-      <p className="text-gray-400 text-sm mb-2">{pkg.amount}</p>
-      <div className="flex items-center gap-2 mb-3">
-        <p className="text-primary-green font-semibold">{pkg.price}</p>
+    <div className="bg-dark-card rounded-xl p-3 mb-3">
+      <h3 className="text-white font-semibold mb-1.5 text-sm">{pkg.name}</h3>
+      <p className="text-gray-400 text-xs mb-1.5">{pkg.amount}</p>
+      <div className="flex items-center gap-2 mb-2">
+        <p className="text-primary-green font-semibold text-sm">{pkg.price}</p>
         {pkg.avgTime && (
           <span className="text-gray-400 text-xs">⏱️ {pkg.avgTime}</span>
         )}
       </div>
 
-      {/* Package Amount Grid - 3 columns */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      {/* Package Amount Grid - 3 columns, more compact */}
+      <div className="grid grid-cols-3 gap-1.5 mb-2">
         {packageOptions.slice(0, 15).map((option) => {
           const isSelected = selectedOption === option.amount.toString()
           return (
             <button
               key={option.amount}
               onClick={() => setSelectedOption(option.amount.toString())}
-              className={`p-3 rounded-lg border-2 transition text-center ${
+              className={`p-2 rounded-lg border-2 transition text-center ${
                 isSelected
                   ? 'border-primary-green bg-primary-green/10'
                   : 'border-dark-card-light bg-dark-bg hover:border-primary-green/50'
               }`}
             >
-              <p className="text-white font-semibold text-sm mb-1">
-                {option.amount.toLocaleString('tr-TR')} {getPackageType()}
+              <p className="text-white font-semibold text-xs mb-0.5">
+                {option.amount.toLocaleString('tr-TR')}
               </p>
               <div
-                className={`rounded-lg p-1.5 mb-1 ${
+                className={`rounded p-1 mb-0.5 ${
                   isSelected ? 'bg-primary-green' : 'bg-dark-card-light'
                 }`}
               >
-                <p className="text-white font-bold text-xs">{option.price}</p>
+                <p className="text-white font-bold text-[10px] leading-tight">{option.price}</p>
               </div>
               {isSelected && (
-                <div className="flex justify-center mt-1">
-                  <Check className="w-4 h-4 text-primary-green" />
+                <div className="flex justify-center mt-0.5">
+                  <Check className="w-3 h-3 text-primary-green" />
                 </div>
               )}
             </button>
@@ -87,11 +87,11 @@ function PackageCard({
       </div>
 
       {pkg.features && pkg.features.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {pkg.features.slice(0, 3).map((feature, idx) => (
             <span
               key={idx}
-              className="text-xs bg-primary-green/20 text-primary-green px-2 py-1 rounded"
+              className="text-[10px] bg-primary-green/20 text-primary-green px-1.5 py-0.5 rounded"
             >
               {feature}
             </span>
@@ -180,62 +180,62 @@ export default function ServicePage() {
       <Header />
       <LiveSupport />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-4">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 mb-6">
-          <Link href="/" className="text-gray-400 hover:text-primary-green">
+        <div className="flex items-center gap-2 mb-4">
+          <Link href="/" className="text-gray-400 hover:text-primary-green text-sm">
             Ana Sayfa
           </Link>
           <span className="text-gray-400">/</span>
-          <span className="text-white">{service.name}</span>
+          <span className="text-white text-sm">{service.name}</span>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Left Column - Service Details */}
-          <div className="md:col-span-1 space-y-4">
+        <div className="grid md:grid-cols-12 gap-4">
+          {/* Left Column - Service Details (3 columns) */}
+          <div className="md:col-span-3 space-y-3">
             {/* Service Hero Card */}
-            <div className="bg-primary-green rounded-2xl p-6 relative overflow-hidden">
+            <div className="bg-primary-green rounded-xl p-4 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-green/20 to-transparent"></div>
               <div className="relative z-10">
                 {/* Empty Avatar Section */}
-                <div className="w-full h-48 bg-white/10 rounded-xl mb-4"></div>
+                <div className="w-full h-32 bg-white/10 rounded-lg mb-3"></div>
                 <div className="text-center">
-                  <div className="text-6xl mb-2">{service.icon}</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{service.name}</h3>
-                  <p className="text-white/90 text-sm">Ucuz Yabancı Takipçi</p>
+                  <div className="text-4xl mb-1">{service.icon}</div>
+                  <h3 className="text-xl font-bold text-white mb-1">{service.name}</h3>
+                  <p className="text-white/90 text-xs">Ucuz Yabancı Takipçi</p>
                 </div>
               </div>
             </div>
 
             {/* Service Description */}
-            <div className="bg-dark-card rounded-xl p-4">
-              <p className="text-gray-300 text-sm mb-4">{service.description}</p>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-primary-green text-xl">⭐</span>
-                <span className="text-gray-300 text-sm">37 Değerlendirme</span>
-                <span className="text-primary-green font-bold">5 Puan</span>
+            <div className="bg-dark-card rounded-xl p-3">
+              <p className="text-gray-300 text-xs mb-3 leading-relaxed">{service.description}</p>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-primary-green text-lg">⭐</span>
+                <span className="text-gray-300 text-xs">37 Değerlendirme</span>
+                <span className="text-primary-green font-bold text-xs">5 Puan</span>
               </div>
-              <button className="w-full bg-dark-card-light text-white py-2 rounded-lg hover:bg-dark-card-light/80 transition flex items-center justify-center gap-2">
+              <button className="w-full bg-dark-card-light text-white py-1.5 rounded-lg hover:bg-dark-card-light/80 transition flex items-center justify-center gap-2 text-xs">
                 <span>🤖</span>
                 <span>ChatGPT ile Özetle</span>
               </button>
             </div>
           </div>
 
-          {/* Center Column - Package Selection */}
-          <div className="md:col-span-1">
-            <h2 className="text-2xl font-bold text-primary-green mb-4">
+          {/* Center Column - Package Selection (6 columns) */}
+          <div className="md:col-span-6">
+            <h2 className="text-xl font-bold text-primary-green mb-2">
               {service.name} Hizmetleri
             </h2>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-primary-green font-semibold">Paket Seç</span>
-              <span className="text-gray-400 text-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-primary-green font-semibold text-sm">Paket Seç</span>
+              <span className="text-gray-400 text-xs">
                 Satın almak istediğiniz miktarı seçiniz.
               </span>
             </div>
 
             {/* Category Tabs */}
-            <div className="flex gap-2 mb-6 overflow-x-auto">
+            <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2">
               {[
                 { id: 'all', label: 'Tümü' },
                 { id: 'follower', label: 'Takipçi' },
@@ -246,7 +246,7 @@ export default function ServicePage() {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedCategory(tab.id)}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition ${
+                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition text-xs ${
                     selectedCategory === tab.id
                       ? 'bg-primary-green text-white'
                       : 'bg-dark-card text-gray-300 hover:bg-dark-card-light'
@@ -258,7 +258,7 @@ export default function ServicePage() {
             </div>
 
             {/* Package Cards */}
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3">
               {filteredPackages.map((pkg) => {
                 const packageOptions = generatePackageOptions(pkg)
                 return (
@@ -272,43 +272,43 @@ export default function ServicePage() {
             </div>
           </div>
 
-          {/* Right Column - Cart & Features */}
-          <div className="md:col-span-1 space-y-4">
+          {/* Right Column - Cart & Features (3 columns) */}
+          <div className="md:col-span-3 space-y-3">
             {/* Shopping Cart Indicator */}
-            <div className="bg-primary-green rounded-xl p-4">
+            <div className="bg-primary-green rounded-xl p-3">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🛒</span>
-                <span className="text-white font-semibold">150 Kişinin Sepetinde</span>
+                <span className="text-xl">🛒</span>
+                <span className="text-white font-semibold text-sm">150 Kişinin Sepetinde</span>
               </div>
             </div>
 
             {/* Example Users */}
-            <div className="bg-dark-card rounded-xl p-4">
-              <h4 className="text-white font-semibold mb-3">ÖRNEK KULLANICILAR</h4>
-              <div className="flex gap-2 flex-wrap">
+            <div className="bg-dark-card rounded-xl p-3">
+              <h4 className="text-white font-semibold mb-2 text-xs">ÖRNEK KULLANICILAR</h4>
+              <div className="flex gap-1.5 flex-wrap">
                 {/* Empty Avatar Sections */}
-                {[...Array(8)].map((_, i) => (
+                {[...Array(6)].map((_, i) => (
                   <div
                     key={i}
-                    className="w-10 h-10 bg-dark-card-light rounded-full"
+                    className="w-8 h-8 bg-dark-card-light rounded-full"
                   ></div>
                 ))}
               </div>
             </div>
 
             {/* Features */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {features.map((feature, index) => {
                 const Icon = feature.icon
                 return (
                   <div
                     key={index}
-                    className="bg-dark-card rounded-lg p-3 flex items-center gap-3"
+                    className="bg-dark-card rounded-lg p-2.5 flex items-center gap-2.5"
                   >
-                    <div className="w-10 h-10 bg-primary-green/20 rounded-lg flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-primary-green" />
+                    <div className="w-8 h-8 bg-primary-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-4 h-4 text-primary-green" />
                     </div>
-                    <span className="text-white text-sm">{feature.text}</span>
+                    <span className="text-white text-xs">{feature.text}</span>
                   </div>
                 )
               })}
