@@ -705,22 +705,40 @@ document.addEventListener('DOMContentLoaded', () => {
 // Setup event listeners
 function setupEventListeners() {
     // Category change
-    document.getElementById('category').addEventListener('change', filterServicesByCategory);
+    const categoryEl = document.getElementById('category');
+    if (categoryEl) {
+        categoryEl.addEventListener('change', filterServicesByCategory);
+    }
     
     // Service selection
-    document.getElementById('service').addEventListener('change', handleServiceSelection);
+    const serviceEl = document.getElementById('service');
+    if (serviceEl) {
+        serviceEl.addEventListener('change', handleServiceSelection);
+    }
     
     // Quantity input
-    document.getElementById('quantity').addEventListener('input', calculatePrice);
+    const quantityEl = document.getElementById('quantity');
+    if (quantityEl) {
+        quantityEl.addEventListener('input', calculatePrice);
+    }
     
     // Order form submit
-    document.getElementById('orderForm').addEventListener('submit', handleOrderSubmit);
+    const orderFormEl = document.getElementById('orderForm');
+    if (orderFormEl) {
+        orderFormEl.addEventListener('submit', handleOrderSubmit);
+    }
     
     // Search services
-    document.getElementById('searchServices').addEventListener('input', filterServicesGrid);
+    const searchEl = document.getElementById('searchServices');
+    if (searchEl) {
+        searchEl.addEventListener('input', filterServicesGrid);
+    }
     
     // Filter category
-    document.getElementById('filterCategory').addEventListener('change', filterServicesGrid);
+    const filterCategoryEl = document.getElementById('filterCategory');
+    if (filterCategoryEl) {
+        filterCategoryEl.addEventListener('change', filterServicesGrid);
+    }
 }
 
 // Load user balance
@@ -761,12 +779,15 @@ async function loadServices() {
     } catch (error) {
         console.error('Services load error:', error);
         showToast('Hizmetler yüklenirken hata oluştu', 'error');
-        document.getElementById('servicesGrid').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-circle"></i>
-                <p>Hizmetler yüklenemedi</p>
-            </div>
-        `;
+        const grid = document.getElementById('servicesGrid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Hizmetler yüklenemedi</p>
+                </div>
+            `;
+        }
     }
 }
 
@@ -774,6 +795,8 @@ async function loadServices() {
 function populateCategoryDropdowns() {
     const categorySelect = document.getElementById('category');
     const filterCategorySelect = document.getElementById('filterCategory');
+    
+    if (!categorySelect || !filterCategorySelect) return;
     
     // Clear existing options (except first)
     categorySelect.innerHTML = '<option value="">Kategori seçin...</option>';
@@ -790,6 +813,8 @@ function populateCategoryDropdowns() {
 function filterServicesByCategory(e) {
     const selectedCategory = e.target.value;
     const serviceSelect = document.getElementById('service');
+    
+    if (!serviceSelect) return;
     
     serviceSelect.innerHTML = '<option value="">Hizmet seçin...</option>';
     
@@ -995,6 +1020,8 @@ function filterByPlatform(platform) {
 function displayServicesGrid() {
     const grid = document.getElementById('servicesGrid');
     
+    if (!grid) return;
+    
     if (!services.length) {
         grid.innerHTML = `
             <div class="empty-state">
@@ -1052,26 +1079,40 @@ function selectServiceFromGrid(serviceId) {
     const service = services.find(s => s.service === serviceId);
     if (!service) return;
     
+    const categoryEl = document.getElementById('category');
+    if (!categoryEl) return;
+    
     // Set category
-    document.getElementById('category').value = service.category;
+    categoryEl.value = service.category;
     
     // Trigger category change to populate services
     filterServicesByCategory({ target: { value: service.category } });
     
     // Set service
     setTimeout(() => {
-        document.getElementById('service').value = serviceId;
-        handleServiceSelection({ target: document.getElementById('service') });
+        const serviceEl = document.getElementById('service');
+        if (serviceEl) {
+            serviceEl.value = serviceId;
+            handleServiceSelection({ target: serviceEl });
+        }
         
         // Scroll to order form
-        document.querySelector('.order-section').scrollIntoView({ behavior: 'smooth' });
+        const orderSection = document.querySelector('.order-section');
+        if (orderSection) {
+            orderSection.scrollIntoView({ behavior: 'smooth' });
+        }
     }, 100);
 }
 
 // Filter services grid
 function filterServicesGrid() {
-    const searchTerm = document.getElementById('searchServices').value.toLowerCase();
-    const filterCategory = document.getElementById('filterCategory').value;
+    const searchEl = document.getElementById('searchServices');
+    const filterCategoryEl = document.getElementById('filterCategory');
+    
+    if (!searchEl || !filterCategoryEl) return;
+    
+    const searchTerm = searchEl.value.toLowerCase();
+    const filterCategory = filterCategoryEl.value;
     
     let filtered = services;
     
@@ -1095,6 +1136,8 @@ function filterServicesGrid() {
     }
     
     const grid = document.getElementById('servicesGrid');
+    
+    if (!grid) return;
     
     if (!filtered.length) {
         grid.innerHTML = `
