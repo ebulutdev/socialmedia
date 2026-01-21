@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMM Service - Profesyonel Sosyal Medya Hizmetleri</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand" onclick="goToHome()">
+                <i class="fas fa-rocket"></i>
+                <span>SMM Service</span>
+            </div>
+            <div class="nav-balance">
+                <i class="fas fa-wallet"></i>
+                <span id="balance">Yükleniyor...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        
+        <!-- Page: Platform Selection (Home) -->
+        <div id="homePage" class="page active">
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-tag">
+                            <i class="fas fa-rocket"></i>
+                            <span>Takipçi Satın Al</span>
+                        </div>
+                        <h1>
+                            <span>Sosyal Mecralarda</span>
+                            <span class="highlight">BÜYÜMEYE HAZIR MISIN?</span>
+                        </h1>
+                        <p>Türkiye'nin en güvenilir ve en çok tercih edilen sosyal medya hizmet platformundan hedef kitlenize en uygun siparişi oluşturun ve sayfanızı güçlendirin!</p>
+                        <div class="hero-cta">
+                            <button class="btn btn-video">
+                                <i class="fas fa-play"></i>
+                                <span>TANITIM VİDEOSU</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="social-icons">
+                            <div class="floating-icon instagram-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div class="floating-icon twitter-icon">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="floating-icon youtube-icon">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <div class="floating-icon tiktok-icon">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <div class="floating-emoji">
+                                <span>❤️</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trust Badges -->
+            <section class="trust-badges">
+                <div class="trust-item">
+                    <i class="fas fa-shield-check"></i>
+                    <span>SSL Güvenli</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Şifre Gerektirmez</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-headset"></i>
+                    <span>7/24 Destek</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Anında Teslimat</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-check-double"></i>
+                    <span>%100 Güvenli</span>
+                </div>
+            </section>
+
+            <section class="platform-selection">
+                <div class="platform-grid">
+                    <div class="platform-card instagram" onclick="goToPlatform('instagram')">
+                        <div class="platform-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <h3>Instagram</h3>
+                        <span class="platform-subtitle">Hizmetleri</span>
+                        <span class="service-count">6 Hizmet</span>
+                    </div>
+
+                    <div class="platform-card twitter" onclick="goToPlatform('twitter')">
+                        <div class="platform-icon">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <h3>Twitter</h3>
+                        <span class="platform-subtitle">Hizmetleri</span>
+                        <span class="service-count">5 Hizmet</span>
+                    </div>
+
+                    <div class="platform-card tiktok" onclick="goToPlatform('tiktok')">
+                        <div class="platform-icon">
+                            <i class="fab fa-tiktok"></i>
+                        </div>
+                        <h3>TikTok</h3>
+                        <span class="platform-subtitle">Hizmetleri</span>
+                        <span class="service-count">6 Hizmet</span>
+                    </div>
+
+                    <div class="platform-card youtube" onclick="goToPlatform('youtube')">
+                        <div class="platform-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <h3>YouTube</h3>
+                        <span class="platform-subtitle">Hizmetleri</span>
+                        <span class="service-count">5 Hizmet</span>
+                    </div>
+
+                    <div class="platform-card facebook" onclick="goToPlatform('facebook')">
+                        <div class="platform-icon">
+                            <i class="fab fa-facebook"></i>
+                        </div>
+                        <h3>Facebook</h3>
+                        <span class="platform-subtitle">Hizmetleri</span>
+                        <span class="service-count">5 Hizmet</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Page: Platform Detail -->
+        <div id="platformPage" class="page">
+            <div class="breadcrumb">
+                <a href="#home" onclick="goToHome()">Ana Sayfa</a>
+                <i class="fas fa-chevron-right"></i>
+                <span id="currentPlatform"></span>
+            </div>
+
+            <div class="platform-detail">
+                <div class="service-header" id="serviceHeader">
+                    <div class="header-content">
+                        <i id="headerIcon" class="fab fa-instagram"></i>
+                        <div class="header-text">
+                            <h1 id="headerTitle">Instagram Hizmetleri</h1>
+                            <p id="headerDesc">Güvenilir, kaliteli ve profesyonel hizmetler</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-grid" id="serviceGrid">
+                    <!-- Services will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Service Detail (Packages) -->
+        <div id="servicePage" class="page">
+            <div class="breadcrumb">
+                <a href="#home" onclick="goToHome()">Ana Sayfa</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="#" onclick="goBackToPlatform()" id="breadcrumbPlatform"></a>
+                <i class="fas fa-chevron-right"></i>
+                <span id="currentService"></span>
+            </div>
+
+            <div class="package-header" id="packageHeader">
+                <h1 id="packageTitle">Instagram Takipçi Paketleri</h1>
+                <p id="packageDesc">En uygun fiyatlı takipçi paketleri</p>
+            </div>
+
+            <div class="package-grid" id="packageGrid">
+                <!-- Packages will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Order Form (Fixed at bottom when item selected) -->
+        <div class="order-modal" id="orderModal">
+            <div class="order-modal-content">
+                <div class="order-modal-header">
+                    <h3>Sipariş Oluştur</h3>
+                    <button class="close-modal" onclick="closeOrderModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="order-modal-body">
+                    <form id="orderForm">
+                        <div class="form-group">
+                            <label for="link">Link</label>
+                            <input type="text" id="link" class="form-control" placeholder="https://instagram.com/username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Miktar</label>
+                            <input type="number" id="quantity" class="form-control" placeholder="100" required>
+                            <small class="form-hint" id="quantityHint">Min: - | Max: -</small>
+                        </div>
+
+                        <div class="order-summary">
+                            <div class="summary-item">
+                                <span>Toplam Fiyat:</span>
+                                <span id="orderPrice" class="price">₺0.00</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sepete Ekle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Status -->
+        <section class="status-section">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-search"></i>
+                    <h2>Sipariş Durumu</h2>
+                </div>
+                <div class="card-body">
+                    <form id="statusForm">
+                        <div class="form-group">
+                            <label for="orderId">Sipariş ID</label>
+                            <input type="text" id="orderId" class="form-control" placeholder="12345" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary btn-block">
+                            <i class="fas fa-search"></i>
+                            Sorgula
+                        </button>
+                    </form>
+                    <div id="orderStatus" class="order-status"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SMM Service. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer"></div>
+
+    <script src="app.js"></script>
+    <script src="router.js"></script>
+</body>
+</html>
