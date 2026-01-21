@@ -1,7 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Instagram, Facebook, Youtube, Music, Twitter } from 'lucide-react'
+
+const serviceImages = [
+  '/images/Ekran Resmi 2026-01-22 01.40.05.png',
+  '/images/Ekran Resmi 2026-01-22 01.40.47.png',
+  '/images/Ekran Resmi 2026-01-22 01.41.26.png',
+  '/images/Ekran Resmi 2026-01-22 01.42.13.png',
+  '/images/Ekran Resmi 2026-01-22 01.43.46.png',
+]
 
 const services = [
   { id: 'instagram', name: 'INSTAGRAM', icon: Instagram, color: 'from-pink-500 to-purple-500' },
@@ -20,20 +29,31 @@ export default function Services() {
           <h2 className="text-3xl font-bold">Popüler Platformlar</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
-          {services.map((service) => {
+          {services.map((service, index) => {
             const Icon = service.icon
             return (
               <Link
                 key={service.id}
                 href={`/services/${service.id}`}
-                className="bg-gradient-to-br bg-dark-card rounded-xl p-6 hover:scale-105 transition-transform border-2 border-dark-card-light hover:border-primary-green group cursor-pointer block"
+                className="bg-gradient-to-br bg-dark-card rounded-xl p-6 hover:scale-105 transition-transform border-2 border-dark-card-light hover:border-primary-green group cursor-pointer block relative overflow-hidden min-h-[180px]"
               >
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center`}>
-                  <Icon className="w-8 h-8 text-white" />
+                <Image
+                  src={serviceImages[index] || serviceImages[0]}
+                  alt={service.name}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"></div>
+                
+                <div className="relative z-10 flex flex-col items-center justify-center h-full">
+                  <div className={`w-16 h-16 mb-4 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center backdrop-blur-sm bg-opacity-90`}>
+                    <Icon className="w-8 h-8 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                  </div>
+                  <p className="text-white font-bold text-sm group-hover:text-primary-green transition text-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+                    {service.name}
+                  </p>
                 </div>
-                <p className="text-white font-bold text-sm group-hover:text-primary-green transition text-center">
-                  {service.name}
-                </p>
               </Link>
             )
           })}

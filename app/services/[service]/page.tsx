@@ -7,131 +7,20 @@ import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones, ArrowLeft } from
 import Header from '@/components/Header'
 import LiveSupport from '@/components/LiveSupport'
 import { servicesData, calculatePackagePrice, Package } from '@/lib/servicesData'
+import { ServiceLogo } from '@/components/ServiceLogos'
 
-// Package Card Component
-function PackageCard({
+// Paket Detay Bileşeni - Seçilen paketin miktar ve fiyat seçeneklerini gösterir
+function PackageDetail({
   pkg,
-  packageOptions,
+  onBack,
 }: {
   pkg: Package
-  packageOptions: Array<{ amount: number; price: string }>
+  onBack: () => void
 }) {
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    packageOptions[0]?.amount.toString() || null
-  )
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
-  // Paket türünü belirle (Takipçi, Beğeni, İzlenme, vb.)
-  const getPackageType = () => {
-    if (pkg.name.toLowerCase().includes('takipçi') || pkg.name.toLowerCase().includes('abone')) {
-      return 'Takipçi'
-    }
-    if (pkg.name.toLowerCase().includes('beğeni') || pkg.name.toLowerCase().includes('favori')) {
-      return 'Beğeni'
-    }
-    if (pkg.name.toLowerCase().includes('izlenme') || pkg.name.toLowerCase().includes('view')) {
-      return 'İzlenme'
-    }
-    if (
-      pkg.name.toLowerCase().includes('yorum') ||
-      pkg.name.toLowerCase().includes('repost') ||
-      pkg.name.toLowerCase().includes('paylaşım')
-    ) {
-      return 'Etkileşim'
-    }
-    return 'Diğer'
-  }
-
-  return (
-    <div className="bg-dark-card rounded-xl p-3 mb-3">
-      <h3 className="text-white font-semibold mb-1.5 text-sm">{pkg.name}</h3>
-      <p className="text-gray-400 text-xs mb-1.5">{pkg.amount}</p>
-      <div className="flex items-center gap-2 mb-2">
-        <p className="text-primary-green font-semibold text-sm">{pkg.price}</p>
-        {pkg.avgTime && (
-          <span className="text-gray-400 text-xs">⏱️ {pkg.avgTime}</span>
-        )}
-      </div>
-
-      {/* Package Amount Grid - 3 columns, more compact */}
-      <div className="grid grid-cols-3 gap-1.5 mb-2">
-        {packageOptions.slice(0, 15).map((option) => {
-          const isSelected = selectedOption === option.amount.toString()
-          return (
-            <button
-              key={option.amount}
-              onClick={() => setSelectedOption(option.amount.toString())}
-              className={`p-2 rounded-lg border-2 transition text-center ${
-                isSelected
-                  ? 'border-primary-green bg-primary-green/10'
-                  : 'border-dark-card-light bg-dark-bg hover:border-primary-green/50'
-              }`}
-            >
-              <p className="text-white font-semibold text-xs mb-0.5">
-                {option.amount.toLocaleString('tr-TR')}
-              </p>
-              <div
-                className={`rounded p-1 mb-0.5 ${
-                  isSelected ? 'bg-primary-green' : 'bg-dark-card-light'
-                }`}
-              >
-                <p className="text-white font-bold text-[10px] leading-tight">{option.price}</p>
-              </div>
-              {isSelected && (
-                <div className="flex justify-center mt-0.5">
-                  <Check className="w-3 h-3 text-primary-green" />
-                </div>
-              )}
-            </button>
-          )
-        })}
-      </div>
-
-      {pkg.features && pkg.features.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {pkg.features.slice(0, 3).map((feature, idx) => (
-            <span
-              key={idx}
-              className="text-[10px] bg-primary-green/20 text-primary-green px-1.5 py-0.5 rounded"
-            >
-              {feature}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default function ServicePage() {
-  const params = useParams()
-  const router = useRouter()
-  const serviceId = params.service as string
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null)
-
-  const service = servicesData.find((s) => s.id === serviceId)
-
-  if (!service) {
-    return (
-      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Hizmet Bulunamadı</h1>
-          <Link href="/" className="text-primary-green hover:underline">
-            Ana Sayfaya Dön
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  // Kategorilere göre paketleri filtrele
-  const filteredPackages =
-    selectedCategory === 'all'
-      ? service.packages
-      : service.packages.filter((pkg) => pkg.category === selectedCategory)
-
-  // Paket miktarlarını oluştur (örnek: 9403 için)
-  const generatePackageOptions = (pkg: typeof service.packages[0]) => {
+  // Paket miktarlarını oluştur
+  const generatePackageOptions = (pkg: Package) => {
     const { min = 100, max = 1000000 } = pkg
     const pricePer1K = pkg.price.split('/')[0].trim()
     
@@ -165,6 +54,118 @@ export default function ServicePage() {
         }
       })
   }
+
+  const packageOptions = generatePackageOptions(pkg)
+  const defaultSelected = packageOptions[0]?.amount.toString() || null
+  const currentSelected = selectedOption || defaultSelected
+
+  return (
+    <div className="bg-dark-card rounded-xl p-4">
+      {/* Geri Butonu */}
+      <button
+        onClick={onBack}
+        className="flex items-center gap-2 text-gray-400 hover:text-primary-green mb-4 transition"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span className="text-sm">Geri Dön</span>
+      </button>
+
+      {/* Paket Başlığı */}
+      <h3 className="text-white font-semibold mb-2 text-lg">{pkg.name}</h3>
+      {pkg.avgTime && (
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-gray-400 text-xs">⏱️ {pkg.avgTime}</span>
+        </div>
+      )}
+
+      {/* Özellikler */}
+      {pkg.features && pkg.features.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {pkg.features.map((feature, idx) => (
+            <span
+              key={idx}
+              className="text-xs bg-primary-green/20 text-primary-green px-2 py-1 rounded"
+            >
+              {feature}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Paket Seçimi Başlığı */}
+      <div className="mb-3">
+        <span className="text-primary-green font-semibold text-sm">Paket Seç</span>
+        <span className="text-gray-400 text-xs ml-2">
+          Satın almak istediğiniz miktarı seçiniz.
+        </span>
+      </div>
+
+      {/* Miktar Seçenekleri Grid - 3 sütun */}
+      <div className="grid grid-cols-3 gap-2">
+        {packageOptions.slice(0, 15).map((option) => {
+          const isSelected = currentSelected === option.amount.toString()
+          return (
+            <button
+              key={option.amount}
+              onClick={() => setSelectedOption(option.amount.toString())}
+              className={`p-3 rounded-lg border-2 transition text-center ${
+                isSelected
+                  ? 'border-primary-green bg-primary-green/10'
+                  : 'border-dark-card-light bg-dark-bg hover:border-primary-green/50'
+              }`}
+            >
+              <p className="text-white font-semibold text-sm mb-1">
+                {option.amount.toLocaleString('tr-TR')}
+              </p>
+              <div
+                className={`rounded-lg p-1.5 mb-1 ${
+                  isSelected ? 'bg-primary-green' : 'bg-dark-card-light'
+                }`}
+              >
+                <p className="text-white font-bold text-xs">{option.price}</p>
+              </div>
+              {isSelected && (
+                <div className="flex justify-center mt-1">
+                  <Check className="w-4 h-4 text-primary-green" />
+                </div>
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export default function ServicePage() {
+  const params = useParams()
+  const router = useRouter()
+  const serviceId = params.service as string
+  const [selectedCategory, setSelectedCategory] = useState<string>('follower')
+  const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null)
+
+  const service = servicesData.find((s) => s.id === serviceId)
+
+  if (!service) {
+    return (
+      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Hizmet Bulunamadı</h1>
+          <Link href="/" className="text-primary-green hover:underline">
+            Ana Sayfaya Dön
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // Kategorilere göre paketleri filtrele
+  const filteredPackages = service.packages.filter((pkg) => pkg.category === selectedCategory)
+
+  // Seçili paketi bul
+  const selectedPackage = selectedPackageId
+    ? service.packages.find((pkg) => pkg.id === selectedPackageId)
+    : null
 
   const features = [
     { icon: Gift, text: 'Hediye +5 Adet' },
@@ -200,7 +201,11 @@ export default function ServicePage() {
                 {/* Empty Avatar Section */}
                 <div className="w-full h-32 bg-white/10 rounded-lg mb-3"></div>
                 <div className="text-center">
-                  <div className="text-4xl mb-1">{service.icon}</div>
+                  <div className="flex justify-center mb-2">
+                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                      <ServiceLogo serviceId={serviceId} className="w-10 h-10 text-white" />
+                    </div>
+                  </div>
                   <h3 className="text-xl font-bold text-white mb-1">{service.name}</h3>
                   <p className="text-white/90 text-xs">Ucuz Yabancı Takipçi</p>
                 </div>
@@ -227,49 +232,69 @@ export default function ServicePage() {
             <h2 className="text-xl font-bold text-primary-green mb-2">
               {service.name} Hizmetleri
             </h2>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-primary-green font-semibold text-sm">Paket Seç</span>
-              <span className="text-gray-400 text-xs">
-                Satın almak istediğiniz miktarı seçiniz.
-              </span>
-            </div>
 
-            {/* Category Tabs */}
-            <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2">
-              {[
-                { id: 'all', label: 'Tümü' },
-                { id: 'follower', label: 'Takipçi' },
-                { id: 'like', label: 'Beğeni' },
-                { id: 'view', label: 'İzlenme' },
-                { id: 'engagement', label: 'Etkileşim' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedCategory(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition text-xs ${
-                    selectedCategory === tab.id
-                      ? 'bg-primary-green text-white'
-                      : 'bg-dark-card text-gray-300 hover:bg-dark-card-light'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            {/* Eğer paket seçilmediyse kategori seçimini göster */}
+            {!selectedPackageId && (
+              <>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-primary-green font-semibold text-sm">Kategori Seç</span>
+                  <span className="text-gray-400 text-xs">
+                    Bir kategori seçin ve paketleri görüntüleyin.
+                  </span>
+                </div>
 
-            {/* Package Cards */}
-            <div className="space-y-3">
-              {filteredPackages.map((pkg) => {
-                const packageOptions = generatePackageOptions(pkg)
-                return (
-                  <PackageCard
-                    key={pkg.id}
-                    pkg={pkg}
-                    packageOptions={packageOptions}
-                  />
-                )
-              })}
-            </div>
+                {/* Category Tabs */}
+                <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2">
+                  {[
+                    { id: 'follower', label: 'Takipçi' },
+                    { id: 'like', label: 'Beğeni' },
+                    { id: 'view', label: 'İzlenme' },
+                    { id: 'engagement', label: 'Etkileşim' },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setSelectedCategory(tab.id)
+                        setSelectedPackageId(null) // Kategori değişince paket seçimini sıfırla
+                      }}
+                      className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition text-xs ${
+                        selectedCategory === tab.id
+                          ? 'bg-primary-green text-white'
+                          : 'bg-dark-card text-gray-300 hover:bg-dark-card-light'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Paketler Grid - Kare Kartlar */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {filteredPackages.map((pkg) => (
+                    <button
+                      key={pkg.id}
+                      onClick={() => setSelectedPackageId(pkg.id)}
+                      className="bg-dark-card rounded-xl p-4 hover:bg-dark-card-light transition border-2 border-dark-card-light hover:border-primary-green group text-left"
+                    >
+                      <div className="w-12 h-12 bg-primary-green/20 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-green/30 transition">
+                        <ServiceLogo serviceId={serviceId} className="w-6 h-6 text-primary-green" />
+                      </div>
+                      <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2 group-hover:text-primary-green transition">
+                        {pkg.name}
+                      </h3>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Eğer paket seçildiyse paket detaylarını göster */}
+            {selectedPackageId && selectedPackage && (
+              <PackageDetail
+                pkg={selectedPackage}
+                onBack={() => setSelectedPackageId(null)}
+              />
+            )}
           </div>
 
           {/* Right Column - Cart & Features (3 columns) */}

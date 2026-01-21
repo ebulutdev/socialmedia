@@ -76,3 +76,61 @@ Production build için:
 npm run build
 npm start
 ```
+
+## 🚀 Vercel Deployment
+
+### Otomatik Deployment (GitHub ile)
+
+1. Projeyi GitHub'a push edin:
+```bash
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
+
+2. [Vercel](https://vercel.com) hesabınıza giriş yapın
+
+3. "New Project" butonuna tıklayın
+
+4. GitHub repository'nizi seçin
+
+5. Vercel otomatik olarak Next.js projesini algılayacak:
+   - **Framework Preset**: Next.js
+   - **Root Directory**: `./`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `.next`
+
+6. "Deploy" butonuna tıklayın
+
+### Manuel Deployment (Vercel CLI)
+
+1. Vercel CLI'yi yükleyin:
+```bash
+npm i -g vercel
+```
+
+2. Projeyi deploy edin:
+```bash
+vercel
+```
+
+3. Production'a deploy etmek için:
+```bash
+vercel --prod
+```
+
+### Environment Variables
+
+Eğer ileride API key'ler eklemeniz gerekirse, Vercel dashboard'dan:
+1. Project Settings > Environment Variables
+2. Gerekli değişkenleri ekleyin
+
+### Build Ayarları
+
+Vercel otomatik olarak şunları algılar:
+- ✅ Next.js framework
+- ✅ TypeScript
+- ✅ Tailwind CSS
+- ✅ Build komutları
+
+**Not**: `vercel.json` dosyası projeye eklenmiştir ve Vercel'in projeyi doğru şekilde build etmesini sağlar.
