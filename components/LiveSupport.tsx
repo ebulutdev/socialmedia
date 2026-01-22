@@ -23,7 +23,7 @@ export default function LiveSupport() {
   }, [])
 
   return (
-    <div className="fixed right-4 bottom-4 z-[102] hidden sm:block" ref={supportRef}>
+    <div className="fixed right-4 bottom-4 z-[102] block" ref={supportRef}>
       {/* Açılır Kutu */}
       {isOpen && (
         <div className="absolute bottom-16 right-0 w-64 bg-dark-card border border-dark-card-light rounded-xl shadow-2xl p-4 mb-2 animate-in fade-in slide-in-from-bottom-2">
@@ -53,7 +53,7 @@ export default function LiveSupport() {
       {/* Ana Buton */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-primary-green text-white p-3 rounded-full shadow-lg shadow-primary-green/30 hover:shadow-primary-green/40 hover:bg-primary-green-dark transition-all min-w-[56px] min-h-[56px] flex items-center justify-center group"
+        className="bg-primary-green text-white p-3 rounded-full shadow-lg shadow-primary-green/30 hover:shadow-primary-green/40 hover:bg-primary-green-dark transition-all min-w-[52px] sm:min-w-[56px] min-h-[52px] sm:min-h-[56px] flex items-center justify-center group"
       >
         {isOpen ? (
           <X className="w-5 h-5" />

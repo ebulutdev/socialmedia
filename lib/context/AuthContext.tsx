@@ -92,6 +92,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithGoogle = async () => {
     const redirectPath = sessionStorage.getItem('auth_redirect') || '/'
+    
+    // window.location.origin zaten doğru URL'i verir (production'da Vercel URL'i)
+    // Önemli: Supabase Dashboard'da bu URL'in Redirect URLs listesinde olması gerekir
     const redirectTo = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectPath)}`
 
     const { error } = await supabase.auth.signInWithOAuth({
