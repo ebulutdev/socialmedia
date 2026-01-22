@@ -47,11 +47,12 @@ export default function Header() {
       // Hizmet paketlerinde ara
       service.packages.forEach((pkg) => {
         const packageName = pkg.name.toLowerCase()
-        const categoryMatch = {
+        const categoryMatch: Record<string, string[]> = {
           follower: ['takipçi', 'follower', 'abone', 'subscriber'],
           like: ['beğeni', 'like'],
           view: ['izlenme', 'view', 'görüntülenme'],
           engagement: ['etkileşim', 'engagement', 'yorum', 'comment', 'repost', 'retweet'],
+          other: [],
         }
 
         const categoryKeywords = categoryMatch[pkg.category] || []
