@@ -27,6 +27,19 @@ async function apiRequest<T>(
     formData.append(key, String(value))
   })
 
+  // Debug: API isteğini logla (key'in sadece ilk 4 karakteri gösteriliyor)
+  const debugParams = { ...params }
+  if (debugParams.key) {
+    const keyStr = String(debugParams.key)
+    debugParams.key = keyStr.substring(0, 4) + '...' + keyStr.substring(keyStr.length - 4)
+  }
+  console.log('🌐 SMMTurk API İsteği:', {
+    url: API_BASE_URL,
+    action: params.action,
+    params: debugParams,
+    keyLength: String(params.key).length,
+  })
+
   const response = await fetch(API_BASE_URL, {
     method: 'POST',
     headers: {
@@ -35,14 +48,50 @@ async function apiRequest<T>(
     body: formData.toString(),
   })
 
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`)
-  }
-
   const data = await response.json()
+  
+  // Debug: API yanıtını logla
+  console.log('📥 SMMTurk API Yanıtı:', {
+    status: response.status,
+    statusText: response.statusText,
+    data: data,
+  })
+
+  if (!response.ok) {
+    console.error('❌ API Response Error:', {
+      status: response.status,
+      statusText: response.statusText,
+      error: data.error || data,
+    })
+    
+    // 401 Unauthorized için özel mesaj
+    if (response.status === 401) {
+      throw new Error('API anahtarı geçersiz veya yetkisiz. Lütfen API anahtarınızı kontrol edin.')
+    }
+    
+    // Bakiye yetersiz hatası için özel mesaj
+    const errorMessage = data.error || ''
+    if (errorMessage.toLowerCase().includes('not enough funds') || 
+        errorMessage.toLowerCase().includes('insufficient balance') ||
+        errorMessage.toLowerCase().includes('yetersiz bakiye')) {
+      throw new Error('Hesabınızda yeterli bakiye bulunmamaktadır. Lütfen hesabınıza bakiye yükleyin.')
+    }
+    
+    throw new Error(data.error || `API request failed: ${response.status} ${response.statusText}`)
+  }
   
   // Check if response contains an error
   if (data.error) {
+    console.error('❌ API Error Response:', data.error)
+    
+    // Bakiye yetersiz hatası için özel mesaj
+    const errorMessage = String(data.error).toLowerCase()
+    if (errorMessage.includes('not enough funds') || 
+        errorMessage.includes('insufficient balance') ||
+        errorMessage.includes('yetersiz bakiye')) {
+      throw new Error('Hesabınızda yeterli bakiye bulunmamaktadır. Lütfen hesabınıza bakiye yükleyin.')
+    }
+    
     throw new Error(data.error)
   }
 

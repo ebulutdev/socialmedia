@@ -132,21 +132,36 @@ export default function CartPage() {
   // Load API key from localStorage or environment variable
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Try to get from environment variable first (highest priority)
+      const envKey = process.env.NEXT_PUBLIC_SMMTURK_API_KEY
+      if (envKey && envKey.trim()) {
+        console.log('🔑 API Key environment variable\'dan yüklendi:', {
+          prefix: envKey.substring(0, 4) + '...',
+          length: envKey.length,
+          fullKey: envKey, // Debug için tam key'i göster
+        })
+        setApiKey(envKey.trim())
+        localStorage.setItem('smmturk_api_key', envKey.trim())
+        return
+      }
+
+      // Check localStorage
       const stored = localStorage.getItem('smmturk_api_key')
-      if (stored) {
-        setApiKey(stored)
+      if (stored && stored.trim()) {
+        console.log('🔑 API Key localStorage\'dan yüklendi:', {
+          prefix: stored.substring(0, 4) + '...',
+          length: stored.length,
+        })
+        setApiKey(stored.trim())
       } else {
-        // Try to get from environment variable (for development)
-        const envKey = process.env.NEXT_PUBLIC_SMMTURK_API_KEY
-        if (envKey) {
-          setApiKey(envKey)
-          localStorage.setItem('smmturk_api_key', envKey)
-        } else {
-          // Default API key (should be moved to environment variable in production)
-          const defaultApiKey = 'daa573901673c824ee8ba916d201bbb2'
-          setApiKey(defaultApiKey)
-          localStorage.setItem('smmturk_api_key', defaultApiKey)
-        }
+        // Default API key from .env.local
+        const defaultApiKey = 'bd835f762d9620b2d81555f8ee8c9fd4'
+        console.log('🔑 Default API Key kullanılıyor:', {
+          prefix: defaultApiKey.substring(0, 4) + '...',
+          length: defaultApiKey.length,
+        })
+        setApiKey(defaultApiKey)
+        localStorage.setItem('smmturk_api_key', defaultApiKey)
       }
     }
   }, [])
@@ -159,10 +174,18 @@ export default function CartPage() {
   }
 
   const handlePlaceOrder = async () => {
-    if (!apiKey.trim()) {
-      alert('Lütfen API anahtarınızı girin.')
+    // API key kontrolü
+    const currentApiKey = apiKey.trim()
+    if (!currentApiKey) {
+      alert('API anahtarı bulunamadı. Lütfen API anahtarınızı kontrol edin.')
       return
     }
+
+    console.log('🔑 API Key kontrolü:', {
+      hasApiKey: !!currentApiKey,
+      apiKeyLength: currentApiKey.length,
+      apiKeyPrefix: currentApiKey.substring(0, 4) + '...',
+    })
 
     // Her ürünün URL'si olup olmadığını kontrol et
     const itemsWithoutUrl = items.filter(item => !item.url || !item.url.trim())
@@ -187,7 +210,7 @@ export default function CartPage() {
     try {
       // Save API key to localStorage
       if (typeof window !== 'undefined') {
-        localStorage.setItem('smmturk_api_key', apiKey)
+        localStorage.setItem('smmturk_api_key', currentApiKey)
       }
 
       const results: Array<{ orderId: number; success: boolean; error?: string }> = []
@@ -198,6 +221,10 @@ export default function CartPage() {
           // packageId SMMTurk servis ID'sini içeriyor (örn: '9403')
           const serviceId = parseInt(item.packageId)
           if (isNaN(serviceId)) {
+            console.error('❌ Geçersiz servis ID:', {
+              packageId: item.packageId,
+              packageName: item.packageName,
+            })
             results.push({
               orderId: 0,
               success: false,
@@ -206,18 +233,35 @@ export default function CartPage() {
             continue
           }
 
+          // Debug: Sipariş detaylarını logla
+          console.log('📦 Sipariş oluşturuluyor:', {
+            packageName: item.packageName,
+            serviceId: serviceId,
+            url: item.url,
+            quantity: item.amount,
+          })
+
           const response = await smmturkClient.addOrder(
-            apiKey,
+            currentApiKey,
             serviceId,
             item.url,
             item.amount
           )
+
+          console.log('✅ Sipariş başarılı:', {
+            packageName: item.packageName,
+            orderId: response.order,
+          })
 
           results.push({
             orderId: response.order,
             success: true,
           })
         } catch (error) {
+          console.error('❌ Sipariş hatası:', {
+            packageName: item.packageName,
+            error: error instanceof Error ? error.message : 'Bilinmeyen hata',
+          })
           results.push({
             orderId: 0,
             success: false,

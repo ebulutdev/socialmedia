@@ -30,14 +30,14 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 
 # SMMTurk API Configuration (zaten var)
-NEXT_PUBLIC_SMMTURK_API_KEY=daa573901673c824ee8ba916d201bbb2
+NEXT_PUBLIC_SMMTURK_API_KEY=bd835f762d9620b2d81555f8ee8c9fd4
 ```
 
 **Örnek:**
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprbG1ub3AiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTYxNjIzOTAyMiwiZXhwIjoxOTMxODE1MDIyfQ.example
-NEXT_PUBLIC_SMMTURK_API_KEY=daa573901673c824ee8ba916d201bbb2
+NEXT_PUBLIC_SMMTURK_API_KEY=bd835f762d9620b2d81555f8ee8c9fd4
 ```
 
 ### 3. Development Sunucusunu Yeniden Başlatma

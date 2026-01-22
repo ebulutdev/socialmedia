@@ -4,7 +4,7 @@
 
 API anahtarınız projeye entegre edilmiştir. Cart sayfasında otomatik olarak yüklenecektir.
 
-**API Key:** `daa573901673c824ee8ba916d201bbb2`
+**API Key:** `bd835f762d9620b2d81555f8ee8c9fd4`
 
 ## Kullanım
 
