@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import CartProviderWrapper from '@/components/CartProviderWrapper'
 
 export const metadata: Metadata = {
-  title: 'SosyalEvin - Sosyal Medya Hizmetleri',
+  title: 'A Social Media - Sosyal Medya Hizmetleri',
   description: 'Instagram, Facebook, YouTube, TikTok ve X için sosyal medya hizmetleri',
 }
 
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body>{children}</body>
+      <body>
+        <CartProviderWrapper>{children}</CartProviderWrapper>
+      </body>
     </html>
   )
 }

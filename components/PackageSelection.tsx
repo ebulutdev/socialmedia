@@ -63,13 +63,10 @@ export default function PackageSelection() {
                 <span className="text-primary-green text-xl">⭐</span>
                 <span className="text-gray-300 text-sm">Ortalama Süre: 55 dakika</span>
               </div>
-              <div className="mb-4">
+              <div>
                 <p className="text-gray-300 text-sm mb-1">Min: 100 - Max: 1.000.000</p>
                 <p className="text-primary-green font-semibold">53,28₺ / 1K</p>
               </div>
-              <button className="w-full bg-dark-card-light text-white py-2 rounded-lg hover:bg-dark-card-light/80 transition">
-                ChatGPT ile Özetle
-              </button>
             </div>
           </div>
 

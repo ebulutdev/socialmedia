@@ -5,8 +5,8 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: "Sosyal Evin'e Neden Güvenmeliyim?",
-    answer: 'Sosyal Evin olarak yıllardır binlerce müşteriye hizmet vermekteyiz. Güvenli ödeme sistemleri, 7/24 destek ve kaliteli hizmet garantisi sunuyoruz.',
+    question: "A Social Media'ya Neden Güvenmeliyim?",
+    answer: 'A Social Media olarak yıllardır binlerce müşteriye hizmet vermekteyiz. Güvenli ödeme sistemleri, 7/24 destek ve kaliteli hizmet garantisi sunuyoruz.',
   },
   {
     question: 'Ne Kadar Takipçi Satın Almalıyım?',
@@ -58,33 +58,33 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="bg-dark-bg py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-dark-card rounded-full flex items-center justify-center">
-            <span className="text-2xl">❓</span>
+    <section className="bg-dark-bg py-6 sm:py-8 lg:py-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
+        <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-dark-card rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-xl sm:text-2xl">❓</span>
           </div>
-          <h2 className="text-4xl font-bold">Sıkça Sorulan Sorular</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Sıkça Sorulan Sorular</h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-dark-card rounded-xl p-6 cursor-pointer hover:bg-dark-card-light transition"
+              className="bg-dark-card rounded-xl p-4 sm:p-6 cursor-pointer active:bg-dark-card-light sm:hover:bg-dark-card-light transition touch-manipulation min-h-[60px]"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 flex-1">
-                  <span className="text-primary-green text-xl">✨</span>
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold mb-2">{faq.question}</h3>
+              <div className="flex items-start justify-between gap-3 sm:gap-4">
+                <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
+                  <span className="text-primary-green text-lg sm:text-xl flex-shrink-0">✨</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-white font-semibold mb-2 text-sm sm:text-base leading-tight">{faq.question}</h3>
                     {openIndex === index && (
-                      <p className="text-gray-300 text-sm mt-2">{faq.answer}</p>
+                      <p className="text-gray-300 text-xs sm:text-sm mt-2 leading-relaxed">{faq.answer}</p>
                     )}
                   </div>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0 transition-transform min-w-[24px] ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
