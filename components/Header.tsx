@@ -19,9 +19,6 @@ export default function Header() {
   const router = useRouter()
   const { user, signOut, loading: authLoading } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // Debug log
-  console.log('🔴 [HEADER] Render - user:', user?.email || 'null', 'loading:', authLoading)
   const [searchQuery, setSearchQuery] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
