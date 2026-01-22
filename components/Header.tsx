@@ -2,9 +2,11 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, ShoppingBag, Bell, LogIn, Crown, Menu, X, Package as PackageIcon } from 'lucide-react'
+import Link from 'next/link'
+import { Search, ShoppingBag, Bell, LogIn, Crown, Menu, X, Package as PackageIcon, LogOut, User } from 'lucide-react'
 import CartButton from './Cart'
 import { servicesData, Service, Package as PackageType } from '@/lib/servicesData'
+import { useAuth } from '@/lib/context/AuthContext'
 
 interface SearchResult {
   type: 'service' | 'package'
@@ -15,12 +17,15 @@ interface SearchResult {
 
 export default function Header() {
   const router = useRouter()
+  const { user, signOut, loading: authLoading } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const notificationsRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   // Arama sonuçlarını hesapla
   const searchResults = useMemo(() => {
@@ -112,6 +117,9 @@ export default function Header() {
       }
       if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
         setNotificationsOpen(false)
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false)
       }
     }
 
@@ -312,13 +320,73 @@ export default function Header() {
                   </div>
                 )}
               </div>
-              <button className="hidden md:flex items-center gap-2 bg-gradient-to-r from-primary-green to-primary-green-dark text-white px-4 lg:px-5 py-2 sm:py-2.5 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 hover:shadow-xl hover:shadow-primary-green/30 font-semibold text-xs sm:text-sm min-h-[44px]">
-                <LogIn className="w-4 h-4" />
-                <span className="hidden lg:inline">Giriş Yap</span>
-              </button>
-              <button className="hidden md:block group min-w-[44px] min-h-[44px] flex items-center justify-center">
-                <Crown className="w-5 sm:w-6 h-5 sm:h-6 text-gray-300 group-hover:text-primary-green transition-colors" />
-              </button>
+              {/* Auth Buttons */}
+              {!authLoading && (
+                <>
+                  {user ? (
+                    <div className="hidden md:block relative" ref={userMenuRef}>
+                      <button
+                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                        className="flex items-center gap-2 bg-dark-card hover:bg-dark-card-light text-white px-4 lg:px-5 py-2 sm:py-2.5 rounded-lg transition-all border border-dark-card-light hover:border-primary-green/30 font-semibold text-xs sm:text-sm min-h-[44px]"
+                      >
+                        <div className="w-6 h-6 rounded-full bg-primary-green/20 flex items-center justify-center">
+                          <User className="w-4 h-4 text-primary-green" />
+                        </div>
+                        <span className="hidden lg:inline truncate max-w-[120px]">
+                          {user.email?.split('@')[0] || 'Kullanıcı'}
+                        </span>
+                      </button>
+
+                      {/* User Menu Dropdown */}
+                      {userMenuOpen && (
+                        <div className="absolute right-0 top-full mt-2 w-56 bg-dark-card border border-dark-card-light rounded-xl shadow-2xl z-50">
+                          <div className="p-4 border-b border-dark-card-light">
+                            <p className="text-white font-semibold text-sm truncate">{user.email}</p>
+                            <p className="text-gray-400 text-xs mt-1">Gmail ile giriş yapıldı</p>
+                          </div>
+                          <div className="p-2 space-y-1">
+                            <Link
+                              href="/orders"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-dark-card-light text-white transition-colors text-sm"
+                            >
+                              <PackageIcon className="w-4 h-4" />
+                              <span>Siparişlerim</span>
+                            </Link>
+                            <button
+                              onClick={async () => {
+                                await signOut()
+                                setUserMenuOpen(false)
+                                router.push('/')
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-dark-card-light text-red-400 hover:text-red-300 transition-colors text-sm"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              <span>Çıkış Yap</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <Link
+                        href="/auth/login"
+                        className="hidden md:flex items-center gap-2 bg-gradient-to-r from-primary-green to-primary-green-dark text-white px-4 lg:px-5 py-2 sm:py-2.5 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 hover:shadow-xl hover:shadow-primary-green/30 font-semibold text-xs sm:text-sm min-h-[44px]"
+                      >
+                        <LogIn className="w-4 h-4" />
+                        <span className="hidden lg:inline">Giriş Yap</span>
+                      </Link>
+                      <Link
+                        href="/auth/signup"
+                        className="hidden md:block group min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      >
+                        <Crown className="w-5 sm:w-6 h-5 sm:h-6 text-gray-300 group-hover:text-primary-green transition-colors" />
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
               <button
                 className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -410,10 +478,41 @@ export default function Header() {
               <a href="/#popular-products" className="block py-3 px-4 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-primary-green font-semibold min-h-[44px] flex items-center">
                 Popüler Hizmetler
               </a>
-              <button className="w-full py-3 px-4 bg-gradient-to-r from-primary-green to-primary-green-dark rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all text-white font-semibold min-h-[44px] flex items-center justify-center gap-2">
-                <LogIn className="w-4 h-4" />
-                <span>Giriş Yap</span>
-              </button>
+              {user ? (
+                <div className="space-y-2">
+                  <div className="py-3 px-4 bg-dark-card rounded-lg">
+                    <p className="text-white font-semibold text-sm truncate mb-1">{user.email}</p>
+                    <p className="text-gray-400 text-xs">Gmail ile giriş yapıldı</p>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      await signOut()
+                      setMobileMenuOpen(false)
+                      router.push('/')
+                    }}
+                    className="w-full py-3 px-4 bg-red-500/10 border border-red-500/30 rounded-lg hover:bg-red-500/20 transition-all text-red-400 font-semibold min-h-[44px] flex items-center justify-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Çıkış Yap</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    className="block w-full py-3 px-4 bg-gradient-to-r from-primary-green to-primary-green-dark rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all text-white font-semibold min-h-[44px] flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Giriş Yap</span>
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="block w-full py-3 px-4 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium min-h-[44px] flex items-center justify-center"
+                  >
+                    Kayıt Ol
+                  </Link>
+                </>
+              )}
             </div>
           )}
         </div>
