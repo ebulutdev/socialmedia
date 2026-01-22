@@ -12,6 +12,7 @@ import { servicesData, calculatePackagePrice, Package } from '@/lib/servicesData
 import { ServiceLogo } from '@/components/ServiceLogos'
 import { useCart } from '@/lib/context/CartContext'
 import { useToast } from '@/lib/context/ToastContext'
+import UrlInputModal from '@/components/UrlInputModal'
 
 // Paket Detay Bileşeni - Seçilen paketin miktar ve fiyat seçeneklerini gösterir
 function PackageDetail({
@@ -26,6 +27,12 @@ function PackageDetail({
   serviceName: string
 }) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [showUrlModal, setShowUrlModal] = useState(false)
+  const [pendingCartItem, setPendingCartItem] = useState<{
+    selectedAmount: number
+    selectedPrice: string
+    totalPrice: number
+  } | null>(null)
   const { addToCart } = useCart()
   const { showToast } = useToast()
 
@@ -154,21 +161,13 @@ function PackageDetail({
               )
               const totalPrice = (numericPrice * selectedAmount) / 1000
 
-              addToCart({
-                id: `${pkg.id}-${selectedAmount}-${Date.now()}`,
-                packageId: pkg.id,
-                packageName: pkg.name,
-                serviceId: serviceId,
-                serviceName: serviceName,
-                amount: selectedAmount,
-                price: selectedPrice.price,
-                totalPrice: totalPrice,
+              // URL modal'ını aç
+              setPendingCartItem({
+                selectedAmount,
+                selectedPrice: selectedPrice.price,
+                totalPrice,
               })
-              
-              showToast(
-                `${pkg.name} - ${selectedAmount.toLocaleString('tr-TR')} adet sepete eklendi!`,
-                'success'
-              )
+              setShowUrlModal(true)
             }
           }}
           className="w-full mt-3 sm:mt-4 bg-gradient-to-r from-primary-green to-primary-green-dark text-white py-3 sm:py-3.5 px-4 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 min-h-[44px] touch-manipulation max-w-full"
@@ -177,6 +176,39 @@ function PackageDetail({
           <span className="truncate">Sepete Ekle</span>
         </button>
       )}
+
+      {/* URL Input Modal */}
+      <UrlInputModal
+        isOpen={showUrlModal}
+        onClose={() => {
+          setShowUrlModal(false)
+          setPendingCartItem(null)
+        }}
+        onConfirm={(url) => {
+          if (pendingCartItem) {
+            addToCart({
+              id: `${pkg.id}-${pendingCartItem.selectedAmount}-${Date.now()}`,
+              packageId: pkg.id,
+              packageName: pkg.name,
+              serviceId: serviceId,
+              serviceName: serviceName,
+              amount: pendingCartItem.selectedAmount,
+              price: pendingCartItem.selectedPrice,
+              totalPrice: pendingCartItem.totalPrice,
+              url: url,
+            })
+            
+            showToast(
+              `${pkg.name} - ${pendingCartItem.selectedAmount.toLocaleString('tr-TR')} adet sepete eklendi!`,
+              'success'
+            )
+          }
+          setShowUrlModal(false)
+          setPendingCartItem(null)
+        }}
+        packageName={pkg.name}
+        serviceName={serviceName}
+      />
     </div>
   )
 }

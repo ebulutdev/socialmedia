@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Mail, Phone, MapPin } from 'lucide-react'
+import { Mail, Phone } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -169,20 +169,9 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs sm:text-sm mb-1">Telefon</p>
-                  <a href="tel:+908508501313" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
-                    +90 850 850 13 13
+                  <a href="tel:+905521172505" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
+                    0552 117 25 05
                   </a>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary-green/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-green" />
-                </div>
-                <div>
-                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Adres</p>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                    Pertev Paşa Mah. Üç Çakırlar Cad. Borak Apt. Zemin Kat. Dük. No: 3 Aşağı Maraş Gazimağusa / KKTC
-                  </p>
                 </div>
               </li>
             </ul>

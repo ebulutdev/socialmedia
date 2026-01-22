@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones } from 'lucide-react'
+import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones, ShoppingCart } from 'lucide-react'
+import { useCart } from '@/lib/context/CartContext'
+import { useToast } from '@/lib/context/ToastContext'
+import UrlInputModal from './UrlInputModal'
 
 interface Package {
   id: string
@@ -38,6 +41,16 @@ const features = [
 
 export default function PackageSelection() {
   const [selectedPackage, setSelectedPackage] = useState<string>('1')
+  const [showUrlModal, setShowUrlModal] = useState(false)
+  const [pendingCartItem, setPendingCartItem] = useState<{
+    packageId: string
+    amount: string
+    price: string
+    numericAmount: number
+    numericPrice: number
+  } | null>(null)
+  const { addToCart } = useCart()
+  const { showToast } = useToast()
 
   return (
     <section className="bg-dark-bg py-12">
@@ -158,9 +171,70 @@ export default function PackageSelection() {
                 )
               })}
             </div>
+            
+            {/* Sepete Ekle Butonu */}
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  const selectedPkg = packages.find(p => p.id === selectedPackage)
+                  if (selectedPkg) {
+                    // Fiyatı parse et
+                    const numericPrice = parseFloat(selectedPkg.price.replace(/[^\d,]/g, '').replace(',', '.'))
+                    // Miktarı parse et (örn: "100 Takipçi" -> 100)
+                    const numericAmount = parseInt(selectedPkg.amount.replace(/[^\d]/g, ''))
+                    
+                    setPendingCartItem({
+                      packageId: selectedPkg.id,
+                      amount: selectedPkg.amount,
+                      price: selectedPkg.price,
+                      numericAmount,
+                      numericPrice,
+                    })
+                    setShowUrlModal(true)
+                  }
+                }}
+                className="w-full bg-gradient-to-r from-primary-green to-primary-green-dark text-white py-3.5 px-4 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 font-semibold text-sm flex items-center justify-center gap-2 min-h-[44px]"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                Sepete Ekle
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* URL Input Modal */}
+      {pendingCartItem && (
+        <UrlInputModal
+          isOpen={showUrlModal}
+          onClose={() => {
+            setShowUrlModal(false)
+            setPendingCartItem(null)
+          }}
+          onConfirm={(url) => {
+            addToCart({
+              id: `9403-${pendingCartItem.numericAmount}-${Date.now()}`,
+              packageId: '9403',
+              packageName: 'Instagram Takipçi [ 30 Gün Garantili ]',
+              serviceId: 'instagram',
+              serviceName: 'Instagram',
+              amount: pendingCartItem.numericAmount,
+              price: pendingCartItem.price,
+              totalPrice: pendingCartItem.numericPrice,
+              url: url,
+            })
+            
+            showToast(
+              `Instagram Takipçi - ${pendingCartItem.amount} sepete eklendi!`,
+              'success'
+            )
+            setShowUrlModal(false)
+            setPendingCartItem(null)
+          }}
+          packageName="Instagram Takipçi [ 30 Gün Garantili ]"
+          serviceName="Instagram"
+        />
+      )}
     </section>
   )
 }

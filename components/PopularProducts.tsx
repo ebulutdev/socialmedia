@@ -4,8 +4,6 @@ import { useRouter } from 'next/navigation'
 import { ShoppingCart } from 'lucide-react'
 import { servicesData, Package } from '@/lib/servicesData'
 import { ServiceLogo } from './ServiceLogos'
-import { useCart } from '@/lib/context/CartContext'
-import { useToast } from '@/lib/context/ToastContext'
 
 // Her servisten en iyi paketleri seç
 const getBestPackages = (serviceId: string): Package[] => {
@@ -66,8 +64,6 @@ const services = [
 
 export default function PopularProducts() {
   const router = useRouter()
-  const { addToCart } = useCart()
-  const { showToast } = useToast()
 
   const getProductsByService = (serviceId: string) => {
     return getBestPackages(serviceId)
@@ -77,31 +73,9 @@ export default function PopularProducts() {
     router.push(`/services/${serviceId}`)
   }
 
-  const handleAddToCart = (e: React.MouseEvent, product: Package, serviceId: string, serviceName: string) => {
+  const handleCartButtonClick = (e: React.MouseEvent, serviceId: string) => {
     e.stopPropagation()
-    
-    // Minimum miktarı kullan
-    const minAmount = product.min || 100
-    const pricePer1K = product.price.split('/')[0].trim()
-    const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
-    const totalPrice = (numericPrice * minAmount) / 1000
-    const formattedPrice = Math.round(totalPrice).toString() + '₺'
-
-    addToCart({
-      id: `${product.id}-${minAmount}-${Date.now()}`,
-      packageId: product.id,
-      packageName: product.name,
-      serviceId: serviceId,
-      serviceName: serviceName,
-      amount: minAmount,
-      price: formattedPrice,
-      totalPrice: totalPrice,
-    })
-    
-    showToast(
-      `${product.name} - ${minAmount.toLocaleString('tr-TR')} adet sepete eklendi!`,
-      'success'
-    )
+    router.push(`/services/${serviceId}`)
   }
 
   return (
@@ -162,8 +136,8 @@ export default function PopularProducts() {
                       </div>
                       <button 
                         className="bg-primary-green p-2 sm:p-1.5 rounded-lg active:bg-primary-green-dark sm:hover:bg-primary-green-dark transition flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
-                        onClick={(e) => handleAddToCart(e, product, service.id, service.name)}
-                        title="Sepete Ekle"
+                        onClick={(e) => handleCartButtonClick(e, service.id)}
+                        title="Hizmet Sayfasına Git"
                       >
                         <ShoppingCart className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-white" />
                       </button>

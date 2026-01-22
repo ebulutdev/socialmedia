@@ -7,7 +7,7 @@ import Link from 'next/link'
 export default function LiveSupport() {
   const [isOpen, setIsOpen] = useState(false)
   const supportRef = useRef<HTMLDivElement>(null)
-  const whatsappNumber = '905339651925' // 0533 965 19 25
+  const whatsappNumber = '905521172505' // 0552 117 25 05
   const whatsappUrl = `https://wa.me/${whatsappNumber}`
 
   // Dışarı tıklandığında kapat

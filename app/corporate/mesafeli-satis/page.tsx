@@ -33,10 +33,7 @@ export default function MesafeliSatisPage() {
                         <strong className="text-white">SLBT No:</strong> 1078
                       </p>
                       <p>
-                        <strong className="text-white">Adres:</strong> Pertev Paşa Mah. Üç Çakırlar Cad. Borak Apt. Zemin Kat. Dük. No: 3 Aşağı Maraş Gazimağusa / KKTC
-                      </p>
-                      <p>
-                        <strong className="text-white">Telefon:</strong> +90 850 850 13 13
+                        <strong className="text-white">Telefon:</strong> 0552 117 25 05
                       </p>
                       <p>
                         <strong className="text-white">E-posta:</strong> scmmediasocial@gmail.com

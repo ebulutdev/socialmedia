@@ -39,6 +39,19 @@ function CartItemCard({
             {item.packageName}
           </h3>
           <p className="text-gray-400 text-xs mb-2 break-words">{item.serviceName}</p>
+          {item.url && (
+            <div className="mb-2">
+              <p className="text-gray-500 text-[10px] mb-1">URL:</p>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-green hover:text-primary-green-light text-xs break-all line-clamp-1"
+              >
+                {item.url}
+              </a>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-2 flex-wrap w-full">
             <div className="flex items-center gap-1.5 bg-dark-bg/60 rounded-xl p-1.5 border border-dark-card-light/50">
               <button
@@ -113,7 +126,6 @@ export default function CartPage() {
   const { items, removeFromCart, clearCart, getTotalPrice, getItemCount, updateQuantity } = useCart()
   
   const [apiKey, setApiKey] = useState('')
-  const [link, setLink] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string }>>([])
 
@@ -152,17 +164,21 @@ export default function CartPage() {
       return
     }
 
-    if (!link.trim()) {
-      alert('Lütfen link girin.')
+    // Her ürünün URL'si olup olmadığını kontrol et
+    const itemsWithoutUrl = items.filter(item => !item.url || !item.url.trim())
+    if (itemsWithoutUrl.length > 0) {
+      alert('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.')
       return
     }
 
-    // Validate link format (basic validation)
-    try {
-      new URL(link)
-    } catch {
-      alert('Lütfen geçerli bir link girin.')
-      return
+    // Tüm URL'leri validate et
+    for (const item of items) {
+      try {
+        new URL(item.url)
+      } catch {
+        alert(`${item.packageName} için geçersiz URL: ${item.url}`)
+        return
+      }
     }
 
     setIsProcessing(true)
@@ -176,15 +192,16 @@ export default function CartPage() {
 
       const results: Array<{ orderId: number; success: boolean; error?: string }> = []
 
-      // Create orders for each cart item
+      // Create orders for each cart item with their own URLs
       for (const item of items) {
         try {
-          const serviceId = parseInt(item.serviceId)
+          // packageId SMMTurk servis ID'sini içeriyor (örn: '9403')
+          const serviceId = parseInt(item.packageId)
           if (isNaN(serviceId)) {
             results.push({
               orderId: 0,
               success: false,
-              error: `${item.packageName}: Geçersiz servis ID`,
+              error: `${item.packageName}: Geçersiz servis ID (packageId: ${item.packageId})`,
             })
             continue
           }
@@ -192,7 +209,7 @@ export default function CartPage() {
           const response = await smmturkClient.addOrder(
             apiKey,
             serviceId,
-            link,
+            item.url,
             item.amount
           )
 
@@ -324,40 +341,6 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* API Key Input */}
-                <div className="mb-4 pb-4 border-b border-dark-card-light">
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    API Anahtarı
-                  </label>
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="SMMTurk API anahtarınızı girin"
-                    className="w-full px-4 py-2.5 rounded-xl bg-dark-bg border border-dark-card-light text-white placeholder-gray-500 focus:outline-none focus:border-primary-green focus:ring-2 focus:ring-primary-green/20 transition-all text-sm"
-                  />
-                  <p className="text-xs text-gray-500 mt-1.5">
-                    API anahtarınız hesap sayfanızdan alınabilir
-                  </p>
-                </div>
-
-                {/* Link Input */}
-                <div className="mb-4 pb-4 border-b border-dark-card-light">
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Link
-                  </label>
-                  <input
-                    type="url"
-                    value={link}
-                    onChange={(e) => setLink(e.target.value)}
-                    placeholder="https://instagram.com/p/..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-dark-bg border border-dark-card-light text-white placeholder-gray-500 focus:outline-none focus:border-primary-green focus:ring-2 focus:ring-primary-green/20 transition-all text-sm"
-                  />
-                  <p className="text-xs text-gray-500 mt-1.5">
-                    Sipariş için link girin (Instagram gönderisi, profil vb.)
-                  </p>
-                </div>
-
                 {/* Order Results */}
                 {orderResults.length > 0 && (
                   <div className="mb-4 pb-4 border-b border-dark-card-light space-y-2">
@@ -408,7 +391,7 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={handlePlaceOrder}
-                    disabled={isProcessing || items.length === 0 || !apiKey.trim() || !link.trim() || !user}
+                    disabled={isProcessing || items.length === 0 || !user || items.some(item => !item.url || !item.url.trim())}
                     className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary-green to-primary-green-dark text-white font-bold text-sm shadow-lg shadow-primary-green/30 hover:shadow-primary-green/40 hover:scale-[1.02] transition-all touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
                     {isProcessing ? (

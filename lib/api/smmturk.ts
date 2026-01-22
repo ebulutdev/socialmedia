@@ -13,7 +13,7 @@ import type {
   SMMTurkError,
 } from './smmturk-types'
 
-const API_BASE_URL = 'https://smmturk.net/api/v2'
+const API_BASE_URL = 'https://smmturk.org/api/v2'
 
 /**
  * Make a POST request to SMMTurk API
