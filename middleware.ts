@@ -37,13 +37,13 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh session if expired - required for Server Components
+  // This ensures the session cookie is updated on every request
+  // The getSession() call will automatically update cookies via setAll callback
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+    await supabase.auth.getSession()
   } catch (error) {
     // If auth fails, just continue without auth
-    console.error('Supabase auth error in middleware:', error)
+    // This is expected for unauthenticated requests
   }
 
   return supabaseResponse
@@ -56,8 +56,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - /auth/callback (Auth callback route - middleware should not interfere)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|auth/callback|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

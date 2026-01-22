@@ -10,5 +10,7 @@ export function createClient() {
     )
   }
 
+  // createBrowserClient automatically handles PKCE code verifier in cookies
+  // when used with @supabase/ssr package
   return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
