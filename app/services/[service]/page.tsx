@@ -361,31 +361,34 @@ export default function ServicePage() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
           {/* Left Column - Service Details (3 columns) - Mobile Full Width */}
           <div className="md:col-span-3 space-y-3">
-            {/* Service Hero Card */}
-            <div className="bg-primary-green rounded-xl p-3 sm:p-4 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-green/20 to-transparent"></div>
-              <div className="relative z-10">
-                {/* Empty Avatar Section */}
-                <div className="w-full h-24 sm:h-32 bg-white/10 rounded-lg mb-2 sm:mb-3"></div>
-                <div className="text-center">
-                  <div className="flex justify-center mb-2">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/20 rounded-xl flex items-center justify-center">
-                      <ServiceLogo serviceId={serviceId} className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-white" />
-                    </div>
+            {/* Küçük kutu: tek tam boyutlu resim + hizmet logosu overlay */}
+            <div className="rounded-xl overflow-hidden border border-dark-card-light bg-dark-card shrink-0 w-full max-w-[180px] sm:max-w-[200px]">
+              <div className="relative aspect-square w-full">
+                <Image
+                  src="/images/Ekran Resmi 2026-01-22 01.38.46.png"
+                  alt={service.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 180px, 200px"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/90 flex items-center justify-center shadow-lg ring-2 ring-white/50">
+                    <ServiceLogo serviceId={serviceId} className="w-8 h-8 sm:w-9 sm:h-9 text-gray-900" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-1">{service.name}</h3>
-                  <p className="text-white/90 text-[10px] sm:text-xs">Ucuz Yabancı Takipçi</p>
                 </div>
+              </div>
+              <div className="px-2.5 py-2 text-center border-t border-dark-card-light">
+                <h3 className="text-white font-bold text-sm sm:text-base truncate">{service.name}</h3>
               </div>
             </div>
 
-            {/* Service Description */}
+            {/* Service Description - sadeleştirilmiş */}
             <div className="bg-dark-card rounded-xl p-3 sm:p-4">
-              <p className="text-gray-300 text-xs sm:text-sm mb-3 leading-relaxed line-clamp-4 sm:line-clamp-none">{service.description}</p>
-              <div className="flex items-center gap-2">
-                <span className="text-primary-green text-base sm:text-lg">⭐</span>
-                <span className="text-gray-300 text-xs sm:text-sm">37 Değerlendirme</span>
-                <span className="text-primary-green font-bold text-xs sm:text-sm">5 Puan</span>
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-4 sm:line-clamp-none">{service.description}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-primary-green text-base">⭐</span>
+                <span className="text-gray-300 text-xs">37 Değerlendirme</span>
+                <span className="text-primary-green font-bold text-xs">5 Puan</span>
               </div>
             </div>
           </div>
