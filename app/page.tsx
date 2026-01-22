@@ -7,6 +7,7 @@ import PopularProducts from '@/components/PopularProducts'
 import Testimonials from '@/components/Testimonials'
 import FAQ from '@/components/FAQ'
 import LiveSupport from '@/components/LiveSupport'
+import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Testimonials />
       <FAQ />
       <LiveSupport />
+      <Footer />
     </main>
   )
 }
