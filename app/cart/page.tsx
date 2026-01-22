@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
-import { useCart } from '@/lib/context/CartContext'
+import { useCart, type CartItem } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
 import { smmturkClient } from '@/lib/api/smmturk-client'
 import { createMultipleOrders } from '@/lib/api/orders'
@@ -21,7 +21,7 @@ function CartItemCard({
   onRemove,
   onQuantityChange,
 }: {
-  item: { id: string; packageName: string; serviceName: string; amount: number; totalPrice: number }
+  item: CartItem
   onRemove: () => void
   onQuantityChange: (delta: number) => void
 }) {
@@ -124,6 +124,7 @@ export default function CartPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { items, removeFromCart, clearCart, getTotalPrice, getItemCount, updateQuantity } = useCart()
+  const cartItems: CartItem[] = items
   
   const [apiKey, setApiKey] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -188,14 +189,14 @@ export default function CartPage() {
     })
 
     // Her ürünün URL'si olup olmadığını kontrol et
-    const itemsWithoutUrl = items.filter(item => !item.url || !item.url.trim())
+    const itemsWithoutUrl = cartItems.filter(item => !item.url || !item.url.trim())
     if (itemsWithoutUrl.length > 0) {
       alert('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.')
       return
     }
 
     // Tüm URL'leri validate et
-    for (const item of items) {
+    for (const item of cartItems) {
       try {
         new URL(item.url)
       } catch {
@@ -343,13 +344,13 @@ export default function CartPage() {
         )}
 
         {/* Cart Content */}
-        {items.length === 0 ? (
+        {cartItems.length === 0 ? (
           <EmptyState onBack={() => router.push('/')} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Items List */}
             <div className="lg:col-span-2 space-y-4">
-              {items.map((item) => (
+              {cartItems.map((item) => (
                 <CartItemCard
                   key={item.id}
                   item={item}
@@ -435,7 +436,7 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={handlePlaceOrder}
-                    disabled={isProcessing || items.length === 0 || !user || items.some(item => !item.url || !item.url.trim())}
+                    disabled={isProcessing || cartItems.length === 0 || !user || cartItems.some(item => !item.url || !item.url.trim())}
                     className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary-green to-primary-green-dark text-white font-bold text-sm shadow-lg shadow-primary-green/30 hover:shadow-primary-green/40 hover:scale-[1.02] transition-all touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
                     {isProcessing ? (

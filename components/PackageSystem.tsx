@@ -551,21 +551,13 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
                             <button 
                               onClick={(e) => {
                                 e.stopPropagation()
-                                addToCart({
-                                  id: `${pkg.id}-${minAmount}-${Date.now()}`,
-                                  packageId: pkg.id,
-                                  packageName: pkg.name,
-                                  serviceId: currentSelectedService,
-                                  serviceName: currentService.name,
-                                  amount: minAmount,
-                                  price: formattedPrice,
-                                  totalPrice: totalPrice,
+                                setPendingCartItem({
+                                  pkg,
+                                  minAmount,
+                                  formattedPrice,
+                                  totalPrice,
                                 })
-                                
-                                showToast(
-                                  `${pkg.name} - ${minAmount.toLocaleString('tr-TR')} adet sepete eklendi!`,
-                                  'success'
-                                )
+                                setShowUrlModal(true)
                               }}
                               className="bg-primary-green/10 hover:bg-primary-green active:bg-primary-green p-2 sm:p-2.5 rounded-lg transition-all flex-shrink-0 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center touch-manipulation border border-primary-green/30 group-hover:border-primary-green"
                               title="Sepete Ekle"
