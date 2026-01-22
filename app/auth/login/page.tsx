@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Loader2, ArrowLeft } from 'lucide-react'
 import { useAuth } from '@/lib/context/AuthContext'
 import Header from '@/components/Header'
 import Link from 'next/link'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, signInWithGoogle, loading: authLoading } = useAuth()
@@ -127,5 +127,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-primary-green border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
