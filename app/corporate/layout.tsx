@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Check } from 'lucide-react'
 import Header from '@/components/Header'
 import LiveSupport from '@/components/LiveSupport'
+import FloatingCartButton from '@/components/FloatingCartButton'
 
 const menuItems = [
   { id: 'hakkimizda', label: 'Hakkımızda', path: '/corporate/hakkimizda' },
@@ -26,6 +27,7 @@ export default function CorporateLayout({
     <>
       <Header />
       <LiveSupport />
+      <FloatingCartButton />
       <div className="min-h-screen bg-dark-bg">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">

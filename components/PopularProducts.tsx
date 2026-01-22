@@ -31,7 +31,7 @@ const formatPrice = (pkg: Package): string => {
     const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
     const minAmount = Math.min(pkg.min, 1000)
     const totalPrice = (numericPrice * minAmount) / 1000
-    return totalPrice.toFixed(2).replace('.', ',') + '₺'
+    return Math.round(totalPrice).toString() + '₺'
   }
   return pkg.price.split('/')[0].trim()
 }
@@ -53,7 +53,7 @@ const getLowestPrice = (packages: Package[]): string => {
   })
   
   const lowestPrice = Math.min(...prices)
-  return lowestPrice.toFixed(2).replace('.', ',') + '₺'
+  return Math.round(lowestPrice).toString() + '₺'
 }
 
 const services = [
@@ -85,7 +85,7 @@ export default function PopularProducts() {
     const pricePer1K = product.price.split('/')[0].trim()
     const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
     const totalPrice = (numericPrice * minAmount) / 1000
-    const formattedPrice = totalPrice.toFixed(2).replace('.', ',') + '₺'
+    const formattedPrice = Math.round(totalPrice).toString() + '₺'
 
     addToCart({
       id: `${product.id}-${minAmount}-${Date.now()}`,
@@ -105,7 +105,7 @@ export default function PopularProducts() {
   }
 
   return (
-    <section className="bg-dark-bg py-6 sm:py-8 lg:py-10">
+    <section id="popular-products" className="bg-dark-bg py-6 sm:py-8 lg:py-10">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8">
           <span className="text-primary-green">#Keşfet</span>{' '}

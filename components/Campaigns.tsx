@@ -32,7 +32,7 @@ const campaigns = [
 
 export default function Campaigns() {
   return (
-    <section className="bg-dark-bg py-4 sm:py-6 lg:py-8">
+    <section id="campaigns" className="bg-dark-bg py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <span className="text-lg sm:text-xl">📢</span>

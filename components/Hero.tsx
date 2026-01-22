@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight, Play } from 'lucide-react'
 
 export default function Hero() {
@@ -21,14 +22,14 @@ export default function Hero() {
             />
             <div className="absolute inset-0 bg-gradient-to-br from-primary-green/10 to-transparent"></div>
             
-            <div className="relative z-10 max-w-[90%] sm:max-w-[70%] md:max-w-[60%]">
-              <button className="bg-primary-green text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg mb-3 sm:mb-4 hover:bg-primary-green-dark transition text-xs sm:text-sm font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] min-h-[44px] w-full sm:w-auto">
-                Takipçi Satın Al
-              </button>
+            <div className="relative z-10 max-w-[90%] sm:max-w-[70%] md:max-w-[60%] mt-8 sm:mt-0">
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 A Social Media Kalitesi ile{' '}
                 <span className="text-primary-green drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Etkileşimin Tadını Çıkarın!</span>
               </h1>
+              <Link href="/services/instagram" className="inline-block bg-primary-green text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg mb-2 sm:mb-4 hover:bg-primary-green-dark transition text-[11px] sm:text-sm font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] min-h-[36px] sm:min-h-[44px] w-auto text-center">
+                Takipçi Satın Al
+              </Link>
               <p className="text-gray-300 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
                 Tamamen otomatik sistem ile siparişleriniz 7 Gün 24 Saat hızlı ve
                 sorunsuz bir şekilde tamamlanmaktadır.
@@ -56,10 +57,10 @@ export default function Hero() {
           {/* Right Featured Cards - 2x2 Grid - Mobile Optimized */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {/* Campaign Card 1 */}
-            <div className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation">
+            <Link href="/#popular-products" className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
               <Image
                 src="/images/Ekran Resmi 2026-01-22 01.40.05.png"
-                alt="Campaign"
+                alt="Popüler Hizmetler"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 100px"
@@ -67,19 +68,19 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
               
               <div className="absolute bottom-0 left-0 right-0 z-10 p-2 sm:p-2.5">
-                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">2026 YILINDA FIRSATLAR</h3>
-                <button className="bg-white/95 backdrop-blur-sm text-dark-card px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-semibold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
+                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">POPÜLER HİZMETLER</h3>
+                <div className="bg-white/95 backdrop-blur-sm text-dark-card px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-semibold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
                   Hemen İncele
                   <ArrowRight className="w-2 h-2 sm:w-2.5 sm:h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Campaign Card 2 */}
-            <div className="bg-primary-green rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation">
+            <Link href="/#services" className="bg-primary-green rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
               <Image
                 src="/images/Ekran Resmi 2026-01-22 01.40.47.png"
-                alt="Campaign"
+                alt="Popüler Platformlar"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 100px"
@@ -87,19 +88,19 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-t from-primary-green/85 via-primary-green/50 to-transparent"></div>
               
               <div className="absolute bottom-0 left-0 right-0 z-10 p-2 sm:p-2.5">
-                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">%100 ÜCRETSİZ ARAÇLAR</h3>
-                <button className="bg-white/95 backdrop-blur-sm text-primary-green px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-bold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
+                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">POPÜLER PLATFORMLAR</h3>
+                <div className="bg-white/95 backdrop-blur-sm text-primary-green px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-bold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
                   Hemen İncele
                   <ArrowRight className="w-2 h-2 sm:w-2.5 sm:h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Campaign Card 3 */}
-            <div className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation">
+            <Link href="/#campaigns" className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
               <Image
                 src="/images/Ekran Resmi 2026-01-22 01.41.26.png"
-                alt="Campaign"
+                alt="Özel Kampanyalar"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 100px"
@@ -108,18 +109,18 @@ export default function Hero() {
               
               <div className="absolute bottom-0 left-0 right-0 z-10 p-2 sm:p-2.5">
                 <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">ÖZEL KAMPANYALAR</h3>
-                <button className="bg-white/95 backdrop-blur-sm text-dark-card px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-semibold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
+                <div className="bg-white/95 backdrop-blur-sm text-dark-card px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-semibold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
                   Hemen İncele
                   <ArrowRight className="w-2 h-2 sm:w-2.5 sm:h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Campaign Card 4 */}
-            <div className="bg-primary-green rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation">
+            <Link href="/#package-system" className="bg-primary-green rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
               <Image
                 src="/images/Ekran Resmi 2026-01-22 01.42.13.png"
-                alt="Campaign"
+                alt="Yeni Hizmetler"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 100px"
@@ -127,13 +128,13 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-t from-primary-green/85 via-primary-green/50 to-transparent"></div>
               
               <div className="absolute bottom-0 left-0 right-0 z-10 p-2 sm:p-2.5">
-                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">YENİ ÜRÜNLER</h3>
-                <button className="bg-white/95 backdrop-blur-sm text-primary-green px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-bold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
+                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">YENİ HİZMETLER</h3>
+                <div className="bg-white/95 backdrop-blur-sm text-primary-green px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-bold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
                   Hemen İncele
                   <ArrowRight className="w-2 h-2 sm:w-2.5 sm:h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

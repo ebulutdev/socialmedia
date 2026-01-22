@@ -883,7 +883,7 @@ export const servicesData: Service[] = [
 export function calculatePackagePrice(pricePer1K: string, amount: number): string {
   const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
   const totalPrice = (numericPrice * amount) / 1000
-  return totalPrice.toFixed(2).replace('.', ',') + '₺'
+  return Math.round(totalPrice).toString() + '₺'
 }
 
 // Paket miktarlarını oluştur (min-max arası)

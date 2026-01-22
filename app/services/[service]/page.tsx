@@ -7,6 +7,7 @@ import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones, ArrowLeft, Shopp
 import Image from 'next/image'
 import Header from '@/components/Header'
 import LiveSupport from '@/components/LiveSupport'
+import FloatingCartButton from '@/components/FloatingCartButton'
 import { servicesData, calculatePackagePrice, Package } from '@/lib/servicesData'
 import { ServiceLogo } from '@/components/ServiceLogos'
 import { useCart } from '@/lib/context/CartContext'
@@ -54,7 +55,7 @@ function PackageDetail({
         const totalPrice = (numericPrice * amount) / 1000
         return {
           amount,
-          price: totalPrice.toFixed(2).replace('.', ',') + '₺',
+          price: Math.round(totalPrice).toString() + '₺',
         }
       })
   }
@@ -64,7 +65,7 @@ function PackageDetail({
   const currentSelected = selectedOption || defaultSelected
 
   return (
-    <div className="bg-dark-card rounded-xl p-3 sm:p-4">
+    <div className="bg-dark-card rounded-xl p-3 sm:p-4 w-full overflow-hidden">
       {/* Geri Butonu */}
       <button
         onClick={onBack}
@@ -75,7 +76,7 @@ function PackageDetail({
       </button>
 
       {/* Paket Başlığı */}
-      <h3 className="text-white font-semibold mb-2 sm:mb-3 text-base sm:text-lg leading-tight">{pkg.name}</h3>
+      <h3 className="text-white font-semibold mb-2 sm:mb-3 text-base sm:text-lg leading-tight break-words">{pkg.name}</h3>
       {pkg.avgTime && (
         <div className="flex items-center gap-2 mb-3 sm:mb-4">
           <span className="text-gray-400 text-xs sm:text-sm">⏱️ {pkg.avgTime}</span>
@@ -105,20 +106,20 @@ function PackageDetail({
       </div>
 
       {/* Miktar Seçenekleri Grid - 3 sütun - Mobile Optimized */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
+      <div className="grid grid-cols-3 gap-2 sm:gap-2.5 w-full max-w-full">
         {packageOptions.slice(0, 15).map((option) => {
           const isSelected = currentSelected === option.amount.toString()
           return (
             <button
               key={option.amount}
               onClick={() => setSelectedOption(option.amount.toString())}
-              className={`p-2.5 sm:p-3 rounded-lg border-2 transition text-center touch-manipulation min-h-[70px] sm:min-h-[80px] ${
+              className={`p-2.5 sm:p-3 rounded-lg border-2 transition text-center touch-manipulation min-h-[70px] sm:min-h-[80px] w-full ${
                 isSelected
                   ? 'border-primary-green bg-primary-green/10'
                   : 'border-dark-card-light bg-dark-bg active:border-primary-green/50'
               }`}
             >
-              <p className="text-white font-semibold text-xs sm:text-sm mb-1">
+              <p className="text-white font-semibold text-xs sm:text-sm mb-1 break-words">
                 {option.amount.toLocaleString('tr-TR')}
               </p>
               <div
@@ -126,7 +127,7 @@ function PackageDetail({
                   isSelected ? 'bg-primary-green' : 'bg-dark-card-light'
                 }`}
               >
-                <p className="text-white font-bold text-[10px] sm:text-xs">{option.price}</p>
+                <p className="text-white font-bold text-[10px] sm:text-xs break-words">{option.price}</p>
               </div>
               {isSelected && (
                 <div className="flex justify-center mt-1">
@@ -170,10 +171,10 @@ function PackageDetail({
               )
             }
           }}
-          className="w-full mt-3 sm:mt-4 bg-gradient-to-r from-primary-green to-primary-green-dark text-white py-3 sm:py-3.5 px-4 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 min-h-[44px] touch-manipulation"
+          className="w-full mt-3 sm:mt-4 bg-gradient-to-r from-primary-green to-primary-green-dark text-white py-3 sm:py-3.5 px-4 rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all shadow-lg shadow-primary-green/20 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 min-h-[44px] touch-manipulation max-w-full"
         >
-          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-          Sepete Ekle
+          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+          <span className="truncate">Sepete Ekle</span>
         </button>
       )}
     </div>
@@ -347,8 +348,9 @@ export default function ServicePage() {
     <div className="min-h-screen bg-dark-bg">
       <Header />
       <LiveSupport />
+      <FloatingCartButton />
       
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4 w-full overflow-x-hidden">
         {/* Breadcrumbs - Mobile Optimized */}
         <div className="flex items-center gap-2 mb-3 sm:mb-4 overflow-x-auto scrollbar-hide">
           <Link href="/" className="text-gray-400 hover:text-primary-green text-xs sm:text-sm whitespace-nowrap min-h-[44px] flex items-center">
@@ -358,7 +360,7 @@ export default function ServicePage() {
           <span className="text-white text-xs sm:text-sm whitespace-nowrap">{service.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 w-full">
           {/* Left Column - Service Details (3 columns) - Mobile Full Width */}
           <div className="md:col-span-3 space-y-3">
             {/* Küçük kutu: tek tam boyutlu resim + hizmet logosu overlay */}
@@ -466,23 +468,23 @@ export default function ServicePage() {
           </div>
 
           {/* Right Column - Cart & Features (3 columns) - Mobile Full Width */}
-          <div className="md:col-span-3 space-y-3">
+          <div className="md:col-span-3 space-y-3 w-full overflow-x-hidden">
             {/* Shopping Cart Indicator */}
-            <div className="bg-primary-green rounded-xl p-3 sm:p-4">
-              <div className="flex items-center gap-2">
-                <span className="text-lg sm:text-xl">🛒</span>
-                <span className="text-white font-semibold text-xs sm:text-sm">150 Kişinin Sepetinde</span>
+            <div className="bg-primary-green rounded-xl p-3 sm:p-4 w-full overflow-hidden">
+              <div className="flex items-center gap-2 w-full">
+                <span className="text-lg sm:text-xl flex-shrink-0">🛒</span>
+                <span className="text-white font-semibold text-xs sm:text-sm break-words">150 Kişinin Sepetinde</span>
               </div>
             </div>
 
             {/* Example Users */}
-            <div className="bg-dark-card rounded-xl p-3 sm:p-4">
+            <div className="bg-dark-card rounded-xl p-3 sm:p-4 w-full overflow-hidden">
               <h4 className="text-white font-semibold mb-2 text-xs sm:text-sm">ÖRNEK KULLANICILAR</h4>
-              <div className="flex gap-1.5 sm:gap-2 flex-wrap">
+              <div className="flex gap-1.5 sm:gap-2 flex-wrap overflow-x-auto scrollbar-hide -mx-3 sm:-mx-0 px-3 sm:px-0 w-full">
                 {exampleUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="relative group"
+                    className="relative group flex-shrink-0"
                   >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-primary-green/30 active:border-primary-green sm:hover:border-primary-green transition-all cursor-pointer touch-manipulation">
                       <Image
@@ -508,18 +510,18 @@ export default function ServicePage() {
             </div>
 
             {/* Features */}
-            <div className="space-y-1.5 sm:space-y-2">
+            <div className="space-y-1.5 sm:space-y-2 w-full">
               {features.map((feature, index) => {
                 const Icon = feature.icon
                 return (
                   <div
                     key={index}
-                    className="bg-dark-card rounded-lg p-2.5 sm:p-3 flex items-center gap-2.5 min-h-[60px] sm:min-h-[70px]"
+                    className="bg-dark-card rounded-lg p-2.5 sm:p-3 flex items-center gap-2.5 min-h-[60px] sm:min-h-[70px] w-full"
                   >
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-green" />
                     </div>
-                    <span className="text-white text-xs sm:text-sm">{feature.text}</span>
+                    <span className="text-white text-xs sm:text-sm break-words">{feature.text}</span>
                   </div>
                 )
               })}

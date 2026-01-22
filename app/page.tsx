@@ -7,6 +7,7 @@ import PopularProducts from '@/components/PopularProducts'
 import Testimonials from '@/components/Testimonials'
 import FAQ from '@/components/FAQ'
 import LiveSupport from '@/components/LiveSupport'
+import FloatingCartButton from '@/components/FloatingCartButton'
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
       <Testimonials />
       <FAQ />
       <LiveSupport />
+      <FloatingCartButton />
       <Footer />
     </main>
   )

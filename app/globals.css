@@ -71,6 +71,60 @@ body {
   animation: slide-out 0.3s ease-out;
 }
 
+/* Cart panel animations */
+@keyframes cart-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cart-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cart-overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-cart-panel-up {
+  animation: cart-slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.animate-cart-panel-right {
+  animation: cart-slide-in-right 0.3s ease-out;
+}
+
+.cart-panel-animate {
+  animation: cart-slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@media (min-width: 640px) {
+  .cart-panel-animate {
+    animation: cart-slide-in-right 0.3s ease-out forwards;
+  }
+}
+
+.animate-cart-overlay {
+  animation: cart-overlay-fade 0.2s ease-out;
+}
+
 /* Mobile Optimizations */
 @layer utilities {
   .scrollbar-hide {

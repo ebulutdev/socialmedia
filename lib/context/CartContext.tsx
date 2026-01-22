@@ -17,6 +17,7 @@ interface CartContextType {
   items: CartItem[]
   addToCart: (item: CartItem) => void
   removeFromCart: (id: string) => void
+  updateQuantity: (id: string, newAmount: number) => void
   clearCart: () => void
   getTotalPrice: () => number
   getItemCount: () => number
@@ -59,7 +60,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             ...item,
             amount: newAmount,
             totalPrice: newTotalPrice,
-            price: newTotalPrice.toFixed(2).replace('.', ',') + '₺',
+            price: Math.round(newTotalPrice).toString() + '₺',
           }
         }
         return item

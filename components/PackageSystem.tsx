@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { ShoppingCart, Check, ArrowLeft } from 'lucide-react'
 import { ServiceLogo } from './ServiceLogos'
 import { useCart } from '@/lib/context/CartContext'
@@ -387,22 +388,32 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
         const totalPrice = (numericPrice * amount) / 1000
         return {
           amount,
-          price: totalPrice.toFixed(2).replace('.', ',') + '₺',
+          price: Math.round(totalPrice).toString() + '₺',
         }
       })
   }
 
   return (
-    <section className="bg-dark-bg py-4 sm:py-6 lg:py-8">
+    <section id="package-system" className="bg-dark-bg py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
           {/* Left Sidebar - Service Details - Mobile Hidden or Full Width */}
           <div className="md:col-span-1">
             <div className="bg-primary-green rounded-xl mb-3 relative overflow-hidden h-[150px] sm:h-[180px] md:h-[200px] flex flex-col items-center justify-center p-3 sm:p-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-2 sm:mb-3 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              {currentSelectedService === 'instagram' && (
+                <Image
+                  src="/images/Ekran Resmi 2026-01-22 15.28.42.png"
+                  alt={currentService.name}
+                  fill
+                  className="object-cover opacity-70"
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                />
+              )}
+              <div className="absolute inset-0 bg-primary-green/40"></div>
+              <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-2 sm:mb-3 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <ServiceLogo serviceId={currentSelectedService} className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+              <h3 className="relative z-10 text-base sm:text-lg md:text-xl font-bold text-white text-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
                 {currentService.name.toUpperCase()}
               </h3>
             </div>
@@ -462,7 +473,7 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
                     const pricePer1K = pkg.price.split('/')[0].trim()
                     const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
                     const totalPrice = (numericPrice * minAmount) / 1000
-                    const formattedPrice = totalPrice.toFixed(2).replace('.', ',') + '₺'
+                    const formattedPrice = Math.round(totalPrice).toString() + '₺'
                     
                     return (
                       <div
