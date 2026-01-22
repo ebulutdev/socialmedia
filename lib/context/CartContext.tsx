@@ -48,6 +48,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((item) => item.id !== id))
   }
 
+  const updateQuantity = (id: string, newAmount: number) => {
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          // Calculate new price based on original price per 1K
+          const pricePer1K = item.totalPrice / (item.amount / 1000)
+          const newTotalPrice = (pricePer1K * newAmount) / 1000
+          return {
+            ...item,
+            amount: newAmount,
+            totalPrice: newTotalPrice,
+            price: newTotalPrice.toFixed(2).replace('.', ',') + '₺',
+          }
+        }
+        return item
+      })
+    )
+  }
+
   const clearCart = () => {
     setItems([])
   }
@@ -66,6 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         items,
         addToCart,
         removeFromCart,
+        updateQuantity,
         clearCart,
         getTotalPrice,
         getItemCount,
