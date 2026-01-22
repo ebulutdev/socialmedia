@@ -27,8 +27,8 @@ export default function Hero() {
                 A Social Media Kalitesi ile{' '}
                 <span className="text-primary-green drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Etkileşimin Tadını Çıkarın!</span>
               </h1>
-              <Link href="/services/instagram" className="inline-block bg-primary-green text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg mb-2 sm:mb-4 hover:bg-primary-green-dark transition text-[11px] sm:text-sm font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] min-h-[36px] sm:min-h-[44px] w-auto text-center">
-                Takipçi Satın Al
+              <Link href="/#popular-products" className="inline-block bg-primary-green text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg mb-2 sm:mb-4 hover:bg-primary-green-dark transition text-[11px] sm:text-sm font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] min-h-[36px] sm:min-h-[44px] w-auto text-center">
+                Popüler Hizmetler
               </Link>
               <p className="text-gray-300 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
                 Tamamen otomatik sistem ile siparişleriniz 7 Gün 24 Saat hızlı ve

@@ -34,9 +34,19 @@ export default function Campaigns() {
   return (
     <section id="campaigns" className="bg-dark-bg py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
-        <div className="flex items-center gap-2 mb-4 sm:mb-5">
-          <span className="text-lg sm:text-xl">📢</span>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-primary-green">Devam Eden Kampanyalar</h2>
+        {/* Başlık - Ortalanmış ve Şık Tasarım */}
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary-green/20 to-primary-green/10 rounded-xl flex items-center justify-center border border-primary-green/30">
+              <span className="text-2xl sm:text-3xl">📢</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary-green to-primary-green-light bg-clip-text text-transparent">
+              Devam Eden Kampanyalar
+            </h2>
+          </div>
+          <p className="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto">
+            Özel fırsatlar ve indirimlerle sosyal medya hesaplarınızı büyütün
+          </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {campaigns.map((campaign) => (

@@ -38,7 +38,7 @@ export default function Testimonials() {
     <section className="bg-dark-bg py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-          {/* Left Featured Card - Google İşletme (2 satır kaplar) */}
+          {/* Left Featured Card - Değerlendirmeler (2 satır kaplar) */}
           <div className="md:row-span-2">
             <div className="bg-primary-green rounded-lg relative overflow-hidden h-[250px] sm:h-[300px] md:h-full min-h-[250px] md:min-h-[400px]">
               <Image
@@ -54,11 +54,11 @@ export default function Testimonials() {
                 <div className="bg-dark-card/95 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-primary-green/20">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center">
-                      <span className="text-primary-green font-bold text-base sm:text-lg">G</span>
+                      <span className="text-primary-green font-bold text-base sm:text-lg">⭐</span>
                     </div>
-                    <span className="text-white font-semibold text-xs sm:text-sm">Google İşletme</span>
+                    <span className="text-white font-semibold text-xs sm:text-sm">Değerlendirmeler</span>
                   </div>
-                  <p className="text-gray-300 text-[10px] sm:text-xs">4.079 Yorum, 4.7 Puan</p>
+                  <p className="text-gray-300 text-[10px] sm:text-xs">987 Yorum, 4.7 Puan</p>
                 </div>
               </div>
             </div>

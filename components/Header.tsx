@@ -181,7 +181,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
             {/* Logo - Mobile Optimized */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 hover:opacity-80 transition-opacity cursor-pointer">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-green to-primary-green-dark rounded-xl flex items-center justify-center shadow-lg shadow-primary-green/20 border border-primary-green/30 flex-shrink-0">
                 <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">A</span>
               </div>
@@ -192,7 +192,7 @@ export default function Header() {
                 </span>
                 <span className="text-[8px] sm:text-[10px] text-gray-400 font-medium tracking-wider uppercase hidden sm:block">Sosyal Medya Hizmetleri</span>
               </div>
-            </div>
+            </Link>
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8 relative" ref={searchRef}>
@@ -262,17 +262,28 @@ export default function Header() {
             </div>
 
             {/* Right Icons - Mobile Optimized */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="min-w-[44px] min-h-[44px] flex items-center justify-center">
+            <div className="flex items-center gap-1.5 sm:gap-3">
+              {/* Mobilde Kullanıcı Adı - Küçültülmüş */}
+              {user && (
+                <div className="md:hidden flex items-center gap-1 px-1.5 py-1 bg-dark-card rounded-md border border-dark-card-light">
+                  <div className="w-4.5 h-4.5 rounded-full bg-primary-green/20 flex items-center justify-center flex-shrink-0">
+                    <User className="w-3 h-3 text-primary-green" />
+                  </div>
+                  <span className="text-white font-medium text-[10px] truncate max-w-[70px]">
+                    {user.email?.split('@')[0] || 'Kullanıcı'}
+                  </span>
+                </div>
+              )}
+              <div className="min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center">
                 <CartButton />
               </div>
               <div className="relative" ref={notificationsRef}>
                 <button 
                   onClick={() => setNotificationsOpen(!notificationsOpen)}
-                  className="relative group min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="relative group min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center"
                 >
-                  <Bell className="w-5 sm:w-6 h-5 sm:h-6 text-gray-300 group-hover:text-primary-green transition-colors" />
-                  <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-primary-green text-white text-[10px] sm:text-xs font-semibold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center shadow-lg shadow-primary-green/30">
+                  <Bell className="w-4.5 sm:w-6 h-4.5 sm:h-6 text-gray-300 group-hover:text-primary-green transition-colors" />
+                  <span className="absolute -top-0.5 -right-0.5 sm:-top-2 sm:-right-2 bg-primary-green text-white text-[9px] sm:text-xs font-semibold rounded-full w-3.5 h-3.5 sm:w-5 sm:h-5 flex items-center justify-center shadow-lg shadow-primary-green/30">
                     3
                   </span>
                 </button>
@@ -389,13 +400,13 @@ export default function Header() {
                 </>
               )}
               <button
-                className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="md:hidden min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg hover:bg-dark-card transition-colors"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? (
-                  <X className="w-6 h-6 text-gray-300" />
+                  <X className="w-5 h-5 text-gray-300" />
                 ) : (
-                  <Menu className="w-6 h-6 text-gray-300" />
+                  <Menu className="w-5 h-5 text-gray-300" />
                 )}
               </button>
             </div>
@@ -470,20 +481,20 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu - Kompakt ve Şık Tasarım */}
           {mobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t border-dark-card-light pt-4 space-y-2">
-              <a href="/#campaigns" className="block py-3 px-4 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium min-h-[44px] flex items-center">
+            <div className="md:hidden mt-2.5 pb-2.5 border-t border-dark-card-light pt-2.5 space-y-1">
+              <a href="/#campaigns" className="block py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium text-[13px] min-h-[32px] flex items-center">
                 Özel Kampanyalar
               </a>
-              <a href="/#popular-products" className="block py-3 px-4 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-primary-green font-semibold min-h-[44px] flex items-center">
+              <a href="/#popular-products" className="block py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-primary-green font-semibold text-[13px] min-h-[32px] flex items-center">
                 Popüler Hizmetler
               </a>
               {user ? (
-                <div className="space-y-2">
-                  <div className="py-3 px-4 bg-dark-card rounded-lg">
-                    <p className="text-white font-semibold text-sm truncate mb-1">{user.email}</p>
-                    <p className="text-gray-400 text-xs">Gmail ile giriş yapıldı</p>
+                <div className="space-y-1">
+                  <div className="py-1.5 px-2.5 bg-dark-card rounded-lg">
+                    <p className="text-white font-semibold text-[11px] break-words leading-tight">{user.email}</p>
+                    <p className="text-gray-400 text-[10px] mt-0.5">Gmail ile giriş yapıldı</p>
                   </div>
                   <button
                     onClick={async () => {
@@ -491,9 +502,9 @@ export default function Header() {
                       setMobileMenuOpen(false)
                       router.push('/')
                     }}
-                    className="w-full py-3 px-4 bg-red-500/10 border border-red-500/30 rounded-lg hover:bg-red-500/20 transition-all text-red-400 font-semibold min-h-[44px] flex items-center justify-center gap-2"
+                    className="w-full py-1.5 px-2.5 bg-red-500/10 border border-red-500/30 rounded-lg hover:bg-red-500/20 transition-all text-red-400 font-semibold text-[13px] min-h-[32px] flex items-center justify-center gap-1.5"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-3 h-3" />
                     <span>Çıkış Yap</span>
                   </button>
                 </div>
@@ -501,14 +512,14 @@ export default function Header() {
                 <>
                   <Link
                     href="/auth/login"
-                    className="block w-full py-3 px-4 bg-gradient-to-r from-primary-green to-primary-green-dark rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all text-white font-semibold min-h-[44px] flex items-center justify-center gap-2"
+                    className="block w-full py-1.5 px-2.5 bg-gradient-to-r from-primary-green to-primary-green-dark rounded-lg hover:from-primary-green-dark hover:to-primary-green transition-all text-white font-semibold text-[13px] min-h-[32px] flex items-center justify-center gap-1.5"
                   >
-                    <LogIn className="w-4 h-4" />
+                    <LogIn className="w-3 h-3" />
                     <span>Giriş Yap</span>
                   </Link>
                   <Link
                     href="/auth/signup"
-                    className="block w-full py-3 px-4 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium min-h-[44px] flex items-center justify-center"
+                    className="block w-full py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium text-[13px] min-h-[32px] flex items-center justify-center"
                   >
                     Kayıt Ol
                   </Link>
