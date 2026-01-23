@@ -15,7 +15,7 @@ Bu proje Vercel'de deploy edilmeye hazırdır. Aşağıdaki adımları takip edi
    ```bash
    git init
    git add .
-   git commit -m "Initial commit - SosyalEvin platform"
+   git commit -m "Initial commit - subjective platform"
    git branch -M main
    git remote add origin https://github.com/KULLANICI_ADI/socialmedia.git
    git push -u origin main

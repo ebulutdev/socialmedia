@@ -528,7 +528,7 @@ export const servicesData: Service[] = [
   {
     id: 'tiktok',
     name: 'TikTok',
-    description: 'TikTok hesabınızı büyütün ve videolarınızın etkileşimini artırın. Güvenilir ve hızlı çözümler için sosyalevin.com\'u tercih edin.',
+    description: 'TikTok hesabınızı büyütün ve videolarınızın etkileşimini artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '🎵',
     packages: [
       {

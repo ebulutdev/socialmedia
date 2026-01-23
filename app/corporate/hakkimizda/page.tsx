@@ -13,14 +13,14 @@ export default function HakkimizdaPage() {
 
       {/* Description */}
       <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed">
-        2015 yılında sosyal medyanın yükselişiyle birlikte kurulan A Social Media, bireylerin ve markaların dijital dünyada güçlü ve etkili bir varlık göstermelerini sağlamak amacıyla yola çıktı. Kuruluşumuzdan bu yana sosyal medya hizmetleri alanında yenilikçi adımlar atarak, kullanıcıların hedef kitlelerine daha hızlı ve etkili ulaşmasını kolaylaştırıyoruz. İster bireysel bir içerik üretici olun ister kurumsal bir marka, A Social Media olarak sizin için dijital başarıyı erişilebilir kılıyoruz.
+        2015 yılında sosyal medyanın yükselişiyle birlikte kurulan subjective, bireylerin ve markaların dijital dünyada güçlü ve etkili bir varlık göstermelerini sağlamak amacıyla yola çıktı. Kuruluşumuzdan bu yana sosyal medya hizmetleri alanında yenilikçi adımlar atarak, kullanıcıların hedef kitlelerine daha hızlı ve etkili ulaşmasını kolaylaştırıyoruz. İster bireysel bir içerik üretici olun ister kurumsal bir marka, subjective olarak sizin için dijital başarıyı erişilebilir kılıyoruz.
       </p>
 
       {/* Misyonumuz */}
       <div className="mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Misyonumuz</h2>
         <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-          Sosyal medya sadece bir paylaşım alanı değil, aynı zamanda markalaşmanın ve dijital itibarı yönetmenin merkezidir. Biz de A Social Media olarak bu bilinçle hareket ediyoruz. Misyonumuz; kullanıcılarımıza en güvenli, en hızlı ve en etkili sosyal medya hizmetlerini sunarak, dijital platformlardaki hedeflerine ulaşmalarını sağlamak. Hedef kitleye ulaşmada gerçek ve sürdürülebilir sonuçlar yaratmayı önemsiyoruz.
+          Sosyal medya sadece bir paylaşım alanı değil, aynı zamanda markalaşmanın ve dijital itibarı yönetmenin merkezidir. Biz de subjective olarak bu bilinçle hareket ediyoruz. Misyonumuz; kullanıcılarımıza en güvenli, en hızlı ve en etkili sosyal medya hizmetlerini sunarak, dijital platformlardaki hedeflerine ulaşmalarını sağlamak. Hedef kitleye ulaşmada gerçek ve sürdürülebilir sonuçlar yaratmayı önemsiyoruz.
         </p>
       </div>
 
@@ -28,13 +28,13 @@ export default function HakkimizdaPage() {
       <div className="mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Vizyonumuz</h2>
         <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-          Dijital dünya her geçen gün değişiyor ve gelişiyor. Biz de A Social Media olarak bu değişime ayak uydurmakla kalmıyor, sektörde öncü olmayı hedefliyoruz. Vizyonumuz, yalnızca Türkiye'de değil, global ölçekte de güvenilir ve tercih edilen bir sosyal medya hizmetleri sağlayıcısı olmaktır. Teknolojiyi ve kullanıcı deneyimini merkezimize alarak, her zaman bir adım önde olmayı sürdürüyoruz.
+          Dijital dünya her geçen gün değişiyor ve gelişiyor. Biz de subjective olarak bu değişime ayak uydurmakla kalmıyor, sektörde öncü olmayı hedefliyoruz. Vizyonumuz, yalnızca Türkiye'de değil, global ölçekte de güvenilir ve tercih edilen bir sosyal medya hizmetleri sağlayıcısı olmaktır. Teknolojiyi ve kullanıcı deneyimini merkezimize alarak, her zaman bir adım önde olmayı sürdürüyoruz.
         </p>
       </div>
 
       {/* Neden A Social Media? */}
       <div className="mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Neden A Social Media?</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Neden subjective?</h2>
         <div className="space-y-4">
           <div>
             <h3 className="text-lg sm:text-xl font-semibold text-primary-green mb-2">Geniş Hizmet Yelpazesi</h3>
@@ -71,7 +71,7 @@ export default function HakkimizdaPage() {
 
       {/* Başarılarımız */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">A Social Media Olarak Neler Başardık?</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">subjective Olarak Neler Başardık?</h2>
         <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
           Kurulduğumuz günden bu yana Türkiye başta olmak üzere birçok ülkede bireysel ve kurumsal binlerce müşteriye ulaştık. Kullanıcı odaklı yapımız ve kaliteli hizmet anlayışımız sayesinde, sektörde örnek gösterilen ve tavsiye edilen bir platform haline geldik. Müşterilerimizin başarısı, bizim en büyük referansımızdır.
         </p>

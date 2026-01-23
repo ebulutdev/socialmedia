@@ -11,7 +11,7 @@ export default function IadeKosullariPage() {
                   <div>
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">İade Koşulları</h1>
                     <p className="text-gray-300 text-sm sm:text-base">
-                      A Social Media dijital hizmetlerine ait iade koşullarını öğrenin. Hangi durumlarda iade yapılır, süreç nasıl işler? Tüm detaylar bu sayfada!
+                      subjective dijital hizmetlerine ait iade koşullarını öğrenin. Hangi durumlarda iade yapılır, süreç nasıl işler? Tüm detaylar bu sayfada!
                     </p>
                   </div>
                 </div>
@@ -22,7 +22,7 @@ export default function IadeKosullariPage() {
                   <section>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">1. Genel Bilgilendirme</h2>
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                      A Social Media olarak kullanıcı memnuniyetini ön planda tutmaktayız. Satın alınan dijital hizmetler kapsamında iade işlemleri, ilgili yasal mevzuata ve aşağıda belirtilen koşullara uygun olarak gerçekleştirilmektedir.
+                      subjective olarak kullanıcı memnuniyetini ön planda tutmaktayız. Satın alınan dijital hizmetler kapsamında iade işlemleri, ilgili yasal mevzuata ve aşağıda belirtilen koşullara uygun olarak gerçekleştirilmektedir.
                     </p>
                   </section>
 
@@ -57,7 +57,7 @@ export default function IadeKosullariPage() {
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">4. Bonus Bakiye Kullanımı ve İade Şartları</h2>
                     <div className="space-y-3 sm:space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                       <p>
-                        A Social Media tarafından promosyon, kampanya ya da manuel olarak tanımlanan bonus bakiyeler yalnızca kullanım amaçlıdır; nakit değeri yoktur ve herhangi bir şekilde iade edilemez.
+                        subjective tarafından promosyon, kampanya ya da manuel olarak tanımlanan bonus bakiyeler yalnızca kullanım amaçlıdır; nakit değeri yoktur ve herhangi bir şekilde iade edilemez.
                       </p>
                       <p>
                         Bonus bakiyelerle yapılan işlemler sonrasında, ilgili hesabın iade talebi geçersiz sayılır. Kullanıcı, bonus bakiyesi tanımlandıktan sonra herhangi bir hizmet satın aldıysa ya da sistemi kullandıysa, bonusun etkilediği tüm işlemler iade dışı kalır.
@@ -75,7 +75,7 @@ export default function IadeKosullariPage() {
                   <section>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">5. İade Süreci</h2>
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                      İade talebi için kullanıcı, <strong className="text-primary-green">scmmediasocial@gmail.com</strong> adresine e-posta göndermelidir. Talep en geç 3 iş günü içinde değerlendirilir ve uygun görülmesi halinde, ödeme yapılan yöntemle 5 iş günü içerisinde iade gerçekleştirilir.
+                      İade talebi için kullanıcı, <strong className="text-primary-green">asocialmedianiz@gmail.com</strong> adresine e-posta göndermelidir. Talep en geç 3 iş günü içinde değerlendirilir ve uygun görülmesi halinde, ödeme yapılan yöntemle 5 iş günü içerisinde iade gerçekleştirilir.
                     </p>
                   </section>
 

@@ -5,8 +5,8 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: "A Social Media'ya Neden Güvenmeliyim?",
-    answer: 'A Social Media olarak yıllardır binlerce müşteriye hizmet vermekteyiz. Güvenli ödeme sistemleri, 7/24 destek ve kaliteli hizmet garantisi sunuyoruz.',
+    question: "subjective'a Neden Güvenmeliyim?",
+    answer: 'subjective olarak yıllardır binlerce müşteriye hizmet vermekteyiz. Güvenli ödeme sistemleri, 7/24 destek ve kaliteli hizmet garantisi sunuyoruz.',
   },
   {
     question: 'Ne Kadar Takipçi Satın Almalıyım?',

@@ -24,7 +24,7 @@ export default function Hero() {
             
             <div className="relative z-10 max-w-[90%] sm:max-w-[70%] md:max-w-[60%] mt-8 sm:mt-0">
               <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                A Social Media Kalitesi ile{' '}
+                subjective Kalitesi ile{' '}
                 <span className="text-primary-green drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Etkileşimin Tadını Çıkarın!</span>
               </h1>
               <Link href="/#popular-products" className="inline-block bg-primary-green text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg mb-2 sm:mb-4 hover:bg-primary-green-dark transition text-[11px] sm:text-sm font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] min-h-[36px] sm:min-h-[44px] w-auto text-center">

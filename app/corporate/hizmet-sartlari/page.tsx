@@ -13,7 +13,7 @@ export default function HizmetSartlariPage() {
 
                 {/* Description */}
                 <p className="text-gray-300 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed">
-                  Bu sözleşme, bir tarafta A Social Media ("Firma") ile diğer tarafta web sitesine kayıt olan ve/veya hizmetlerinden faydalanan Kullanıcı arasında geçerlidir.
+                  Bu sözleşme, bir tarafta subjective ("Firma") ile diğer tarafta web sitesine kayıt olan ve/veya hizmetlerinden faydalanan Kullanıcı arasında geçerlidir.
                 </p>
 
                 {/* Sections */}
@@ -23,19 +23,16 @@ export default function HizmetSartlariPage() {
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">1. Taraflar ve Tanımlar</h2>
                     <div className="space-y-3 sm:space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                       <p>
-                        <strong className="text-white">SATICI:</strong> A Social Media
+                        <strong className="text-white">SATICI:</strong> subjective
                       </p>
                       <p>
-                        <strong className="text-white">Ünvanı:</strong> SosyalEvin Dijital Hizmetler LTD
-                      </p>
-                      <p>
-                        <strong className="text-white">E-posta:</strong> scmmediasocial@gmail.com
+                        <strong className="text-white">E-posta:</strong> asocialmedianiz@gmail.com
                       </p>
                       <p className="mt-4">
                         <strong className="text-white">Hizmet:</strong> Firma tarafından sunulan sosyal medya etkileşimi artırmaya yönelik dijital hizmetlerdir.
                       </p>
                       <p>
-                        <strong className="text-white">Platform:</strong> A Social Media'ın hizmet sunduğu web sitesidir.
+                        <strong className="text-white">Platform:</strong> subjective'ın hizmet sunduğu web sitesidir.
                       </p>
                     </div>
                   </section>
@@ -44,7 +41,7 @@ export default function HizmetSartlariPage() {
                   <section>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">2. Sözleşmenin Konusu</h2>
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                      Bu sözleşme, A Social Media tarafından sunulan dijital hizmetlerin kullanım koşullarını ve tarafların hak ve yükümlülüklerini belirler. Platformu kullanan her kullanıcı bu şartları kabul etmiş sayılır.
+                      Bu sözleşme, subjective tarafından sunulan dijital hizmetlerin kullanım koşullarını ve tarafların hak ve yükümlülüklerini belirler. Platformu kullanan her kullanıcı bu şartları kabul etmiş sayılır.
                     </p>
                   </section>
 
@@ -71,7 +68,7 @@ export default function HizmetSartlariPage() {
                   <section>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">4. Yasaklı Hizmetler</h2>
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4">
-                      A Social Media platformu aşağıdaki içerik veya hizmetleri hiçbir koşulda desteklemez ve bu tür taleplere yönelik hiçbir işlem yapılmaz:
+                      subjective platformu aşağıdaki içerik veya hizmetleri hiçbir koşulda desteklemez ve bu tür taleplere yönelik hiçbir işlem yapılmaz:
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm sm:text-base ml-4">
                       <li>Kumar, bahis, şans oyunları</li>
@@ -104,23 +101,23 @@ export default function HizmetSartlariPage() {
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">6. Ödeme ve Faturalandırma</h2>
                     <div className="space-y-3 sm:space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                       <p>
-                        <strong className="text-white">6.1. Güvenli Ödeme:</strong> Kullanıcı tarafından yapılan tüm ödemeler, A Social Media'ın anlaşmalı olduğu yerli ve/veya uluslararası ödeme hizmeti sağlayıcıları üzerinden, SSL ve benzeri güvenlik protokolleri kullanılarak gerçekleştirilir. Kullanıcı, ödeme altyapısının üçüncü taraf hizmet sağlayıcılar tarafından yürütüldüğünü ve bu sağlayıcıların kendi kullanım koşullarına tabi olduğunu kabul eder.
+                        <strong className="text-white">6.1. Güvenli Ödeme:</strong> Kullanıcı tarafından yapılan tüm ödemeler, subjective'ın anlaşmalı olduğu yerli ve/veya uluslararası ödeme hizmeti sağlayıcıları üzerinden, SSL ve benzeri güvenlik protokolleri kullanılarak gerçekleştirilir. Kullanıcı, ödeme altyapısının üçüncü taraf hizmet sağlayıcılar tarafından yürütüldüğünü ve bu sağlayıcıların kendi kullanım koşullarına tabi olduğunu kabul eder.
                       </p>
                       <p>
                         <strong className="text-white">6.2. Faturalandırma:</strong> Kullanıcı tarafından satın alınan hizmetler için, Kullanıcı'nın sipariş sırasında beyan ettiği fatura bilgileri esas alınarak dijital fatura düzenlenir ve Kullanıcı'ya elektronik ortamda (e-posta veya kullanıcı paneli üzerinden) iletilir. Kullanıcı, fatura bilgilerinin doğruluğundan münhasıran sorumludur; hatalı bilgi nedeniyle doğabilecek her türlü hukuki ve mali sorumluluk Kullanıcı'ya aittir.
                       </p>
                       <p>
-                        <strong className="text-white">6.3. Hizmet İhracatı ve KDV Uygulaması:</strong> A Social Media, Kuzey Kıbrıs Türk Cumhuriyeti Serbest Liman Bölgesi'nde mukim Sosyal Evin Dijital Hizmetler LTD unvanlı şirket üzerinden sosyal medya etkileşimi artırmaya yönelik dijital hizmet sunmaktadır. Bu kapsamda sağlanan hizmetler, niteliği gereği "hizmet ihracatı" mahiyetinde olup, yürürlükteki KKTC ve Türkiye mevzuatına göre KDV'ye tabi değildir.
+                        <strong className="text-white">6.3. Hizmet İhracatı ve KDV Uygulaması:</strong> subjective, Kuzey Kıbrıs Türk Cumhuriyeti Serbest Liman Bölgesi'nde mukim Sosyal Evin Dijital Hizmetler LTD unvanlı şirket üzerinden sosyal medya etkileşimi artırmaya yönelik dijital hizmet sunmaktadır. Bu kapsamda sağlanan hizmetler, niteliği gereği "hizmet ihracatı" mahiyetinde olup, yürürlükteki KKTC ve Türkiye mevzuatına göre KDV'ye tabi değildir.
                       </p>
                       <p>
                         Bu nedenle düzenlenen faturalarda, işlemin hizmet ihracatı kapsamında olduğu ve KDV oranının %0 (sıfır) olduğu açıkça belirtilir; faturada "%0 KDV / VAT – Hizmet İhracatı – Reverse Charge" veya benzeri açıklamalara yer verilebilir.
                       </p>
                       <p>
-                        <strong className="text-white">6.4. Alıcının Vergi Sorumluluğu (Reverse Charge):</strong> Kullanıcı, A Social Media'dan satın aldığı hizmetlerin kendi ülkesindeki vergi mevzuatına göre "hizmet ithalatı" veya benzeri bir vergisel kategoriye tabi olabileceğini kabul eder. Bu kapsamda;
+                        <strong className="text-white">6.4. Alıcının Vergi Sorumluluğu (Reverse Charge):</strong> Kullanıcı, subjective'dan satın aldığı hizmetlerin kendi ülkesindeki vergi mevzuatına göre "hizmet ithalatı" veya benzeri bir vergisel kategoriye tabi olabileceğini kabul eder. Bu kapsamda;
                       </p>
                       <ul className="list-disc list-inside space-y-2 ml-4">
                         <li>Kullanıcı, kendi ülkesindeki KDV, VAT, GST, Sales Tax ve benzeri tüm dolaylı vergilere ilişkin doğabilecek beyan, ödeme ve bildirim yükümlülüklerini Reverse Charge (Tersine Vergi Yükümlülüğü) esasına göre bizzat yerine getirmekle yükümlüdür.</li>
-                        <li>A Social Media, Kullanıcı'nın bulunduğu ülkedeki vergi idaresine karşı herhangi bir KDV/VAT sorumluluğu üstlenmez ve Kullanıcı'nın yerel vergi mevzuatından kaynaklanan yükümlülüklerinden dolayı hiçbir şekilde sorumlu tutulamaz.</li>
+                        <li>subjective, Kullanıcı'nın bulunduğu ülkedeki vergi idaresine karşı herhangi bir KDV/VAT sorumluluğu üstlenmez ve Kullanıcı'nın yerel vergi mevzuatından kaynaklanan yükümlülüklerinden dolayı hiçbir şekilde sorumlu tutulamaz.</li>
                         <li>Kullanıcı, Platform'u kullanmakla, bu vergisel durumu bildiğini, anladığını ve kabul ettiğini peşinen beyan eder.</li>
                       </ul>
                     </div>

@@ -1,4 +1,4 @@
-# SosyalEvin - Sosyal Medya Hizmetleri Platformu
+# subjective - Sosyal Medya Hizmetleri Platformu
 
 Modern, responsive sosyal medya hizmetleri platformu. Instagram, Facebook, YouTube, TikTok ve X (Twitter) için paket sistemi ile hizmet sunar.
 

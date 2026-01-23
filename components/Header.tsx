@@ -164,7 +164,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <span className="text-gray-400 flex-shrink-0">📧</span>
-            <span className="text-gray-300 hover:text-primary-green transition-colors truncate text-[10px] sm:text-sm">scmmediasocial@gmail.com</span>
+            <span className="text-gray-300 hover:text-primary-green transition-colors truncate text-[10px] sm:text-sm">asocialmedianiz@gmail.com</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 sm:gap-5">
             <a href="/#campaigns" className="hover:text-primary-green transition-colors font-medium whitespace-nowrap">Özel Kampanyalar</a>
@@ -183,12 +183,11 @@ export default function Header() {
             {/* Logo - Mobile Optimized */}
             <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 hover:opacity-80 transition-opacity cursor-pointer">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-green to-primary-green-dark rounded-xl flex items-center justify-center shadow-lg shadow-primary-green/20 border border-primary-green/30 flex-shrink-0">
-                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">A</span>
+                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">s</span>
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-tight leading-tight truncate">
-                  <span className="text-gray-300">A Social</span>
-                  <span className="text-primary-green"> Media</span>
+                  <span className="text-primary-green">subjective</span>
                 </span>
                 <span className="text-[8px] sm:text-[10px] text-gray-400 font-medium tracking-wider uppercase hidden sm:block">Sosyal Medya Hizmetleri</span>
               </div>

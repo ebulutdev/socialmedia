@@ -18,10 +18,7 @@ export default function MesafeliSatisPage() {
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">1. Taraflar</h2>
                     <div className="space-y-3 sm:space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                       <p>
-                        <strong className="text-white">SATICI:</strong> A Social Media
-                      </p>
-                      <p>
-                        <strong className="text-white">Ünvanı:</strong> SosyalEvin Dijital Hizmetler LTD
+                        <strong className="text-white">SATICI:</strong> subjective
                       </p>
                       <p>
                         <strong className="text-white">Vergi Dairesi:</strong> Gazimağusa
@@ -33,10 +30,10 @@ export default function MesafeliSatisPage() {
                         <strong className="text-white">SLBT No:</strong> 1078
                       </p>
                       <p>
-                        <strong className="text-white">Telefon:</strong> 0552 117 25 05
+                        <strong className="text-white">Telefon:</strong> <a href="https://wa.me/905339651925" className="text-primary-green hover:text-primary-green-light transition">0533 965 19 25</a>
                       </p>
                       <p>
-                        <strong className="text-white">E-posta:</strong> scmmediasocial@gmail.com
+                        <strong className="text-white">E-posta:</strong> asocialmedianiz@gmail.com
                       </p>
                       <p className="mt-4">
                         <strong className="text-white">ALICI:</strong> Web sitesinde hizmet alan kullanıcı (bundan sonra "Müşteri" olarak anılacaktır).

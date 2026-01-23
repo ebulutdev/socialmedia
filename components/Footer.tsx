@@ -12,12 +12,11 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2 sm:gap-3 mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-green to-primary-green-dark rounded-xl flex items-center justify-center shadow-lg shadow-primary-green/20 border border-primary-green/30">
-                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">A</span>
+                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">s</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-tight leading-tight">
-                  <span className="text-gray-300">A Social</span>
-                  <span className="text-primary-green"> Media</span>
+                  <span className="text-primary-green">subjective</span>
                 </span>
                 <span className="text-[10px] sm:text-xs text-gray-400 font-medium tracking-wider uppercase">
                   Sosyal Medya Hizmetleri
@@ -29,8 +28,8 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm">
               <span>📧</span>
-              <a href="mailto:scmmediasocial@gmail.com" className="hover:text-primary-green transition-colors">
-                scmmediasocial@gmail.com
+              <a href="mailto:asocialmedianiz@gmail.com" className="hover:text-primary-green transition-colors">
+                asocialmedianiz@gmail.com
               </a>
             </div>
           </div>
@@ -158,8 +157,8 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs sm:text-sm mb-1">E-posta</p>
-                  <a href="mailto:scmmediasocial@gmail.com" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
-                    scmmediasocial@gmail.com
+                  <a href="mailto:asocialmedianiz@gmail.com" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
+                    asocialmedianiz@gmail.com
                   </a>
                 </div>
               </li>
@@ -169,8 +168,8 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs sm:text-sm mb-1">Telefon</p>
-                  <a href="tel:+905521172505" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
-                    0552 117 25 05
+                  <a href="https://wa.me/905339651925" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
+                    0533 965 19 25
                   </a>
                 </div>
               </li>
@@ -184,10 +183,7 @@ export default function Footer() {
             {/* Copyright */}
             <div className="text-center sm:text-left">
               <p className="text-gray-400 text-xs sm:text-sm">
-                © Copyright 2017 - {new Date().getFullYear()} A Social Media. Tüm Hakları Saklıdır.
-              </p>
-              <p className="text-gray-500 text-[10px] sm:text-xs mt-1">
-                SosyalEvin Dijital Hizmetler LTD
+                © Copyright 2017 - {new Date().getFullYear()} subjective. Tüm Hakları Saklıdır.
               </p>
             </div>
 

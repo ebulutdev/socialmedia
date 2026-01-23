@@ -22,8 +22,8 @@ export default function IletisimPage() {
                       </div>
                       <div>
                         <h3 className="text-white font-semibold text-base sm:text-lg mb-1">E-posta</h3>
-                        <a href="mailto:scmmediasocial@gmail.com" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
-                          scmmediasocial@gmail.com
+                        <a href="mailto:asocialmedianiz@gmail.com" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
+                          asocialmedianiz@gmail.com
                         </a>
                       </div>
                     </div>
@@ -36,8 +36,8 @@ export default function IletisimPage() {
                       </div>
                       <div>
                         <h3 className="text-white font-semibold text-base sm:text-lg mb-1">Telefon</h3>
-                        <a href="tel:+905521172505" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
-                          0552 117 25 05
+                        <a href="https://wa.me/905339651925" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
+                          0533 965 19 25
                         </a>
                       </div>
                     </div>
@@ -47,7 +47,6 @@ export default function IletisimPage() {
                     <div>
                       <h3 className="text-white font-semibold text-base sm:text-lg mb-3">Şirket Bilgileri</h3>
                       <div className="space-y-2 text-gray-300 text-sm sm:text-base">
-                        <p><strong className="text-white">Ünvan:</strong> SosyalEvin Dijital Hizmetler LTD</p>
                         <p><strong className="text-white">Vergi Dairesi:</strong> Gazimağusa</p>
                         <p><strong className="text-white">Vergi Numarası:</strong> 160018143</p>
                         <p><strong className="text-white">SLBT No:</strong> 1078</p>
