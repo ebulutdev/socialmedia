@@ -43,16 +43,6 @@ export default function IletisimPage() {
                     </div>
                   </div>
 
-                  <div className="bg-dark-card-light rounded-lg p-4 sm:p-5">
-                    <div>
-                      <h3 className="text-white font-semibold text-base sm:text-lg mb-3">Şirket Bilgileri</h3>
-                      <div className="space-y-2 text-gray-300 text-sm sm:text-base">
-                        <p><strong className="text-white">Vergi Dairesi:</strong> Gazimağusa</p>
-                        <p><strong className="text-white">Vergi Numarası:</strong> 160018143</p>
-                        <p><strong className="text-white">SLBT No:</strong> 1078</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
     </div>
   )

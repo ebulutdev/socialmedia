@@ -21,15 +21,6 @@ export default function MesafeliSatisPage() {
                         <strong className="text-white">SATICI:</strong> subjective
                       </p>
                       <p>
-                        <strong className="text-white">Vergi Dairesi:</strong> Gazimağusa
-                      </p>
-                      <p>
-                        <strong className="text-white">Vergi Numarası:</strong> 160018143
-                      </p>
-                      <p>
-                        <strong className="text-white">SLBT No:</strong> 1078
-                      </p>
-                      <p>
                         <strong className="text-white">Telefon:</strong> <a href="https://wa.me/905339651925" className="text-primary-green hover:text-primary-green-light transition">0533 965 19 25</a>
                       </p>
                       <p>
