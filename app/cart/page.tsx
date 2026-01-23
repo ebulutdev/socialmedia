@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
 import { useCart, type CartItem } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
+import { useToast } from '@/lib/context/ToastContext'
 import { smmturkClient } from '@/lib/api/smmturk-client'
 import { createMultipleOrders } from '@/lib/api/orders'
 import Header from '@/components/Header'
@@ -20,19 +21,30 @@ function CartItemCard({
   item,
   onRemove,
   onQuantityChange,
+  isProcessing,
+  processingIndex,
+  itemIndex,
 }: {
   item: CartItem
   onRemove: () => void
   onQuantityChange: (delta: number) => void
+  isProcessing?: boolean
+  processingIndex?: number
+  itemIndex?: number
 }) {
   const step = item.amount >= STEP_LARGE ? STEP_LARGE : STEP_SMALL
   const canDecrease = item.amount > MIN_AMOUNT
+  const isCurrentlyProcessing = isProcessing && processingIndex === itemIndex
 
   return (
-    <div className="bg-dark-card rounded-2xl p-4 border border-dark-card-light/80 hover:border-primary-green/30 transition-colors w-full max-w-full overflow-hidden">
+    <div className={`bg-dark-card rounded-2xl p-4 border border-dark-card-light/80 hover:border-primary-green/30 transition-colors w-full max-w-full overflow-hidden ${isCurrentlyProcessing ? 'ring-2 ring-primary-green/50' : ''}`}>
       <div className="flex gap-3 w-full">
         <div className="w-11 h-11 rounded-xl bg-primary-green/15 flex items-center justify-center flex-shrink-0 border border-primary-green/20">
-          <Package className="w-5 h-5 text-primary-green" />
+          {isCurrentlyProcessing ? (
+            <Loader2 className="w-5 h-5 text-primary-green animate-spin" />
+          ) : (
+            <Package className="w-5 h-5 text-primary-green" />
+          )}
         </div>
         <div className="flex-1 min-w-0 max-w-full overflow-hidden">
           <h3 className="text-white font-semibold text-sm leading-tight line-clamp-2 mb-0.5 break-words">
@@ -52,12 +64,19 @@ function CartItemCard({
               </a>
             </div>
           )}
+          {isCurrentlyProcessing && (
+            <div className="mb-2">
+              <p className="text-primary-green text-xs font-medium animate-pulse">
+                Sipariş oluşturuluyor...
+              </p>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-2 flex-wrap w-full">
             <div className="flex items-center gap-1.5 bg-dark-bg/60 rounded-xl p-1.5 border border-dark-card-light/50">
               <button
                 type="button"
                 onClick={() => canDecrease && onQuantityChange(-1)}
-                disabled={!canDecrease}
+                disabled={!canDecrease || isProcessing}
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-primary-green/20 disabled:opacity-40 disabled:pointer-events-none transition-colors touch-manipulation active:scale-95"
                 aria-label="Azalt"
               >
@@ -69,7 +88,8 @@ function CartItemCard({
               <button
                 type="button"
                 onClick={() => onQuantityChange(1)}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-primary-green/20 transition-colors touch-manipulation active:scale-95"
+                disabled={isProcessing}
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-primary-green/20 disabled:opacity-40 disabled:pointer-events-none transition-colors touch-manipulation active:scale-95"
                 aria-label="Artır"
               >
                 <Plus className="w-4 h-4" />
@@ -82,7 +102,8 @@ function CartItemCard({
               <button
                 type="button"
                 onClick={onRemove}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors touch-manipulation active:scale-95"
+                disabled={isProcessing}
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:pointer-events-none transition-colors touch-manipulation active:scale-95"
                 aria-label="Kaldır"
               >
                 <Trash2 className="w-4 h-4" />
@@ -124,11 +145,13 @@ export default function CartPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { items, removeFromCart, clearCart, getTotalPrice, getItemCount, updateQuantity } = useCart()
+  const { showToast } = useToast()
   const cartItems: CartItem[] = items
   
   const [apiKey, setApiKey] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
-  const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string }>>([])
+  const [processingIndex, setProcessingIndex] = useState<number | null>(null)
+  const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string; packageName?: string }>>([])
 
   // Load API key from localStorage or environment variable
   useEffect(() => {
@@ -178,7 +201,7 @@ export default function CartPage() {
     // API key kontrolü
     const currentApiKey = apiKey.trim()
     if (!currentApiKey) {
-      alert('API anahtarı bulunamadı. Lütfen API anahtarınızı kontrol edin.')
+      showToast('API anahtarı bulunamadı. Lütfen API anahtarınızı kontrol edin.', 'error')
       return
     }
 
@@ -191,7 +214,7 @@ export default function CartPage() {
     // Her ürünün URL'si olup olmadığını kontrol et
     const itemsWithoutUrl = cartItems.filter(item => !item.url || !item.url.trim())
     if (itemsWithoutUrl.length > 0) {
-      alert('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.')
+      showToast('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.', 'error')
       return
     }
 
@@ -200,12 +223,13 @@ export default function CartPage() {
       try {
         new URL(item.url)
       } catch {
-        alert(`${item.packageName} için geçersiz URL: ${item.url}`)
+        showToast(`${item.packageName} için geçersiz URL: ${item.url}`, 'error')
         return
       }
     }
 
     setIsProcessing(true)
+    setProcessingIndex(null)
     setOrderResults([])
 
     try {
@@ -214,10 +238,24 @@ export default function CartPage() {
         localStorage.setItem('smmturk_api_key', currentApiKey)
       }
 
-      const results: Array<{ orderId: number; success: boolean; error?: string }> = []
+      const results: Array<{ orderId: number; success: boolean; error?: string; packageName?: string }> = []
+      const ordersToSave: Array<{
+        service_id: string
+        service_name: string
+        package_id: string
+        package_name: string
+        quantity: number
+        link: string
+        price: number
+        total_price: number
+        smmturk_order_id?: number
+      }> = []
 
       // Create orders for each cart item with their own URLs
-      for (const item of items) {
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i]
+        setProcessingIndex(i)
+        
         try {
           // packageId SMMTurk servis ID'sini içeriyor (örn: '9403')
           const serviceId = parseInt(item.packageId)
@@ -229,8 +267,10 @@ export default function CartPage() {
             results.push({
               orderId: 0,
               success: false,
-              error: `${item.packageName}: Geçersiz servis ID (packageId: ${item.packageId})`,
+              error: `Geçersiz servis ID (packageId: ${item.packageId})`,
+              packageName: item.packageName,
             })
+            setOrderResults([...results])
             continue
           }
 
@@ -257,7 +297,24 @@ export default function CartPage() {
           results.push({
             orderId: response.order,
             success: true,
+            packageName: item.packageName,
           })
+
+          // Başarılı siparişleri veritabanına kaydetmek için hazırla
+          ordersToSave.push({
+            service_id: item.serviceId,
+            service_name: item.serviceName,
+            package_id: item.packageId,
+            package_name: item.packageName,
+            quantity: item.amount,
+            link: item.url,
+            price: item.totalPrice / item.amount, // Birim fiyat
+            total_price: item.totalPrice,
+            smmturk_order_id: response.order,
+          })
+
+          // Her başarılı siparişte sonuçları güncelle
+          setOrderResults([...results])
         } catch (error) {
           console.error('❌ Sipariş hatası:', {
             packageName: item.packageName,
@@ -267,28 +324,52 @@ export default function CartPage() {
             orderId: 0,
             success: false,
             error: error instanceof Error ? error.message : 'Bilinmeyen hata',
+            packageName: item.packageName,
           })
+          setOrderResults([...results])
         }
       }
 
-      setOrderResults(results)
+      setProcessingIndex(null)
+
+      // Başarılı siparişleri veritabanına kaydet
+      if (ordersToSave.length > 0) {
+        try {
+          console.log('💾 Veritabanına kaydediliyor:', ordersToSave.length, 'sipariş')
+          await createMultipleOrders(ordersToSave)
+          console.log('✅ Siparişler veritabanına kaydedildi')
+        } catch (dbError) {
+          console.error('❌ Veritabanı kayıt hatası:', dbError)
+          showToast('Siparişler oluşturuldu ancak veritabanına kaydedilirken bir hata oluştu.', 'error')
+        }
+      }
 
       // If all orders succeeded, clear cart
       const allSuccess = results.every((r) => r.success)
       if (allSuccess) {
+        showToast(`Tüm siparişler başarıyla oluşturuldu! (${results.length} sipariş)`, 'success')
         setTimeout(() => {
           clearCart()
           setOrderResults([])
-          alert('Tüm siparişler başarıyla oluşturuldu!')
+          router.push('/orders')
         }, 2000)
       } else {
         const successCount = results.filter((r) => r.success).length
-        alert(`${successCount}/${results.length} sipariş başarıyla oluşturuldu.`)
+        const failedCount = results.length - successCount
+        if (successCount > 0) {
+          showToast(`${successCount} sipariş başarılı, ${failedCount} sipariş başarısız oldu.`, 'info')
+          setTimeout(() => {
+            router.push('/orders')
+          }, 3000)
+        } else {
+          showToast('Tüm siparişler başarısız oldu. Lütfen tekrar deneyin.', 'error')
+        }
       }
     } catch (error) {
-      alert('Sipariş oluşturulurken bir hata oluştu: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'))
+      showToast('Sipariş oluşturulurken bir hata oluştu: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'), 'error')
     } finally {
       setIsProcessing(false)
+      setProcessingIndex(null)
     }
   }
 
@@ -350,12 +431,15 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Items List */}
             <div className="lg:col-span-2 space-y-4">
-              {cartItems.map((item) => (
+              {cartItems.map((item, index) => (
                 <CartItemCard
                   key={item.id}
                   item={item}
                   onRemove={() => removeFromCart(item.id)}
                   onQuantityChange={(delta) => handleQuantityChange(item.id, delta, item.amount)}
+                  isProcessing={isProcessing}
+                  processingIndex={processingIndex ?? undefined}
+                  itemIndex={index}
                 />
               ))}
             </div>
@@ -386,33 +470,63 @@ export default function CartPage() {
                   </div>
                 </div>
 
+                {/* Progress Indicator */}
+                {isProcessing && (
+                  <div className="mb-4 pb-4 border-b border-dark-card-light">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-white font-semibold text-sm">İlerleme</p>
+                      <p className="text-primary-green text-sm font-medium">
+                        {orderResults.length} / {cartItems.length}
+                      </p>
+                    </div>
+                    <div className="w-full bg-dark-bg rounded-full h-2">
+                      <div
+                        className="bg-primary-green h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${(orderResults.length / cartItems.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Order Results */}
                 {orderResults.length > 0 && (
-                  <div className="mb-4 pb-4 border-b border-dark-card-light space-y-2">
+                  <div className="mb-4 pb-4 border-b border-dark-card-light space-y-2 max-h-[300px] overflow-y-auto">
                     <h3 className="text-white font-semibold text-sm mb-2">Sipariş Sonuçları</h3>
                     {orderResults.map((result, index) => (
                       <div
                         key={index}
-                        className={`flex items-center gap-2 p-2 rounded-lg ${
+                        className={`flex items-start gap-2 p-2 rounded-lg ${
                           result.success
                             ? 'bg-primary-green/10 border border-primary-green/30'
                             : 'bg-red-500/10 border border-red-500/30'
                         }`}
                       >
                         {result.success ? (
-                          <CheckCircle2 className="w-4 h-4 text-primary-green flex-shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-primary-green flex-shrink-0 mt-0.5" />
                         ) : (
-                          <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                          <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                         )}
                         <div className="flex-1 min-w-0">
                           {result.success ? (
-                            <p className="text-xs text-primary-green">
-                              Sipariş #{result.orderId} oluşturuldu
-                            </p>
+                            <div>
+                              <p className="text-xs text-primary-green font-medium">
+                                Sipariş #{result.orderId}
+                              </p>
+                              {result.packageName && (
+                                <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
+                                  {result.packageName}
+                                </p>
+                              )}
+                            </div>
                           ) : (
-                            <p className="text-xs text-red-400">
-                              {result.error || 'Hata oluştu'}
-                            </p>
+                            <div>
+                              <p className="text-xs text-red-400 font-medium">
+                                {result.packageName || 'Sipariş'}
+                              </p>
+                              <p className="text-xs text-red-300 mt-0.5">
+                                {result.error || 'Hata oluştu'}
+                              </p>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -427,9 +541,11 @@ export default function CartPage() {
                       if (typeof window !== 'undefined' && window.confirm('Sepeti temizlemek istediğinize emin misiniz?')) {
                         clearCart()
                         setOrderResults([])
+                        showToast('Sepet temizlendi', 'success')
                       }
                     }}
-                    className="w-full py-3.5 px-4 rounded-xl bg-dark-card-light text-gray-300 font-semibold text-sm hover:bg-dark-card-light/80 hover:text-white transition-all touch-manipulation active:scale-[0.98]"
+                    disabled={isProcessing}
+                    className="w-full py-3.5 px-4 rounded-xl bg-dark-card-light text-gray-300 font-semibold text-sm hover:bg-dark-card-light/80 hover:text-white transition-all touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Sepeti Temizle
                   </button>

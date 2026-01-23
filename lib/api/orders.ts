@@ -32,9 +32,16 @@ export interface CreateOrderData {
 export async function createOrder(orderData: CreateOrderData): Promise<Order> {
   const supabase = createClient()
   
+  // Get current user
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    throw new Error('Kullanıcı oturumu bulunamadı. Lütfen giriş yapın.')
+  }
+  
   const { data, error } = await supabase
     .from('orders')
     .insert({
+      user_id: user.id,
       service_id: orderData.service_id,
       service_name: orderData.service_name,
       package_id: orderData.package_id,
@@ -56,7 +63,14 @@ export async function createOrder(orderData: CreateOrderData): Promise<Order> {
 export async function createMultipleOrders(ordersData: CreateOrderData[]): Promise<Order[]> {
   const supabase = createClient()
   
+  // Get current user
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    throw new Error('Kullanıcı oturumu bulunamadı. Lütfen giriş yapın.')
+  }
+  
   const orders = ordersData.map(order => ({
+    user_id: user.id,
     service_id: order.service_id,
     service_name: order.service_name,
     package_id: order.package_id,
