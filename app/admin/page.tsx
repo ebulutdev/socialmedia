@@ -45,16 +45,20 @@ export default function AdminPage() {
       setLoading(true)
       setError(null)
       const response = await fetch('/api/admin/orders')
+      const data = await response.json()
       
       if (!response.ok) {
         if (response.status === 403) {
-          setError('Bu sayfaya erişim yetkiniz yok')
+          const debugInfo = data.debug
+          const errorMsg = debugInfo 
+            ? `Bu sayfaya erişim yetkiniz yok. Giriş yaptığınız email: ${user?.email || 'Bilinmiyor'}`
+            : 'Bu sayfaya erişim yetkiniz yok'
+          setError(errorMsg)
           return
         }
-        throw new Error('Siparişler yüklenemedi')
+        throw new Error(data.error || 'Siparişler yüklenemedi')
       }
 
-      const data = await response.json()
       setOrders(data.orders || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu')
@@ -104,10 +108,17 @@ export default function AdminPage() {
       <div className="min-h-screen bg-dark-bg">
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 text-center">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6">
             <Shield className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h2 className="text-white font-bold text-lg mb-2">Erişim Reddedildi</h2>
-            <p className="text-gray-400 text-sm">{error}</p>
+            <h2 className="text-white font-bold text-lg mb-2 text-center">Erişim Reddedildi</h2>
+            <p className="text-gray-400 text-sm mb-4 text-center">{error}</p>
+            {user?.email && (
+              <div className="bg-dark-card rounded-lg p-4 mt-4">
+                <p className="text-gray-400 text-xs mb-2">Giriş yaptığınız email:</p>
+                <p className="text-white text-sm font-mono">{user.email}</p>
+                <p className="text-gray-500 text-xs mt-3">Not: Admin email'i .env.local dosyasında ADMIN_EMAILS değişkeninde tanımlı olmalıdır.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

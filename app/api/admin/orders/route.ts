@@ -27,9 +27,32 @@ export async function GET(request: NextRequest) {
     
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
-    if (authError || !user || !isAdminEmail(user.email)) {
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'Yetkisiz erişim' },
+        { error: 'Giriş yapmanız gerekiyor' },
+        { status: 401 }
+      )
+    }
+
+    const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim().toLowerCase()) || []
+    const userEmail = user.email?.toLowerCase()
+    const isAdmin = isAdminEmail(user.email)
+
+    if (!isAdmin) {
+      console.log('Admin check failed:', {
+        userEmail,
+        adminEmails,
+        envVar: process.env.ADMIN_EMAILS
+      })
+      return NextResponse.json(
+        { 
+          error: 'Yetkisiz erişim',
+          debug: process.env.NODE_ENV === 'development' ? {
+            userEmail,
+            adminEmails,
+            envVar: process.env.ADMIN_EMAILS
+          } : undefined
+        },
         { status: 403 }
       )
     }
