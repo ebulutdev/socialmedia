@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
 import { smmturkClient } from '@/lib/api/smmturk-client'
 import { createMultipleOrders } from '@/lib/api/orders'
+import { getUserBalance, deductBalance } from '@/lib/api/balance'
 import Header from '@/components/Header'
 import LiveSupport from '@/components/LiveSupport'
 import FloatingCartButton from '@/components/FloatingCartButton'
@@ -152,6 +153,8 @@ export default function CartPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingIndex, setProcessingIndex] = useState<number | null>(null)
   const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string; packageName?: string }>>([])
+  const [userBalance, setUserBalance] = useState<number | null>(null)
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
 
   // Load API key from localStorage or environment variable
   useEffect(() => {
@@ -190,6 +193,29 @@ export default function CartPage() {
     }
   }, [])
 
+  // Load user balance when user is logged in
+  useEffect(() => {
+    const loadBalance = async () => {
+      if (!user) {
+        setUserBalance(null)
+        return
+      }
+
+      setIsLoadingBalance(true)
+      try {
+        const balance = await getUserBalance()
+        setUserBalance(balance)
+      } catch (error) {
+        console.error('Error loading balance:', error)
+        setUserBalance(null)
+      } finally {
+        setIsLoadingBalance(false)
+      }
+    }
+
+    loadBalance()
+  }, [user])
+
   const handleQuantityChange = (id: string, delta: number, currentAmount: number) => {
     const step = currentAmount >= STEP_LARGE ? STEP_LARGE : STEP_SMALL
     const next = Math.max(MIN_AMOUNT, currentAmount + delta * step)
@@ -224,6 +250,28 @@ export default function CartPage() {
         new URL(item.url)
       } catch {
         showToast(`${item.packageName} için geçersiz URL: ${item.url}`, 'error')
+        return
+      }
+    }
+
+    // Bakiye kontrolü
+    if (user) {
+      try {
+        const balance = await getUserBalance()
+        const totalPrice = getTotalPrice()
+        
+        if (balance < totalPrice) {
+          const missing = totalPrice - balance
+          showToast(
+            `Yetersiz bakiye! Mevcut bakiyeniz: ${balance.toFixed(2)}₺, Eksik: ${missing.toFixed(2)}₺. Lütfen kupon satın alın.`,
+            'error'
+          )
+          router.push('/coupons')
+          return
+        }
+      } catch (error) {
+        console.error('Balance check error:', error)
+        showToast('Bakiye kontrolü yapılırken bir hata oluştu. Lütfen tekrar deneyin.', 'error')
         return
       }
     }
@@ -332,12 +380,29 @@ export default function CartPage() {
 
       setProcessingIndex(null)
 
-      // Başarılı siparişleri veritabanına kaydet
+      // Başarılı siparişleri veritabanına kaydet ve bakiyeden düş
       if (ordersToSave.length > 0) {
         try {
           console.log('💾 Veritabanına kaydediliyor:', ordersToSave.length, 'sipariş')
-          await createMultipleOrders(ordersToSave)
+          const savedOrders = await createMultipleOrders(ordersToSave)
           console.log('✅ Siparişler veritabanına kaydedildi')
+
+          // Bakiyeden düş (her sipariş için)
+          if (user) {
+            for (const order of savedOrders) {
+              try {
+                await deductBalance(order.total_price, order.id)
+                console.log(`✅ Bakiye düşürüldü: ${order.total_price}₺ (Sipariş: ${order.id})`)
+              } catch (balanceError) {
+                console.error('❌ Bakiye düşürme hatası:', balanceError)
+                // Hata olsa bile sipariş kaydedildi, sadece logla
+              }
+            }
+            
+            // Bakiye güncelle
+            const newBalance = await getUserBalance()
+            setUserBalance(newBalance)
+          }
         } catch (dbError) {
           console.error('❌ Veritabanı kayıt hatası:', dbError)
           showToast('Siparişler oluşturuldu ancak veritabanına kaydedilirken bir hata oluştu.', 'error')
@@ -449,6 +514,31 @@ export default function CartPage() {
               <div className="bg-dark-card rounded-2xl p-4 sm:p-6 border border-dark-card-light/80 sticky top-24">
                 <h2 className="text-white font-bold text-lg mb-4">Sipariş Özeti</h2>
                 
+                {/* Balance Display */}
+                {user && (
+                  <div className="mb-4 p-3 bg-dark-bg/60 rounded-xl border border-dark-card-light/50">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-300 text-sm font-medium">Mevcut Bakiye</span>
+                      {isLoadingBalance ? (
+                        <span className="text-gray-400 text-sm">Yükleniyor...</span>
+                      ) : (
+                        <span className={`font-bold text-base ${
+                          userBalance !== null && userBalance < total
+                            ? 'text-red-400'
+                            : 'text-primary-green'
+                        }`}>
+                          {userBalance !== null ? `${userBalance.toFixed(2)}₺` : '0.00₺'}
+                        </span>
+                      )}
+                    </div>
+                    {userBalance !== null && userBalance < total && (
+                      <p className="text-red-400 text-xs mt-2">
+                        Yetersiz bakiye! Eksik: {(total - userBalance).toFixed(2)}₺
+                      </p>
+                    )}
+                  </div>
+                )}
+                
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300 font-medium">Ara Toplam</span>
@@ -552,7 +642,13 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={handlePlaceOrder}
-                    disabled={isProcessing || cartItems.length === 0 || !user || cartItems.some(item => !item.url || !item.url.trim())}
+                    disabled={
+                      isProcessing || 
+                      cartItems.length === 0 || 
+                      !user || 
+                      cartItems.some(item => !item.url || !item.url.trim()) ||
+                      (userBalance !== null && userBalance < total)
+                    }
                     className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary-green to-primary-green-dark text-white font-bold text-sm shadow-lg shadow-primary-green/30 hover:shadow-primary-green/40 hover:scale-[1.02] transition-all touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
                     {isProcessing ? (
@@ -562,10 +658,20 @@ export default function CartPage() {
                       </>
                     ) : !user ? (
                       'Giriş Yapın'
+                    ) : userBalance !== null && userBalance < total ? (
+                      'Yetersiz Bakiye'
                     ) : (
                       'Sipariş Oluştur'
                     )}
                   </button>
+                  {user && userBalance !== null && userBalance < total && (
+                    <Link
+                      href="/coupons"
+                      className="w-full py-3.5 px-4 rounded-xl bg-primary-green/20 text-primary-green font-semibold text-sm hover:bg-primary-green/30 transition-all touch-manipulation active:scale-[0.98] flex items-center justify-center gap-2 border border-primary-green/30"
+                    >
+                      Kupon Satın Al
+                    </Link>
+                  )}
                   {user && (
                     <Link
                       href="/orders"

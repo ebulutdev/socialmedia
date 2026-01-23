@@ -4,10 +4,11 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, ShoppingBag, Bell, LogIn, Crown, Menu, X, Package as PackageIcon, LogOut, User } from 'lucide-react'
+import { Search, ShoppingBag, Bell, LogIn, Crown, Menu, X, Package as PackageIcon, LogOut, User, Wallet, Gift } from 'lucide-react'
 import CartButton from './Cart'
 import { servicesData, Service, Package as PackageType } from '@/lib/servicesData'
 import { useAuth } from '@/lib/context/AuthContext'
+import { getUserBalance } from '@/lib/api/balance'
 
 interface SearchResult {
   type: 'service' | 'package'
@@ -24,9 +25,39 @@ export default function Header() {
   const [showResults, setShowResults] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [userBalance, setUserBalance] = useState<number | null>(null)
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const notificationsRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
+
+  // Load user balance
+  useEffect(() => {
+    const loadBalance = async () => {
+      if (!user) {
+        setUserBalance(null)
+        return
+      }
+
+      setIsLoadingBalance(true)
+      try {
+        const balance = await getUserBalance()
+        setUserBalance(balance)
+      } catch (error) {
+        console.error('Error loading balance:', error)
+        setUserBalance(null)
+      } finally {
+        setIsLoadingBalance(false)
+      }
+    }
+
+    loadBalance()
+    
+    // Refresh balance when user menu opens
+    if (userMenuOpen) {
+      loadBalance()
+    }
+  }, [user, userMenuOpen])
 
   // Arama sonuçlarını hesapla
   const searchResults = useMemo(() => {
@@ -358,11 +389,37 @@ export default function Header() {
 
                       {/* User Menu Dropdown */}
                       {userMenuOpen && (
-                        <div className="absolute right-0 top-full mt-2 w-56 bg-dark-card border border-dark-card-light rounded-xl shadow-2xl z-50">
+                        <div className="absolute right-0 top-full mt-2 w-64 bg-dark-card border border-dark-card-light rounded-xl shadow-2xl z-50">
                           <div className="p-4 border-b border-dark-card-light">
                             <p className="text-white font-semibold text-sm truncate">{user.email}</p>
                             <p className="text-gray-400 text-xs mt-1">Gmail ile giriş yapıldı</p>
                           </div>
+                          
+                          {/* Balance Display */}
+                          <div className="p-4 border-b border-dark-card-light bg-dark-bg/50">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <Wallet className="w-4 h-4 text-primary-green" />
+                                <span className="text-gray-300 text-sm font-medium">Bakiye</span>
+                              </div>
+                              {isLoadingBalance ? (
+                                <span className="text-gray-400 text-xs">Yükleniyor...</span>
+                              ) : (
+                                <span className="text-primary-green font-bold text-lg">
+                                  {userBalance !== null ? `${userBalance.toFixed(2)}₺` : '0.00₺'}
+                                </span>
+                              )}
+                            </div>
+                            <Link
+                              href="/coupons"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-primary-green/10 hover:bg-primary-green/20 text-primary-green transition-colors text-sm font-medium border border-primary-green/20"
+                            >
+                              <Gift className="w-4 h-4" />
+                              <span>Kupon Satın Al</span>
+                            </Link>
+                          </div>
+
                           <div className="p-2 space-y-1">
                             <Link
                               href="/orders"
