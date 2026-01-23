@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, Phone } from 'lucide-react'
 
 export default function Footer() {
@@ -11,8 +12,14 @@ export default function Footer() {
           {/* Logo ve Açıklama */}
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2 sm:gap-3 mb-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-green to-primary-green-dark rounded-xl flex items-center justify-center shadow-lg shadow-primary-green/20 border border-primary-green/30">
-                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">s</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 relative flex-shrink-0">
+                <Image
+                  src="/images/image.png"
+                  alt="subjective logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 40px, 48px"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-tight leading-tight">

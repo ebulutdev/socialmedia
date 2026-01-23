@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Search, ShoppingBag, Bell, LogIn, Crown, Menu, X, Package as PackageIcon, LogOut, User } from 'lucide-react'
 import CartButton from './Cart'
 import { servicesData, Service, Package as PackageType } from '@/lib/servicesData'
@@ -182,8 +183,15 @@ export default function Header() {
           <div className="flex items-center justify-between gap-2">
             {/* Logo - Mobile Optimized */}
             <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 hover:opacity-80 transition-opacity cursor-pointer">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-green to-primary-green-dark rounded-xl flex items-center justify-center shadow-lg shadow-primary-green/20 border border-primary-green/30 flex-shrink-0">
-                <span className="text-white font-bold text-xl sm:text-2xl tracking-tight">s</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 relative">
+                <Image
+                  src="/images/image.png"
+                  alt="subjective logo"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 640px) 40px, 48px"
+                />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-tight leading-tight truncate">

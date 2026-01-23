@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   other: {
     'google-site-verification': 'v8F1cayCIu003KYLcKwWNbLtx_cBJ_c4PKyeUdMnTlo',
   },
+  icons: {
+    icon: '/images/image.png',
+    apple: '/images/image.png',
+  },
 }
 
 export default function RootLayout({
