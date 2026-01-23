@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
+import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle, Gift } from 'lucide-react'
 import { useCart, type CartItem } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
@@ -625,6 +625,15 @@ export default function CartPage() {
                 )}
 
                 <div className="space-y-3">
+                  {/* Kupon Satın Al Butonu - Her Zaman Görünür */}
+                  <Link
+                    href="/coupons"
+                    className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold text-sm shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/40 hover:scale-[1.02] transition-all touch-manipulation active:scale-[0.98] flex items-center justify-center gap-2"
+                  >
+                    <Gift className="w-4 h-4" />
+                    Kupon Satın Al
+                  </Link>
+                  
                   <button
                     type="button"
                     onClick={() => {
