@@ -8,7 +8,7 @@ import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
 import { smmturkClient } from '@/lib/api/smmturk-client'
 import { createMultipleOrders } from '@/lib/api/orders'
-import { getUserBalance, deductBalance } from '@/lib/api/balance'
+import { getUserBalance, deductBalance, deductBalanceForOrders } from '@/lib/api/balance'
 import Header from '@/components/Header'
 import LiveSupport from '@/components/LiveSupport'
 import FloatingCartButton from '@/components/FloatingCartButton'
@@ -387,21 +387,60 @@ export default function CartPage() {
           const savedOrders = await createMultipleOrders(ordersToSave)
           console.log('✅ Siparişler veritabanına kaydedildi')
 
-          // Bakiyeden düş (her sipariş için)
+          // Bakiyeden düş (tüm siparişler için toplu işlem)
           if (user) {
-            for (const order of savedOrders) {
+            try {
+              // Toplam tutarı kontrol et
+              const totalOrderAmount = savedOrders.reduce((sum, order) => sum + order.total_price, 0)
+              const currentBalance = await getUserBalance()
+              
+              if (currentBalance < totalOrderAmount) {
+                // Yetersiz bakiye - siparişleri iptal et veya uyarı ver
+                console.error('❌ Yetersiz bakiye! Siparişler kaydedildi ancak bakiye düşürülemedi.')
+                showToast(
+                  `Siparişler oluşturuldu ancak yetersiz bakiye nedeniyle ödeme yapılamadı. Lütfen kupon satın alın.`,
+                  'error'
+                )
+                // Bakiye güncelle
+                const newBalance = await getUserBalance()
+                setUserBalance(newBalance)
+              } else {
+                // Toplu bakiye düşürme işlemi
+                const balanceResult = await deductBalanceForOrders(
+                  savedOrders.map(order => ({
+                    id: order.id,
+                    total_price: order.total_price
+                  }))
+                )
+
+                if (balanceResult.success) {
+                  console.log(`✅ Toplam ${totalOrderAmount.toFixed(2)}₺ bakiye düşürüldü (${savedOrders.length} sipariş)`)
+                } else {
+                  console.error('❌ Bazı siparişler için bakiye düşürülemedi:', balanceResult.failedOrders)
+                  showToast(
+                    `${balanceResult.failedOrders.length} sipariş için ödeme yapılamadı. Lütfen destek ekibiyle iletişime geçin.`,
+                    'error'
+                  )
+                }
+                
+                // Bakiye güncelle
+                const newBalance = await getUserBalance()
+                setUserBalance(newBalance)
+              }
+            } catch (balanceError) {
+              console.error('❌ Bakiye düşürme hatası:', balanceError)
+              showToast(
+                'Siparişler oluşturuldu ancak ödeme işlemi sırasında bir hata oluştu. Lütfen destek ekibiyle iletişime geçin.',
+                'error'
+              )
+              // Bakiye güncelle
               try {
-                await deductBalance(order.total_price, order.id)
-                console.log(`✅ Bakiye düşürüldü: ${order.total_price}₺ (Sipariş: ${order.id})`)
-              } catch (balanceError) {
-                console.error('❌ Bakiye düşürme hatası:', balanceError)
-                // Hata olsa bile sipariş kaydedildi, sadece logla
+                const newBalance = await getUserBalance()
+                setUserBalance(newBalance)
+              } catch (e) {
+                console.error('Bakiye güncelleme hatası:', e)
               }
             }
-            
-            // Bakiye güncelle
-            const newBalance = await getUserBalance()
-            setUserBalance(newBalance)
           }
         } catch (dbError) {
           console.error('❌ Veritabanı kayıt hatası:', dbError)
