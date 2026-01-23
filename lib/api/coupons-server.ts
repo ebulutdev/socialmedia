@@ -7,7 +7,8 @@ import { addBalance } from './balance'
  */
 export async function purchaseCouponByEmail(
   email: string,
-  couponId: string
+  couponId: string,
+  quantity: number = 1
 ): Promise<{ success: boolean; message: string }> {
   const supabase = await createClient()
   
@@ -40,75 +41,64 @@ export async function purchaseCouponByEmail(
     }
   }
 
-  // Check if this coupon was already purchased for this transaction
-  // (prevent duplicate processing)
-  const { data: existingTransaction } = await supabase
-    .from('transactions')
-    .select('id')
-    .eq('user_id', profile.id)
-    .eq('coupon_id', couponId)
-    .eq('type', 'deposit')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
-
-  if (existingTransaction) {
-    // Already processed, return success
-    return {
-      success: true,
-      message: 'Kupon zaten aktif edilmiş.'
-    }
+  // Validate quantity
+  if (quantity < 1) {
+    quantity = 1
   }
 
-  // Add balance to user account
-  const { error: transactionError } = await supabase
-    .from('transactions')
-    .insert({
+  // Create transactions for all quantities
+  const transactions = []
+  const userCoupons = []
+  
+  for (let i = 0; i < quantity; i++) {
+    transactions.push({
       user_id: profile.id,
-      type: 'deposit',
+      type: 'deposit' as const,
       amount: coupon.value,
-      description: `${coupon.value}₺ kupon satın alındı (Shopier)`,
+      description: quantity > 1 
+        ? `${coupon.value}₺ kupon satın alındı (Shopier) - ${quantity} adet` 
+        : `${coupon.value}₺ kupon satın alındı (Shopier)`,
       coupon_id: couponId,
     })
+  }
+
+  // Insert all transactions at once
+  const { data: insertedTransactions, error: transactionError } = await supabase
+    .from('transactions')
+    .insert(transactions)
+    .select('id')
 
   if (transactionError) {
-    console.error('Error creating transaction:', transactionError)
+    console.error('Error creating transactions:', transactionError)
     return {
       success: false,
       message: 'Bakiye yüklenirken hata oluştu: ' + transactionError.message
     }
   }
 
-  // Get the transaction ID we just created
-  const { data: transaction } = await supabase
-    .from('transactions')
-    .select('id')
-    .eq('user_id', profile.id)
-    .eq('coupon_id', couponId)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
-
-  // Create user_coupon record
-  const { error: couponError2 } = await supabase
-    .from('user_coupons')
-    .insert({
+  // Create user_coupon records for each transaction
+  if (insertedTransactions && insertedTransactions.length > 0) {
+    const userCouponRecords = insertedTransactions.map(tx => ({
       user_id: profile.id,
       coupon_id: couponId,
-      transaction_id: transaction?.id || null,
-    })
+      transaction_id: tx.id,
+    }))
 
-  if (couponError2) {
-    console.error('Error creating user_coupon:', couponError2)
-    // Transaction was created, so we still return success
-    return {
-      success: true,
-      message: 'Bakiye yüklendi ancak kupon kaydı oluşturulamadı.'
+    const { error: couponError2 } = await supabase
+      .from('user_coupons')
+      .insert(userCouponRecords)
+
+    if (couponError2) {
+      console.error('Error creating user_coupon records:', couponError2)
+      // Transactions were created, so we still return success
     }
   }
 
+  const totalAmount = coupon.value * quantity
   return {
     success: true,
-    message: `${coupon.value}₺ bakiye başarıyla yüklendi.`
+    message: quantity > 1 
+      ? `${quantity} adet ${coupon.value}₺ kupon satın alındı. Toplam ${totalAmount}₺ bakiye yüklendi.`
+      : `${coupon.value}₺ bakiye başarıyla yüklendi.`
   }
 }

@@ -28,6 +28,11 @@ export async function POST(request: NextRequest) {
       email,
       customer_email,
       user_email,
+      quantity,
+      qty,
+      adet,
+      unit_price,
+      price,
       // Shopier'den gelen diğer alanlar
     } = body
     
@@ -72,35 +77,82 @@ export async function POST(request: NextRequest) {
       })
     }
     
-    // Kupon ID'sini bul (tutara göre)
+    // Miktar bilgisini bul
+    let itemQuantity = parseInt(quantity || qty || adet || '1', 10)
+    if (isNaN(itemQuantity) || itemQuantity < 1) {
+      itemQuantity = 1
+    }
+    
+    // Birim fiyatı bul
+    let unitPrice = parseFloat(unit_price || price || '0')
+    
+    // Eğer birim fiyat yoksa, toplam tutardan hesapla
+    if (!unitPrice || unitPrice <= 0) {
+      unitPrice = paymentAmount / itemQuantity
+    }
+    
+    console.log(`📦 Payment details: Total=${paymentAmount}₺, Quantity=${itemQuantity}, Unit Price=${unitPrice}₺`)
+    
+    // Kupon ID'sini bul (birim fiyata göre)
     const supabase = await createClient()
-    const { data: coupons, error: couponsError } = await supabase
+    
+    // Önce tam eşleşen birim fiyatı ara
+    let { data: coupon, error: couponError } = await supabase
       .from('coupons')
       .select('*')
       .eq('is_active', true)
-      .eq('value', paymentAmount)
+      .eq('value', unitPrice)
       .single()
     
-    if (couponsError || !coupons) {
-      console.error('❌ Coupon not found for amount:', paymentAmount)
-      // Tüm kuponları logla
-      const { data: allCoupons } = await supabase
-        .from('coupons')
-        .select('value')
-        .eq('is_active', true)
-      console.log('Available coupon values:', allCoupons?.map(c => c.value))
+    // Eğer bulunamazsa, tüm kuponları al ve en yakın değeri bul
+    if (couponError || !coupon) {
+      console.log(`⚠️ Exact match not found for unit price ${unitPrice}₺, searching for closest match...`)
       
-      return NextResponse.json({ 
-        success: false, 
-        message: `Bu tutar için kupon bulunamadı: ${paymentAmount}₺`,
-        amount: paymentAmount,
-        received: body 
-      }, { status: 400 })
+      const { data: allCoupons, error: allCouponsError } = await supabase
+        .from('coupons')
+        .select('*')
+        .eq('is_active', true)
+        .order('value', { ascending: true })
+      
+      if (allCouponsError || !allCoupons || allCoupons.length === 0) {
+        console.error('❌ No active coupons found')
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Aktif kupon bulunamadı',
+          received: body 
+        }, { status: 400 })
+      }
+      
+      // En yakın kupon değerini bul
+      let closestCoupon = allCoupons[0]
+      let minDiff = Math.abs(closestCoupon.value - unitPrice)
+      
+      for (const c of allCoupons) {
+        const diff = Math.abs(c.value - unitPrice)
+        if (diff < minDiff) {
+          minDiff = diff
+          closestCoupon = c
+        }
+      }
+      
+      // Eğer fark çok büyükse (örn. %10'dan fazla), hata ver
+      const diffPercent = (minDiff / unitPrice) * 100
+      if (diffPercent > 10) {
+        console.error(`❌ Coupon value mismatch: Expected ~${unitPrice}₺, closest is ${closestCoupon.value}₺ (${diffPercent.toFixed(1)}% difference)`)
+        return NextResponse.json({ 
+          success: false, 
+          message: `Kupon değeri uyuşmuyor. Beklenen: ~${unitPrice}₺, En yakın: ${closestCoupon.value}₺`,
+          received: body 
+        }, { status: 400 })
+      }
+      
+      coupon = closestCoupon
+      console.log(`✅ Using closest coupon match: ${coupon.value}₺ (difference: ${minDiff.toFixed(2)}₺)`)
     }
     
-    // Kuponu aktif et
-    console.log(`✅ Processing coupon purchase: ${coupons.value}₺ for ${userEmail}`)
-    const result = await purchaseCouponByEmail(userEmail, coupons.id)
+    // Kuponu aktif et (miktar ile)
+    console.log(`✅ Processing coupon purchase: ${itemQuantity} adet ${coupon.value}₺ kupon for ${userEmail}`)
+    const result = await purchaseCouponByEmail(userEmail, coupon.id, itemQuantity)
     
     if (!result.success) {
       console.error('❌ Coupon purchase failed:', result.message)
@@ -116,7 +168,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       message: result.message,
-      coupon_value: coupons.value,
+      coupon_value: coupon.value,
+      quantity: itemQuantity,
+      total_amount: paymentAmount,
       user_email: userEmail,
       order_id: order_id || order_no
     })
@@ -147,16 +201,30 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ 
     message: 'Shopier webhook endpoint is active',
     url: 'https://xn--subjectve-1pb.com/api/shopier/callback',
-    note: 'This endpoint processes Shopier payment webhooks',
+    note: 'This endpoint processes Shopier payment webhooks with quantity support',
     available_coupons: coupons?.map(c => ({ value: c.value, id: c.id })) || [],
     webhook_format: {
       expected_fields: [
         'email or customer_email or user_email',
         'amount or total_amount',
+        'quantity or qty or adet (optional, defaults to 1)',
+        'unit_price or price (optional, calculated from total/quantity)',
         'status (success/completed/paid)',
         'order_id or order_no'
       ],
-      note: 'Actual format may vary - check Shopier documentation'
+      note: 'If quantity is not provided, system will try to calculate it from total amount and coupon values',
+      example: {
+        single_item: {
+          total_amount: 250,
+          quantity: 1,
+          unit_price: 250
+        },
+        multiple_items: {
+          total_amount: 500,
+          quantity: 2,
+          unit_price: 250
+        }
+      }
     }
   })
 }
