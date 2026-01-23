@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Play } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default function Hero() {
   return (
@@ -44,12 +44,6 @@ export default function Hero() {
                   <span>❤️</span>
                   <span>4.7</span>
                 </span>
-                <button className="flex items-center gap-1.5 text-primary-green hover:text-primary-green-light transition min-h-[44px] px-2">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-primary-green flex items-center justify-center drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-                    <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-primary-green" />
-                  </div>
-                  <span className="text-[10px] sm:text-xs drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">İzle</span>
-                </button>
               </div>
             </div>
           </div>
