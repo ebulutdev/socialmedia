@@ -14,11 +14,11 @@ export async function purchaseCouponByEmail(
 ): Promise<{ success: boolean; message: string }> {
   const supabase = adminClient ?? (await createClient())
   
-  // Find user by email in profiles table
+  // Find user by email in profiles table (case-insensitive: Shopier vs Auth farkı)
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('id')
-    .eq('email', email)
+    .ilike('email', email)
     .single()
 
   if (profileError || !profile) {

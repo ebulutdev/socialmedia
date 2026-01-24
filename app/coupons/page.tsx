@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Gift, ArrowLeft, Loader2, CheckCircle2, ExternalLink, Wallet } from 'lucide-react'
+import { Gift, ArrowLeft, Loader2, CheckCircle2, ExternalLink, Wallet, AlertCircle } from 'lucide-react'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
 import { getCoupons, type Coupon } from '@/lib/api/coupons'
@@ -157,6 +157,23 @@ export default function CouponsPage() {
             </p>
           </div>
         )}
+
+        {/* E-posta uyarısı: Shopier = hesap e-postası */}
+        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm font-medium text-amber-200">
+              <p className="mb-1">
+                Shopier ödeme sayfasında yazacağınız e-posta adresi, hesabınızdaki e-posta ile <span className="font-semibold text-amber-100">aynen aynı</span> olmalıdır. Aksi halde bakiye yüklenemez.
+              </p>
+              {user?.email && (
+                <p className="text-amber-100/90 mt-2">
+                  Hesap e-postanız: <span className="font-mono text-amber-50">{user.email}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* Coupons Grid */}
         {isLoading ? (

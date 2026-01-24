@@ -464,6 +464,17 @@ export default function CartPage() {
                 )}
 
                 <div className="space-y-3">
+                  {/* Kupon alırken e-posta uyarısı */}
+                  {user && (
+                    <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                        <p className="text-amber-200 text-xs font-medium">
+                          Kupon alırken Shopier&apos;da yazdığınız e-posta, hesap e-postanızla <span className="font-semibold text-amber-100">aynı</span> olmalıdır. Hesabınız: <span className="font-mono text-amber-50">{user.email}</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   {/* Kupon Satın Al Butonu - Her Zaman Görünür */}
                   <Link
                     href="/coupons"
