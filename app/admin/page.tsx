@@ -134,7 +134,7 @@ export default function AdminPage() {
 
       // Yükleme sonrası listeyi yenile
       await fetchServices()
-      alert(`Başarılı! ${data.count} hizmet fiyatı veritabanına yüklendi.`)
+      alert(data.message || `Başarılı! ${data.count || 0} hizmet fiyatı veritabanına yüklendi.`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu')
       alert('Hata: ' + (err instanceof Error ? err.message : 'Bilinmeyen hata'))

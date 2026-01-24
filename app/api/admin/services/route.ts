@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST: Hizmet fiyatlarını yükle (servicesData.ts'den)
+// Mevcut kayıtları korur, sadece yeni kayıtları ekler
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // servicesData.ts'den tüm hizmetleri al ve veritabanına kaydet
+    // servicesData.ts'den tüm hizmetleri al
     const servicePricesToInsert: Omit<ServicePrice, 'id' | 'created_at' | 'updated_at'>[] = []
 
     servicesData.forEach(service => {
@@ -107,19 +108,6 @@ export async function POST(request: NextRequest) {
         // Fiyat string'inden sayısal değeri çıkar
         const priceStr = pkg.price.replace(/[^\d,.]/g, '').replace(',', '.')
         pricePer1K = parseFloat(priceStr) || 0
-
-        // Debug: Twitch hizmetlerini logla
-        if (service.id === 'twitch') {
-          console.log('Twitch service found:', {
-            service_id: service.id,
-            service_name: service.name,
-            package_id: pkg.id,
-            package_name: pkg.name,
-            price: pkg.price,
-            parsed_price: pricePer1K,
-            category: pkg.category
-          })
-        }
 
         servicePricesToInsert.push({
           service_id: service.id,
@@ -132,34 +120,56 @@ export async function POST(request: NextRequest) {
       })
     })
 
-    console.log(`Total services to insert: ${servicePricesToInsert.length}`)
+    console.log(`Total services from servicesData.ts: ${servicePricesToInsert.length}`)
     console.log(`Twitch services count: ${servicePricesToInsert.filter(s => s.service_id === 'twitch').length}`)
 
-    // Önce mevcut kayıtları sil (yeniden yükleme için)
-    // Tüm kayıtları silmek için boş bir WHERE koşulu kullanıyoruz
-    const { error: deleteError } = await supabase
+    // Mevcut kayıtları kontrol et (kullanıcının değiştirdiği fiyatları korumak için)
+    const { data: existingPrices, error: fetchError } = await supabase
       .from('service_prices')
-      .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000') // Tüm kayıtları sil (id hiçbir zaman bu değer olmayacak)
+      .select('service_id, package_id')
 
-    if (deleteError) {
-      console.warn('Delete error (might be expected if table is empty):', deleteError)
-      // Hata olsa bile devam et, çünkü tablo boş olabilir
+    if (fetchError) {
+      console.warn('Fetch existing prices error:', fetchError)
     }
 
-    // Yeni kayıtları ekle
-    const { data, error: insertError } = await supabase
-      .from('service_prices')
-      .insert(servicePricesToInsert)
-      .select()
+    // Mevcut kayıtların bir set'ini oluştur (service_id + package_id kombinasyonu)
+    const existingKeys = new Set<string>()
+    existingPrices?.forEach((price: any) => {
+      existingKeys.add(`${price.service_id}_${price.package_id}`)
+    })
 
-    if (insertError) {
-      throw insertError
+    // Sadece yeni kayıtları filtrele (mevcut olanları atla - kullanıcının değişikliklerini koru)
+    const newServicesToInsert = servicePricesToInsert.filter(service => {
+      const key = `${service.service_id}_${service.package_id}`
+      return !existingKeys.has(key)
+    })
+
+    console.log(`Existing services in DB: ${existingKeys.size}`)
+    console.log(`New services to insert: ${newServicesToInsert.length}`)
+
+    let insertedCount = 0
+
+    // Yeni kayıtları ekle (eğer varsa)
+    if (newServicesToInsert.length > 0) {
+      const { data, error: insertError } = await supabase
+        .from('service_prices')
+        .insert(newServicesToInsert)
+        .select()
+
+      if (insertError) {
+        throw insertError
+      }
+
+      insertedCount = data?.length || 0
     }
 
     return NextResponse.json({ 
-      message: 'Hizmet fiyatları başarıyla yüklendi',
-      count: data?.length || 0
+      message: newServicesToInsert.length > 0 
+        ? `${insertedCount} yeni hizmet fiyatı eklendi. Mevcut ${existingKeys.size} kayıt korundu (değiştirdiğiniz fiyatlar kaybolmadı).`
+        : `Tüm hizmetler zaten yüklü. Mevcut ${existingKeys.size} kayıt korundu (değiştirdiğiniz fiyatlar kaybolmadı).`,
+      count: insertedCount,
+      existingCount: existingKeys.size,
+      totalCount: existingKeys.size + insertedCount
     })
   } catch (error) {
     console.error('Admin services POST error:', error)
