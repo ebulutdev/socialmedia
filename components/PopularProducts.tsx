@@ -15,7 +15,7 @@ const getBestPackages = (serviceId: string): Package[] => {
     facebook: ['9010', '2815', '1972', '3947', '8971'], // 30 Gün Garantili Takipçi, Beğeni, Canlı Yayın, Türk Beğeni, Beğeni+Takipçi
     youtube: ['9414', '8102', '7272', '9322', '3432'], // 30 Gün Garantili Abone, Gerçek İzlenme, Beğeni, Telafili Beğeni, İzlenme+Beğeni
     tiktok: ['9391', '9395', '9393', '9309', '9394'], // 30 Gün Garantili Takipçi, Beğeni, Video İzlenme, Hızlı Takipçi, Beğeni
-    twitter: ['9342', '9293', '9344', '9263'], // 30 Gün Garantili Takipçi, Türk Görüntülenme, 90 Gün Garantili Takipçi, Latin Takipçi
+    twitter: ['9342', '9293', '9344'], // 30 Gün Garantili Takipçi, Türk Görüntülenme, 90 Gün Garantili Takipçi
   }
 
   const bestIds = bestPackageIds[serviceId] || []
