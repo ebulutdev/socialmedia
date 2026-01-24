@@ -264,11 +264,14 @@ function PackageDetailView({
               (opt) => opt.amount.toString() === currentSelected
             )
             if (selectedPrice) {
-              const pricePer1K = pkg.price.split('/')[0].trim()
+              const priceStr = pkg.price.split('/')[0].trim()
               const numericPrice = parseFloat(
-                pricePer1K.replace(/[^\d,]/g, '').replace(',', '.')
+                priceStr.replace(/[^\d,]/g, '').replace(',', '.')
               )
-              const totalPrice = (numericPrice * selectedAmount) / 1000
+              const isFixedPrice = pkg.min === pkg.max && !pkg.price.includes('/')
+              const totalPrice = isFixedPrice
+                ? numericPrice
+                : (numericPrice * selectedAmount) / 1000
 
               // URL modal'ını aç
               setPendingCartItem({
@@ -393,9 +396,16 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
   // Paket miktarlarını oluştur
   const generatePackageOptions = (pkg: Package) => {
     const { min = 100, max = 1000000 } = pkg
-    const pricePer1K = pkg.price.split('/')[0].trim()
-    const maxAmount = Math.min(max, 10000) // Maksimum 10K ile sınırla
-    
+    const priceStr = pkg.price.split('/')[0].trim()
+    const numericPrice = parseFloat(priceStr.replace(/[^\d,]/g, '').replace(',', '.'))
+    const isFixedPrice = min === max && !pkg.price.includes('/')
+    const maxAmount = Math.min(max, 10000)
+
+    // Sabit miktarlı paketler (etkileşim, canlı yayın vb.): tek seçenek, fiyat aynen
+    if (isFixedPrice) {
+      return [{ amount: min, price: numericPrice.toString() + '₺' }]
+    }
+
     const amounts: number[] = []
     if (min <= 50) amounts.push(50)
     if (min <= 100) amounts.push(100)
@@ -407,12 +417,10 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
     if (min <= 5000 && maxAmount >= 5000) amounts.push(5000)
     if (min <= 7500 && maxAmount >= 7500) amounts.push(7500)
     if (min <= 10000 && maxAmount >= 10000) amounts.push(10000)
-    // 10K üstündeki paketler kaldırıldı
 
     return amounts
       .filter((a) => a >= min && a <= maxAmount)
       .map((amount) => {
-        const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
         const totalPrice = (numericPrice * amount) / 1000
         return {
           amount,
@@ -498,10 +506,13 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {filteredPackages.map((pkg, index) => {
                     const minAmount = pkg.min || 100
-                    const pricePer1K = pkg.price.split('/')[0].trim()
-                    const numericPrice = parseFloat(pricePer1K.replace(/[^\d,]/g, '').replace(',', '.'))
-                    const totalPrice = (numericPrice * minAmount) / 1000
-                    const formattedPrice = Math.round(totalPrice).toString() + '₺'
+                    const priceStr = pkg.price.split('/')[0].trim()
+                    const numericPrice = parseFloat(priceStr.replace(/[^\d,]/g, '').replace(',', '.'))
+                    const isFixedPrice = pkg.min === pkg.max && !pkg.price.includes('/')
+                    const totalPrice = isFixedPrice
+                      ? numericPrice
+                      : (numericPrice * minAmount) / 1000
+                    const formattedPrice = (isFixedPrice ? numericPrice : Math.round(totalPrice)).toString() + '₺'
                     
                     return (
                       <div
