@@ -742,7 +742,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3785-10',
-        name: 'TikTok Yorum [ %100 Aktif Türk ] - 10 Adet [Kampanya]',
+        name: 'TikTok Yorum [ %100 Aktif Türk ] [Kampanya]',
         amount: '10 Yorum',
         price: '180₺',
         serviceId: '3785',
@@ -766,7 +766,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3785-50',
-        name: 'TikTok Yorum [ %100 Aktif Türk ] - 50 Adet',
+        name: 'TikTok Yorum [ %100 Aktif Türk ]',
         amount: '50 Yorum',
         price: '100₺',
         serviceId: '3785',
@@ -790,7 +790,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3785-80',
-        name: 'TikTok Yorum [ %100 Aktif Türk ] - 80 Adet',
+        name: 'TikTok Yorum [ %100 Aktif Türk ]',
         amount: '80 Yorum',
         price: '160₺',
         serviceId: '3785',
@@ -814,7 +814,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-50',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 50 Adet',
+        name: 'TikTok Paylaşım',
         amount: '50 Paylaşım',
         price: '1₺',
         serviceId: '3951',
@@ -826,7 +826,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-100',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 100 Adet',
+        name: 'TikTok Paylaşım - 100 Adet',
         amount: '100 Paylaşım',
         price: '2₺',
         serviceId: '3951',
@@ -838,7 +838,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-250',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 250 Adet',
+        name: 'TikTok Paylaşım - 250 Adet',
         amount: '250 Paylaşım',
         price: '5₺',
         serviceId: '3951',
@@ -850,7 +850,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-500',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 500 Adet',
+        name: 'TikTok Paylaşım - 500 Adet',
         amount: '500 Paylaşım',
         price: '10₺',
         serviceId: '3951',
@@ -862,7 +862,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-750',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 750 Adet',
+        name: 'TikTok Paylaşım',
         amount: '750 Paylaşım',
         price: '15₺',
         serviceId: '3951',
@@ -874,7 +874,7 @@ export const servicesData: Service[] = [
       },
       {
         id: '3951-1000',
-        name: 'TikTok Paylaşım [Maksimum 1M] - 1000 Adet',
+        name: 'TikTok Paylaşım - 1000 Adet',
         amount: '1000 Paylaşım',
         price: '20₺',
         serviceId: '3951',
