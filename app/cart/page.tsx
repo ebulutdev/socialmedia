@@ -6,9 +6,7 @@ import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader
 import { useCart, type CartItem } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
-import { smmturkClient } from '@/lib/api/smmturk-client'
-import { createMultipleOrders } from '@/lib/api/orders'
-import { getUserBalance, deductBalance, deductBalanceForOrders } from '@/lib/api/balance'
+import { getUserBalance } from '@/lib/api/balance'
 import Header from '@/components/Header'
 import FloatingCartButton from '@/components/FloatingCartButton'
 import Link from 'next/link'
@@ -148,49 +146,13 @@ export default function CartPage() {
   const { showToast } = useToast()
   const cartItems: CartItem[] = items
   
-  const [apiKey, setApiKey] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingIndex, setProcessingIndex] = useState<number | null>(null)
   const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string; packageName?: string }>>([])
   const [userBalance, setUserBalance] = useState<number | null>(null)
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
 
-  // Load API key from localStorage or environment variable
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Try to get from environment variable first (highest priority)
-      const envKey = process.env.NEXT_PUBLIC_SMMTURK_API_KEY
-      if (envKey && envKey.trim()) {
-        console.log('🔑 API Key environment variable\'dan yüklendi:', {
-          prefix: envKey.substring(0, 4) + '...',
-          length: envKey.length,
-          fullKey: envKey, // Debug için tam key'i göster
-        })
-        setApiKey(envKey.trim())
-        localStorage.setItem('smmturk_api_key', envKey.trim())
-        return
-      }
-
-      // Check localStorage
-      const stored = localStorage.getItem('smmturk_api_key')
-      if (stored && stored.trim()) {
-        console.log('🔑 API Key localStorage\'dan yüklendi:', {
-          prefix: stored.substring(0, 4) + '...',
-          length: stored.length,
-        })
-        setApiKey(stored.trim())
-      } else {
-        // Default API key from .env.local
-        const defaultApiKey = 'bd835f762d9620b2d81555f8ee8c9fd4'
-        console.log('🔑 Default API Key kullanılıyor:', {
-          prefix: defaultApiKey.substring(0, 4) + '...',
-          length: defaultApiKey.length,
-        })
-        setApiKey(defaultApiKey)
-        localStorage.setItem('smmturk_api_key', defaultApiKey)
-      }
-    }
-  }, [])
+  // API key is now handled server-side via environment variable
 
   // Load user balance when user is logged in
   useEffect(() => {
@@ -223,27 +185,19 @@ export default function CartPage() {
   }
 
   const handlePlaceOrder = async () => {
-    // API key kontrolü
-    const currentApiKey = apiKey.trim()
-    if (!currentApiKey) {
-      showToast('API anahtarı bulunamadı. Lütfen API anahtarınızı kontrol edin.', 'error')
+    // Validation checks
+    if (!user) {
+      showToast('Sipariş vermek için giriş yapmanız gerekmektedir.', 'error')
       return
     }
 
-    console.log('🔑 API Key kontrolü:', {
-      hasApiKey: !!currentApiKey,
-      apiKeyLength: currentApiKey.length,
-      apiKeyPrefix: currentApiKey.substring(0, 4) + '...',
-    })
-
-    // Her ürünün URL'si olup olmadığını kontrol et
     const itemsWithoutUrl = cartItems.filter(item => !item.url || !item.url.trim())
     if (itemsWithoutUrl.length > 0) {
       showToast('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.', 'error')
       return
     }
 
-    // Tüm URL'leri validate et
+    // Validate URLs
     for (const item of cartItems) {
       try {
         new URL(item.url)
@@ -253,223 +207,71 @@ export default function CartPage() {
       }
     }
 
-    // Bakiye kontrolü
-    if (user) {
-      try {
-        const balance = await getUserBalance()
-        const totalPrice = getTotalPrice()
-        
-        if (balance < totalPrice) {
-          const missing = totalPrice - balance
-          showToast(
-            `Yetersiz bakiye! Mevcut bakiyeniz: ${balance.toFixed(2)}₺, Eksik: ${missing.toFixed(2)}₺. Lütfen kupon satın alın.`,
-            'error'
-          )
-          router.push('/coupons')
-          return
-        }
-      } catch (error) {
-        console.error('Balance check error:', error)
-        showToast('Bakiye kontrolü yapılırken bir hata oluştu. Lütfen tekrar deneyin.', 'error')
-        return
-      }
-    }
-
     setIsProcessing(true)
     setProcessingIndex(null)
     setOrderResults([])
 
     try {
-      // Save API key to localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('smmturk_api_key', currentApiKey)
-      }
+      // Call server-side API route
+      const response = await fetch('/api/orders/place', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: cartItems }),
+      })
 
-      const results: Array<{ orderId: number; success: boolean; error?: string; packageName?: string }> = []
-      const ordersToSave: Array<{
-        service_id: string
-        service_name: string
-        package_id: string
-        package_name: string
-        quantity: number
-        link: string
-        price: number
-        total_price: number
-        smmturk_order_id?: number
-      }> = []
+      const result = await response.json()
 
-      // Create orders for each cart item with their own URLs
-      for (let i = 0; i < cartItems.length; i++) {
-        const item = cartItems[i]
-        setProcessingIndex(i)
-        
-        try {
-          // packageId SMMTurk servis ID'sini içeriyor (örn: '9403')
-          const serviceId = parseInt(item.packageId)
-          if (isNaN(serviceId)) {
-            console.error('❌ Geçersiz servis ID:', {
-              packageId: item.packageId,
-              packageName: item.packageName,
-            })
-            results.push({
-              orderId: 0,
-              success: false,
-              error: `Geçersiz servis ID (packageId: ${item.packageId})`,
-              packageName: item.packageName,
-            })
-            setOrderResults([...results])
-            continue
-          }
-
-          // Debug: Sipariş detaylarını logla
-          console.log('📦 Sipariş oluşturuluyor:', {
-            packageName: item.packageName,
-            serviceId: serviceId,
-            url: item.url,
-            quantity: item.amount,
-          })
-
-          const response = await smmturkClient.addOrder(
-            currentApiKey,
-            serviceId,
-            item.url,
-            item.amount
+      if (!response.ok) {
+        // Handle error response
+        if (result.error === 'Yetersiz bakiye' && result.details) {
+          const { currentBalance, required, missing } = result.details
+          showToast(
+            `Yetersiz bakiye! Mevcut bakiyeniz: ${currentBalance}₺, Eksik: ${missing}₺. Lütfen kupon satın alın.`,
+            'error'
           )
-
-          console.log('✅ Sipariş başarılı:', {
-            packageName: item.packageName,
-            orderId: response.order,
-          })
-
-          results.push({
-            orderId: response.order,
-            success: true,
-            packageName: item.packageName,
-          })
-
-          // Başarılı siparişleri veritabanına kaydetmek için hazırla
-          ordersToSave.push({
-            service_id: item.serviceId,
-            service_name: item.serviceName,
-            package_id: item.packageId,
-            package_name: item.packageName,
-            quantity: item.amount,
-            link: item.url,
-            price: item.totalPrice / item.amount, // Birim fiyat
-            total_price: item.totalPrice,
-            smmturk_order_id: response.order,
-          })
-
-          // Her başarılı siparişte sonuçları güncelle
-          setOrderResults([...results])
-        } catch (error) {
-          console.error('❌ Sipariş hatası:', {
-            packageName: item.packageName,
-            error: error instanceof Error ? error.message : 'Bilinmeyen hata',
-          })
-          results.push({
-            orderId: 0,
-            success: false,
-            error: error instanceof Error ? error.message : 'Bilinmeyen hata',
-            packageName: item.packageName,
-          })
-          setOrderResults([...results])
+          router.push('/coupons')
+        } else {
+          showToast(result.error || 'Sipariş oluşturulurken bir hata oluştu', 'error')
         }
+        return
       }
 
-      setProcessingIndex(null)
+      // Success - update UI with results
+      const { results: orderResults, summary } = result
+      setOrderResults(orderResults)
 
-      // Başarılı siparişleri veritabanına kaydet ve bakiyeden düş
-      if (ordersToSave.length > 0) {
-        try {
-          console.log('💾 Veritabanına kaydediliyor:', ordersToSave.length, 'sipariş')
-          const savedOrders = await createMultipleOrders(ordersToSave)
-          console.log('✅ Siparişler veritabanına kaydedildi')
-
-          // Bakiyeden düş (tüm siparişler için toplu işlem)
-          if (user) {
-            try {
-              // Toplam tutarı kontrol et
-              const totalOrderAmount = savedOrders.reduce((sum, order) => sum + order.total_price, 0)
-              const currentBalance = await getUserBalance()
-              
-              if (currentBalance < totalOrderAmount) {
-                // Yetersiz bakiye - siparişleri iptal et veya uyarı ver
-                console.error('❌ Yetersiz bakiye! Siparişler kaydedildi ancak bakiye düşürülemedi.')
-                showToast(
-                  `Siparişler oluşturuldu ancak yetersiz bakiye nedeniyle ödeme yapılamadı. Lütfen kupon satın alın.`,
-                  'error'
-                )
-                // Bakiye güncelle
-                const newBalance = await getUserBalance()
-                setUserBalance(newBalance)
-              } else {
-                // Toplu bakiye düşürme işlemi
-                const balanceResult = await deductBalanceForOrders(
-                  savedOrders.map(order => ({
-                    id: order.id,
-                    total_price: order.total_price
-                  }))
-                )
-
-                if (balanceResult.success) {
-                  console.log(`✅ Toplam ${totalOrderAmount.toFixed(2)}₺ bakiye düşürüldü (${savedOrders.length} sipariş)`)
-                } else {
-                  console.error('❌ Bazı siparişler için bakiye düşürülemedi:', balanceResult.failedOrders)
-                  showToast(
-                    `${balanceResult.failedOrders.length} sipariş için ödeme yapılamadı. Lütfen destek ekibiyle iletişime geçin.`,
-                    'error'
-                  )
-                }
-                
-                // Bakiye güncelle
-                const newBalance = await getUserBalance()
-                setUserBalance(newBalance)
-              }
-            } catch (balanceError) {
-              console.error('❌ Bakiye düşürme hatası:', balanceError)
-              showToast(
-                'Siparişler oluşturuldu ancak ödeme işlemi sırasında bir hata oluştu. Lütfen destek ekibiyle iletişime geçin.',
-                'error'
-              )
-              // Bakiye güncelle
-              try {
-                const newBalance = await getUserBalance()
-                setUserBalance(newBalance)
-              } catch (e) {
-                console.error('Bakiye güncelleme hatası:', e)
-              }
-            }
-          }
-        } catch (dbError) {
-          console.error('❌ Veritabanı kayıt hatası:', dbError)
-          showToast('Siparişler oluşturuldu ancak veritabanına kaydedilirken bir hata oluştu.', 'error')
-        }
+      // Update balance
+      try {
+        const newBalance = await getUserBalance()
+        setUserBalance(newBalance)
+      } catch (e) {
+        console.error('Bakiye güncelleme hatası:', e)
       }
 
-      // If all orders succeeded, clear cart
-      const allSuccess = results.every((r) => r.success)
-      if (allSuccess) {
-        showToast(`Tüm siparişler başarıyla oluşturuldu! (${results.length} sipariş)`, 'success')
+      // Show results
+      if (summary.successful === summary.total) {
+        showToast(`Tüm siparişler başarıyla oluşturuldu! (${summary.total} sipariş)`, 'success')
         setTimeout(() => {
           clearCart()
           setOrderResults([])
           router.push('/orders')
         }, 2000)
+      } else if (summary.successful > 0) {
+        showToast(`${summary.successful} sipariş başarılı, ${summary.failed} sipariş başarısız oldu.`, 'info')
+        setTimeout(() => {
+          router.push('/orders')
+        }, 3000)
       } else {
-        const successCount = results.filter((r) => r.success).length
-        const failedCount = results.length - successCount
-        if (successCount > 0) {
-          showToast(`${successCount} sipariş başarılı, ${failedCount} sipariş başarısız oldu.`, 'info')
-          setTimeout(() => {
-            router.push('/orders')
-          }, 3000)
-        } else {
-          showToast('Tüm siparişler başarısız oldu. Lütfen tekrar deneyin.', 'error')
-        }
+        showToast('Tüm siparişler başarısız oldu. Lütfen tekrar deneyin.', 'error')
       }
     } catch (error) {
-      showToast('Sipariş oluşturulurken bir hata oluştu: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'), 'error')
+      console.error('Order placement error:', error)
+      showToast(
+        'Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.',
+        'error'
+      )
     } finally {
       setIsProcessing(false)
       setProcessingIndex(null)

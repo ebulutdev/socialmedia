@@ -190,3 +190,67 @@ export async function addBalance(amount: number, description: string, couponId?:
     throw new Error('Bakiye yüklenirken hata oluştu: ' + error.message)
   }
 }
+
+/**
+ * Refund balance for failed orders
+ * This is used to restore balance when an order fails after balance was deducted
+ */
+export async function refundBalanceForOrders(
+  orders: Array<{ id: string; total_price: number }>
+): Promise<{ success: boolean; failedRefunds: Array<{ orderId: string; error: string }> }> {
+  const supabase = createClient()
+  
+  // Get current user
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    throw new Error('Kullanıcı oturumu bulunamadı. Lütfen giriş yapın.')
+  }
+
+  if (orders.length === 0) {
+    return { success: true, failedRefunds: [] }
+  }
+
+  // Create refund transactions for all orders
+  const transactions = orders.map(order => ({
+    user_id: user.id,
+    type: 'refund' as const,
+    amount: order.total_price,
+    description: `Sipariş iptali için geri ödeme: ${order.id}`,
+    order_id: order.id,
+  }))
+
+  const { error } = await supabase
+    .from('transactions')
+    .insert(transactions)
+
+  if (error) {
+    // If bulk insert fails, try individual inserts
+    const failedRefunds: Array<{ orderId: string; error: string }> = []
+    
+    for (const order of orders) {
+      try {
+        await supabase
+          .from('transactions')
+          .insert({
+            user_id: user.id,
+            type: 'refund',
+            amount: order.total_price,
+            description: `Sipariş iptali için geri ödeme: ${order.id}`,
+            order_id: order.id,
+          })
+      } catch (err) {
+        failedRefunds.push({
+          orderId: order.id,
+          error: err instanceof Error ? err.message : 'Bilinmeyen hata'
+        })
+      }
+    }
+
+    return {
+      success: failedRefunds.length === 0,
+      failedRefunds
+    }
+  }
+
+  return { success: true, failedRefunds: [] }
+}
