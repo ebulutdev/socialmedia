@@ -52,6 +52,17 @@ export default function PackageSelection() {
   const { addToCart } = useCart()
   const { showToast } = useToast()
 
+  // Instagram için random sepet sayısı (50-350 arası)
+  const getCartCount = (): number => {
+    // Instagram için sabit bir seed değeri
+    const seed = 'instagram'.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const min = 50
+    const max = 350
+    return min + (seed % (max - min + 1))
+  }
+
+  const cartCount = getCartCount()
+
   return (
     <section className="bg-dark-bg py-12">
       <div className="max-w-7xl mx-auto px-4">
@@ -140,7 +151,7 @@ export default function PackageSelection() {
             <div className="bg-primary-green rounded-xl p-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">👤</span>
-                <span className="text-white font-semibold">150 Kişinin Sepetinde</span>
+                <span className="text-white font-semibold">{cartCount} Kişinin Sepetinde</span>
               </div>
             </div>
             <div className="bg-dark-card rounded-xl p-4 mb-4">

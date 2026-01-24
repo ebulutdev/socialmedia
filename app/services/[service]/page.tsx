@@ -222,6 +222,23 @@ export default function ServicePage() {
 
   const service = servicesData.find((s) => s.id === serviceId)
 
+  // Her hizmet için farklı random sepet sayısı (serviceId'ye göre deterministik)
+  const getCartCount = (serviceId: string): number => {
+    // serviceId'den bir hash değeri oluştur
+    let hash = 0
+    for (let i = 0; i < serviceId.length; i++) {
+      const char = serviceId.charCodeAt(i)
+      hash = ((hash << 5) - hash) + char
+      hash = hash & hash // Convert to 32bit integer
+    }
+    // 50-350 arası random sayı (her hizmet için farklı ama sabit)
+    const min = 50
+    const max = 350
+    return min + (Math.abs(hash) % (max - min + 1))
+  }
+
+  const cartCount = getCartCount(serviceId)
+
   // Rastgele resimler ve kullanıcı adları
   const exampleUserImages = [
     '/images/Ekran Resmi 2026-01-22 01.38.46.png',
@@ -503,7 +520,7 @@ export default function ServicePage() {
             <div className="bg-primary-green rounded-xl p-3 sm:p-4 w-full overflow-hidden">
               <div className="flex items-center gap-2 w-full">
                 <span className="text-lg sm:text-xl flex-shrink-0">🛒</span>
-                <span className="text-white font-semibold text-xs sm:text-sm break-words">150 Kişinin Sepetinde</span>
+                <span className="text-white font-semibold text-xs sm:text-sm break-words">{cartCount} Kişinin Sepetinde</span>
               </div>
             </div>
 
