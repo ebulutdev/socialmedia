@@ -9,7 +9,7 @@ export default function IadeKosullariPage() {
                     <span className="text-white text-xl sm:text-2xl">📖</span>
                   </div>
                   <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">İade Koşulları</h1>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">İade ve İptal Politikası</h1>
                     <p className="text-gray-300 text-sm sm:text-base">
                       subjective dijital hizmetlerine ait iade koşullarını öğrenin. Hangi durumlarda iade yapılır, süreç nasıl işler? Tüm detaylar bu sayfada!
                     </p>

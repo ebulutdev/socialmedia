@@ -9,7 +9,7 @@ const partners = [
     name: 'Doa Çakır',
     instagram: '@doacakrx',
     image: '/images/EC8E3B01-BDDA-440D-B598-2FC83671400E_1_201_a.jpeg',
-    comment: 'A Social Media ile çalışmaya başladığımdan beri hesabımın büyümesi inanılmaz! Organik görünümlü takipçiler ve gerçek etkileşimler sayesinde markaların dikkatini çekmeye başladım. Profesyonel ekibi ve hızlı teslimatları ile her zaman tercih ediyorum. Kesinlikle tavsiye ederim!',
+    comment: 'subjective ile çalışmaya başladığımdan beri hesabımın büyümesi inanılmaz! Organik görünümlü takipçiler ve gerçek etkileşimler sayesinde markaların dikkatini çekmeye başladım. Profesyonel ekibi ve hızlı teslimatları ile her zaman tercih ediyorum. Kesinlikle tavsiye ederim!',
     rating: 5
   }
 ]

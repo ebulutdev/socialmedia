@@ -8,7 +8,7 @@ export default function KVKKPage() {
                   <div className="w-12 h-12 sm:w-14 sm:h-14 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-xl sm:text-2xl">🔒</span>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">KVKK Aydınlatma Metni</h1>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">Gizlilik Politikası</h1>
                 </div>
 
                 {/* Description */}

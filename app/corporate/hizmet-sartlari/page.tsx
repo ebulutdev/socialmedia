@@ -8,7 +8,7 @@ export default function HizmetSartlariPage() {
                   <div className="w-12 h-12 sm:w-14 sm:h-14 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-xl sm:text-2xl">📋</span>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">Hizmet Şartları</h1>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">Kullanım Şartları</h1>
                 </div>
 
                 {/* Description */}
@@ -107,7 +107,7 @@ export default function HizmetSartlariPage() {
                         <strong className="text-white">6.2. Faturalandırma:</strong> Kullanıcı tarafından satın alınan hizmetler için, Kullanıcı'nın sipariş sırasında beyan ettiği fatura bilgileri esas alınarak dijital fatura düzenlenir ve Kullanıcı'ya elektronik ortamda (e-posta veya kullanıcı paneli üzerinden) iletilir. Kullanıcı, fatura bilgilerinin doğruluğundan münhasıran sorumludur; hatalı bilgi nedeniyle doğabilecek her türlü hukuki ve mali sorumluluk Kullanıcı'ya aittir.
                       </p>
                       <p>
-                        <strong className="text-white">6.3. Hizmet İhracatı ve KDV Uygulaması:</strong> subjective, Kuzey Kıbrıs Türk Cumhuriyeti Serbest Liman Bölgesi'nde mukim Sosyal Evin Dijital Hizmetler LTD unvanlı şirket üzerinden sosyal medya etkileşimi artırmaya yönelik dijital hizmet sunmaktadır. Bu kapsamda sağlanan hizmetler, niteliği gereği "hizmet ihracatı" mahiyetinde olup, yürürlükteki KKTC ve Türkiye mevzuatına göre KDV'ye tabi değildir.
+                        <strong className="text-white">6.3. Hizmet İhracatı ve KDV Uygulaması:</strong> subjective, Kuzey Kıbrıs Türk Cumhuriyeti Serbest Liman Bölgesi'nde mukim subjective Dijital Hizmetler LTD unvanlı şirket üzerinden sosyal medya etkileşimi artırmaya yönelik dijital hizmet sunmaktadır. Bu kapsamda sağlanan hizmetler, niteliği gereği "hizmet ihracatı" mahiyetinde olup, yürürlükteki KKTC ve Türkiye mevzuatına göre KDV'ye tabi değildir.
                       </p>
                       <p>
                         Bu nedenle düzenlenen faturalarda, işlemin hizmet ihracatı kapsamında olduğu ve KDV oranının %0 (sıfır) olduğu açıkça belirtilir; faturada "%0 KDV / VAT – Hizmet İhracatı – Reverse Charge" veya benzeri açıklamalara yer verilebilir.

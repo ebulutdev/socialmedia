@@ -8,10 +8,10 @@ import FloatingCartButton from '@/components/FloatingCartButton'
 
 const menuItems = [
   { id: 'hakkimizda', label: 'Hakkımızda', path: '/corporate/hakkimizda' },
-  { id: 'hizmet-sartlari', label: 'Hizmet Şartları', path: '/corporate/hizmet-sartlari' },
+  { id: 'hizmet-sartlari', label: 'Kullanım Şartları', path: '/corporate/hizmet-sartlari' },
   { id: 'mesafeli-satis', label: 'Mesafeli Satış Sözleşmesi', path: '/corporate/mesafeli-satis' },
-  { id: 'kvkk', label: 'KVKK Aydınlatma Metni', path: '/corporate/kvkk' },
-  { id: 'iade-kosullari', label: 'İade Koşulları', path: '/corporate/iade-kosullari' },
+  { id: 'kvkk', label: 'Gizlilik Politikası', path: '/corporate/kvkk' },
+  { id: 'iade-kosullari', label: 'İade ve İptal Politikası', path: '/corporate/iade-kosullari' },
   { id: 'iletisim', label: 'İletişim', path: '/corporate/iletisim' },
 ]
 

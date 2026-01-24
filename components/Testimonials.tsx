@@ -14,22 +14,22 @@ const testimonials = [
   {
     name: 'Zeynep Kaya',
     role: 'İçerik Üreticisi',
-    text: "A Social Media ile tanıştığım günden beri hesabımın büyümesi inanılmaz! Organik görünümlü takipçiler ve gerçek etkileşimler sayesinde markaların dikkatini çekmeye başladım. Kesinlikle tavsiye ederim!",
+    text: "subjective ile tanıştığım günden beri hesabımın büyümesi inanılmaz! Organik görünümlü takipçiler ve gerçek etkileşimler sayesinde markaların dikkatini çekmeye başladım. Kesinlikle tavsiye ederim!",
   },
   {
     name: 'Can Yılmaz',
     role: 'Dijital Pazarlama Uzmanı',
-    text: 'Müşterilerim için sosyal medya büyümesi sağlamam gerekiyordu ve A Social Media tam aradığım çözümdü. Hızlı teslimat, kaliteli hizmet ve mükemmel müşteri desteği. Artık tüm projelerimde tercih ediyorum!',
+    text: 'Müşterilerim için sosyal medya büyümesi sağlamam gerekiyordu ve subjective tam aradığım çözümdü. Hızlı teslimat, kaliteli hizmet ve mükemmel müşteri desteği. Artık tüm projelerimde tercih ediyorum!',
   },
   {
     name: 'Elif Demir',
     role: 'Girişimci',
-    text: "Yeni açtığım online mağazamın Instagram hesabını büyütmek için A Social Media'yı kullandım. Sonuçlar harika! Satışlarım arttı ve marka bilinirliğim yükseldi. Çok memnun kaldım, teşekkürler!",
+    text: "Yeni açtığım online mağazamın Instagram hesabını büyütmek için subjective'ı kullandım. Sonuçlar harika! Satışlarım arttı ve marka bilinirliğim yükseldi. Çok memnun kaldım, teşekkürler!",
   },
   {
     name: 'Burak Özdemir',
     role: 'Youtuber',
-    text: "YouTube kanalımın yanı sıra diğer platformlarda da varlık göstermem gerekiyordu. A Social Media'nın Instagram ve TikTok paketleri sayesinde tüm hesaplarımda tutarlı bir büyüme yakaladım. Harika bir deneyim!",
+    text: "YouTube kanalımın yanı sıra diğer platformlarda da varlık göstermem gerekiyordu. subjective'ın Instagram ve TikTok paketleri sayesinde tüm hesaplarımda tutarlı bir büyüme yakaladım. Harika bir deneyim!",
   },
 ]
 

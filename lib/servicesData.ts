@@ -24,7 +24,7 @@ export const servicesData: Service[] = [
   {
     id: 'instagram',
     name: 'Instagram',
-    description: 'Yabancı takipçi satın al hizmetiyle Instagram hesabınızı büyütün, etkileşiminizi artırın. Güvenilir ve hızlı çözümler için A Social Media\'yı tercih edin.',
+    description: 'Yabancı takipçi satın al hizmetiyle Instagram hesabınızı büyütün, etkileşiminizi artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '📷',
     packages: [
       {
@@ -128,7 +128,7 @@ export const servicesData: Service[] = [
   {
     id: 'facebook',
     name: 'Facebook',
-    description: 'Facebook hesabınızı büyütün ve etkileşiminizi artırın. Güvenilir ve hızlı çözümler için A Social Media\'yı tercih edin.',
+    description: 'Facebook hesabınızı büyütün ve etkileşiminizi artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '👥',
     packages: [
       {
@@ -304,7 +304,7 @@ export const servicesData: Service[] = [
   {
     id: 'youtube',
     name: 'YouTube',
-    description: 'YouTube kanalınızı büyütün ve videolarınızın izlenme sayısını artırın. Güvenilir ve hızlı çözümler için A Social Media\'yı tercih edin.',
+    description: 'YouTube kanalınızı büyütün ve videolarınızın izlenme sayısını artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '▶️',
     packages: [
       {
@@ -743,7 +743,7 @@ export const servicesData: Service[] = [
   {
     id: 'twitter',
     name: 'Twitter (X)',
-    description: 'Twitter hesabınızı büyütün ve tweetlerinizin etkileşimini artırın. Güvenilir ve hızlı çözümler için A Social Media\'yı tercih edin.',
+    description: 'Twitter hesabınızı büyütün ve tweetlerinizin etkileşimini artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '🐦',
     packages: [
       {
@@ -883,7 +883,7 @@ export const servicesData: Service[] = [
   {
     id: 'twitch',
     name: 'Twitch',
-    description: 'Twitch kanalınızı büyütün ve canlı yayınlarınızın izlenme sayısını artırın. Güvenilir ve hızlı çözümler için A Social Media\'yı tercih edin.',
+    description: 'Twitch kanalınızı büyütün ve canlı yayınlarınızın izlenme sayısını artırın. Güvenilir ve hızlı çözümler için subjective\'ı tercih edin.',
     icon: '🎮',
     packages: [
       {

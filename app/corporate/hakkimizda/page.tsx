@@ -32,7 +32,7 @@ export default function HakkimizdaPage() {
         </p>
       </div>
 
-      {/* Neden A Social Media? */}
+      {/* Neden subjective? */}
       <div className="mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Neden subjective?</h2>
         <div className="space-y-4">
