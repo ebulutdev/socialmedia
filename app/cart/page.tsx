@@ -10,7 +10,6 @@ import { smmturkClient } from '@/lib/api/smmturk-client'
 import { createMultipleOrders } from '@/lib/api/orders'
 import { getUserBalance, deductBalance, deductBalanceForOrders } from '@/lib/api/balance'
 import Header from '@/components/Header'
-import LiveSupport from '@/components/LiveSupport'
 import FloatingCartButton from '@/components/FloatingCartButton'
 import Link from 'next/link'
 
@@ -483,7 +482,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-dark-bg">
       <Header />
-      <LiveSupport />
       <FloatingCartButton />
       
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">

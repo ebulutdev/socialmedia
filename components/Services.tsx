@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, Facebook, Youtube, Music, Twitter } from 'lucide-react'
+import { Instagram, Facebook, Youtube, Music, Twitter, Radio } from 'lucide-react'
 
 const serviceImages = [
   '/images/Ekran Resmi 2026-01-22 01.40.05.png',
@@ -10,6 +10,7 @@ const serviceImages = [
   '/images/Ekran Resmi 2026-01-22 01.41.26.png',
   '/images/Ekran Resmi 2026-01-22 01.42.13.png',
   '/images/Ekran Resmi 2026-01-22 01.43.46.png',
+  '/images/Ekran Resmi 2026-01-22 01.40.05.png', // Twitch için placeholder
 ]
 
 const services = [
@@ -18,6 +19,7 @@ const services = [
   { id: 'twitter', name: 'TWITTER (X)', icon: Twitter, color: 'from-blue-400 to-blue-600' },
   { id: 'youtube', name: 'YOUTUBE', icon: Youtube, color: 'from-red-500 to-red-700' },
   { id: 'facebook', name: 'FACEBOOK', icon: Facebook, color: 'from-blue-600 to-blue-800' },
+  { id: 'twitch', name: 'TWITCH', icon: Radio, color: 'from-purple-600 to-purple-800' },
 ]
 
 export default function Services() {

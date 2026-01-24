@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones, ArrowLeft, ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Header from '@/components/Header'
-import LiveSupport from '@/components/LiveSupport'
 import FloatingCartButton from '@/components/FloatingCartButton'
 import { servicesData, calculatePackagePrice, Package } from '@/lib/servicesData'
 import { ServiceLogo } from '@/components/ServiceLogos'
@@ -379,7 +378,6 @@ export default function ServicePage() {
   return (
     <div className="min-h-screen bg-dark-bg">
       <Header />
-      <LiveSupport />
       <FloatingCartButton />
       
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4 w-full overflow-x-hidden">

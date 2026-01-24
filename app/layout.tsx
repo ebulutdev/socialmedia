@@ -40,6 +40,21 @@ export default function RootLayout({
             gtag('config', 'G-XXXXXXXXXX');
           `}
         </Script>
+        
+        {/* Crisp Chatbox */}
+        <Script id="crisp-chatbox" strategy="afterInteractive">
+          {`
+            window.$crisp=[];
+            window.CRISP_WEBSITE_ID="03d400d2-6f6d-4287-af26-35bdafacf68a";
+            (function(){
+              d=document;
+              s=d.createElement("script");
+              s.src="https://beta.client.crisp.chat/l.js";
+              s.async=1;
+              d.getElementsByTagName("head")[0].appendChild(s);
+            })();
+          `}
+        </Script>
         <AuthProvider>
           <CartProviderWrapper>{children}</CartProviderWrapper>
         </AuthProvider>

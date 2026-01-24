@@ -8,7 +8,6 @@ import { useToast } from '@/lib/context/ToastContext'
 import { getCoupons, type Coupon } from '@/lib/api/coupons'
 import { getUserBalance } from '@/lib/api/balance'
 import Header from '@/components/Header'
-import LiveSupport from '@/components/LiveSupport'
 import FloatingCartButton from '@/components/FloatingCartButton'
 import Link from 'next/link'
 
@@ -73,7 +72,6 @@ export default function CouponsPage() {
   return (
     <div className="min-h-screen bg-dark-bg">
       <Header />
-      <LiveSupport />
       <FloatingCartButton />
       
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
