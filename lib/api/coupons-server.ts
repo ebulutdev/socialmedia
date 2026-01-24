@@ -1,16 +1,18 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
-import { addBalance } from './balance'
 
 /**
  * Server-side coupon purchase function
- * Used in webhook handlers where we have user email but no session
+ * Used in webhook handlers where we have user email but no session.
+ * Pass adminClient when called from webhook (no user session / RLS bypass).
  */
 export async function purchaseCouponByEmail(
   email: string,
   couponId: string,
-  quantity: number = 1
+  quantity: number = 1,
+  adminClient?: SupabaseClient
 ): Promise<{ success: boolean; message: string }> {
-  const supabase = await createClient()
+  const supabase = adminClient ?? (await createClient())
   
   // Find user by email in profiles table
   const { data: profile, error: profileError } = await supabase

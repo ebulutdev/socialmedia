@@ -1,230 +1,184 @@
+import { createHmac } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
-import { getCoupons } from '@/lib/api/coupons'
 import { purchaseCouponByEmail } from '@/lib/api/coupons-server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 
 /**
- * Shopier Payment Callback/Webhook Handler
- * 
+ * Shopier OSB (Otomatik Sipariş Bildirimi) callback
+ *
+ * Body: application/x-www-form-urlencoded
+ * - res: base64-encoded JSON payload
+ * - hash: HMAC-SHA256(res + username, password) [hex]
+ *
+ * Verify hash, decode res, process coupon purchase, return "success".
  * Configured URL: https://xn--subjectve-1pb.com/api/shopier/callback
- * 
- * IMPORTANT: This endpoint processes Shopier payment webhooks
- * Make sure to verify webhook signature if Shopier provides it
  */
+
+function text(body: string, status = 200) {
+  return new NextResponse(body, {
+    status,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  })
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    
-    console.log('🔔 Shopier webhook received:', JSON.stringify(body, null, 2))
-    
-    // Shopier webhook formatı (örnek - gerçek formatı Shopier dokümantasyonundan kontrol edin)
-    // Genellikle şu alanlar gelir:
-    const {
-      order_id,
-      order_no,
-      status, // 'success', 'completed', 'failed', etc.
-      amount,
-      total_amount,
-      email,
-      customer_email,
-      user_email,
-      quantity,
-      qty,
-      adet,
-      unit_price,
-      price,
-      // Shopier'den gelen diğer alanlar
-    } = body
-    
-    // Email'i bul (farklı alan isimleri olabilir)
-    const userEmail = email || customer_email || user_email
-    
-    if (!userEmail) {
-      console.error('❌ Email not found in webhook data')
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Email bilgisi bulunamadı',
-        received: body 
-      }, { status: 400 })
+    const username = process.env.SHOPIER_OSB_USERNAME
+    const key = process.env.SHOPIER_OSB_PASSWORD
+
+    if (!username || !key) {
+      console.error('❌ SHOPIER_OSB_USERNAME or SHOPIER_OSB_PASSWORD not set')
+      return text('missing configuration', 500)
     }
-    
-    // Ödeme tutarını bul
-    const paymentAmount = parseFloat(amount || total_amount || '0')
-    
-    if (!paymentAmount || paymentAmount <= 0) {
-      console.error('❌ Invalid amount:', paymentAmount)
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Geçersiz ödeme tutarı',
-        received: body 
-      }, { status: 400 })
+
+    const form = await request.formData()
+    const resRaw = form.get('res')
+    const hashRaw = form.get('hash')
+
+    const res = typeof resRaw === 'string' ? resRaw : null
+    const hash = typeof hashRaw === 'string' ? hashRaw : null
+
+    if (!res || !hash) {
+      console.error('❌ OSB missing parameter: res or hash')
+      return text('missing parameter', 400)
     }
-    
-    // Ödeme durumunu kontrol et
-    const paymentStatus = (status || '').toLowerCase()
-    const isSuccess = paymentStatus === 'success' || 
-                      paymentStatus === 'completed' || 
-                      paymentStatus === 'paid' ||
-                      paymentStatus === '1'
-    
-    if (!isSuccess) {
-      console.log('ℹ️ Payment not completed, status:', status)
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Ödeme tamamlanmadı',
-        status: status,
-        received: body 
-      })
+
+    const computed = createHmac('sha256', key).update(res + username).digest('hex')
+    if (computed !== hash) {
+      console.error('❌ OSB hash verification failed')
+      return text('unauthorized', 401)
     }
-    
-    // Miktar bilgisini bul
-    let itemQuantity = parseInt(quantity || qty || adet || '1', 10)
-    if (isNaN(itemQuantity) || itemQuantity < 1) {
-      itemQuantity = 1
+
+    let json: string
+    try {
+      json = Buffer.from(res, 'base64').toString('utf8')
+    } catch {
+      console.error('❌ OSB base64 decode failed')
+      return text('invalid payload', 400)
     }
-    
-    // Birim fiyatı bul
-    let unitPrice = parseFloat(unit_price || price || '0')
-    
-    // Eğer birim fiyat yoksa, toplam tutardan hesapla
+
+    let data: Record<string, unknown>
+    try {
+      data = JSON.parse(json) as Record<string, unknown>
+    } catch {
+      console.error('❌ OSB JSON parse failed')
+      return text('invalid payload', 400)
+    }
+
+    const email = data.email as string | undefined
+    const orderid = data.orderid as string | undefined
+    const price = Number(data.price ?? 0)
+    const productcount = Number(data.productcount ?? 1)
+    const istest = data.istest as number | undefined
+
+    if (!email || typeof email !== 'string') {
+      console.error('❌ OSB email missing')
+      return text('missing email', 400)
+    }
+
+    if (!orderid || typeof orderid !== 'string') {
+      console.error('❌ OSB orderid missing')
+      return text('missing orderid', 400)
+    }
+
+    const itemQuantity = productcount >= 1 ? Math.floor(productcount) : 1
+    const unitPrice = itemQuantity > 0 ? price / itemQuantity : price
+    const unitPriceRounded = Math.round(unitPrice * 100) / 100
+
     if (!unitPrice || unitPrice <= 0) {
-      unitPrice = paymentAmount / itemQuantity
+      console.error('❌ OSB invalid price', { price, productcount })
+      return text('invalid price', 400)
     }
-    
-    console.log(`📦 Payment details: Total=${paymentAmount}₺, Quantity=${itemQuantity}, Unit Price=${unitPrice}₺`)
-    
-    // Kupon ID'sini bul (birim fiyata göre)
-    const supabase = await createClient()
-    
-    // Önce tam eşleşen birim fiyatı ara
+
+    console.log(`🔔 Shopier OSB: orderid=${orderid} email=${email} price=${price} qty=${itemQuantity} unit=${unitPriceRounded} istest=${istest}`)
+
+    const supabase = createAdminClient()
+
+    const { data: existing } = await supabase
+      .from('shopier_processed_orders')
+      .select('orderid')
+      .eq('orderid', orderid)
+      .single()
+
+    if (existing) {
+      console.log(`ℹ️ OSB orderid ${orderid} already processed, skipping`)
+      return text('success', 200)
+    }
+
     let { data: coupon, error: couponError } = await supabase
       .from('coupons')
       .select('*')
       .eq('is_active', true)
-      .eq('value', unitPrice)
+      .eq('value', unitPriceRounded)
       .single()
-    
-    // Eğer bulunamazsa, tüm kuponları al ve en yakın değeri bul
+
     if (couponError || !coupon) {
-      console.log(`⚠️ Exact match not found for unit price ${unitPrice}₺, searching for closest match...`)
-      
-      const { data: allCoupons, error: allCouponsError } = await supabase
+      const { data: allCoupons, error: allErr } = await supabase
         .from('coupons')
         .select('*')
         .eq('is_active', true)
         .order('value', { ascending: true })
-      
-      if (allCouponsError || !allCoupons || allCoupons.length === 0) {
-        console.error('❌ No active coupons found')
-        return NextResponse.json({ 
-          success: false, 
-          message: 'Aktif kupon bulunamadı',
-          received: body 
-        }, { status: 400 })
+
+      if (allErr || !allCoupons?.length) {
+        console.error('❌ No active coupons')
+        return text('no matching coupon', 400)
       }
-      
-      // En yakın kupon değerini bul
-      let closestCoupon = allCoupons[0]
-      let minDiff = Math.abs(closestCoupon.value - unitPrice)
-      
+
+      let closest = allCoupons[0]
+      let minDiff = Math.abs(Number(closest.value) - unitPriceRounded)
       for (const c of allCoupons) {
-        const diff = Math.abs(c.value - unitPrice)
-        if (diff < minDiff) {
-          minDiff = diff
-          closestCoupon = c
+        const d = Math.abs(Number(c.value) - unitPriceRounded)
+        if (d < minDiff) {
+          minDiff = d
+          closest = c
         }
       }
-      
-      // Eğer fark çok büyükse (örn. %10'dan fazla), hata ver
-      const diffPercent = (minDiff / unitPrice) * 100
+
+      const diffPercent = (minDiff / unitPriceRounded) * 100
       if (diffPercent > 10) {
-        console.error(`❌ Coupon value mismatch: Expected ~${unitPrice}₺, closest is ${closestCoupon.value}₺ (${diffPercent.toFixed(1)}% difference)`)
-        return NextResponse.json({ 
-          success: false, 
-          message: `Kupon değeri uyuşmuyor. Beklenen: ~${unitPrice}₺, En yakın: ${closestCoupon.value}₺`,
-          received: body 
-        }, { status: 400 })
+        console.error(`❌ Coupon mismatch: ~${unitPriceRounded}₺ vs closest ${closest.value}₺`)
+        return text('coupon mismatch', 400)
       }
-      
-      coupon = closestCoupon
-      console.log(`✅ Using closest coupon match: ${coupon.value}₺ (difference: ${minDiff.toFixed(2)}₺)`)
+      coupon = closest
     }
-    
-    // Kuponu aktif et (miktar ile)
-    console.log(`✅ Processing coupon purchase: ${itemQuantity} adet ${coupon.value}₺ kupon for ${userEmail}`)
-    const result = await purchaseCouponByEmail(userEmail, coupon.id, itemQuantity)
-    
+
+    const result = await purchaseCouponByEmail(email, coupon.id, itemQuantity, supabase)
+
     if (!result.success) {
       console.error('❌ Coupon purchase failed:', result.message)
-      return NextResponse.json({ 
-        success: false, 
-        message: result.message,
-        received: body 
-      }, { status: 500 })
+      return text(result.message, 500)
     }
-    
-    console.log('✅ Coupon activated successfully:', result.message)
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: result.message,
-      coupon_value: coupon.value,
-      quantity: itemQuantity,
-      total_amount: paymentAmount,
-      user_email: userEmail,
-      order_id: order_id || order_no
-    })
-    
-  } catch (error) {
-    console.error('❌ Shopier webhook error:', error)
-    return NextResponse.json({ 
-      success: false,
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+
+    await supabase.from('shopier_processed_orders').insert({ orderid })
+
+    console.log(`✅ OSB processed: ${orderid} – ${result.message}`)
+    return text('success', 200)
+  } catch (e) {
+    console.error('❌ Shopier OSB error:', e)
+    return text('internal error', 500)
   }
 }
 
 /**
- * GET endpoint for testing webhook (optional)
+ * GET: debug / health check
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   const supabase = await createClient()
-  
-  // Get available coupons for reference
   const { data: coupons } = await supabase
     .from('coupons')
     .select('value, id')
     .eq('is_active', true)
     .order('value', { ascending: true })
-  
-  return NextResponse.json({ 
-    message: 'Shopier webhook endpoint is active',
+
+  return NextResponse.json({
+    message: 'Shopier OSB callback active',
     url: 'https://xn--subjectve-1pb.com/api/shopier/callback',
-    note: 'This endpoint processes Shopier payment webhooks with quantity support',
-    available_coupons: coupons?.map(c => ({ value: c.value, id: c.id })) || [],
-    webhook_format: {
-      expected_fields: [
-        'email or customer_email or user_email',
-        'amount or total_amount',
-        'quantity or qty or adet (optional, defaults to 1)',
-        'unit_price or price (optional, calculated from total/quantity)',
-        'status (success/completed/paid)',
-        'order_id or order_no'
-      ],
-      note: 'If quantity is not provided, system will try to calculate it from total amount and coupon values',
-      example: {
-        single_item: {
-          total_amount: 250,
-          quantity: 1,
-          unit_price: 250
-        },
-        multiple_items: {
-          total_amount: 500,
-          quantity: 2,
-          unit_price: 250
-        }
-      }
-    }
+    format: 'POST application/x-www-form-urlencoded: res (base64 JSON), hash (HMAC-SHA256)',
+    env: {
+      SHOPIER_OSB_USERNAME: process.env.SHOPIER_OSB_USERNAME ? '***' : 'missing',
+      SHOPIER_OSB_PASSWORD: process.env.SHOPIER_OSB_PASSWORD ? '***' : 'missing',
+    },
+    available_coupons: coupons?.map((c) => ({ value: c.value, id: c.id })) ?? [],
   })
 }
