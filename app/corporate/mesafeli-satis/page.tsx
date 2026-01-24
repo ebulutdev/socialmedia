@@ -24,7 +24,7 @@ export default function MesafeliSatisPage() {
                         <strong className="text-white">Telefon:</strong> <a href="https://wa.me/905339651925" className="text-primary-green hover:text-primary-green-light transition">0533 965 19 25</a>
                       </p>
                       <p>
-                        <strong className="text-white">E-posta:</strong> asocialmedianiz@gmail.com
+                        <strong className="text-white">E-posta:</strong> subjective@gmail.com
                       </p>
                       <p className="mt-4">
                         <strong className="text-white">ALICI:</strong> Web sitesinde hizmet alan kullanıcı (bundan sonra "Müşteri" olarak anılacaktır).

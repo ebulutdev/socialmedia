@@ -35,8 +35,8 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm">
               <span>📧</span>
-              <a href="mailto:asocialmedianiz@gmail.com" className="hover:text-primary-green transition-colors">
-                asocialmedianiz@gmail.com
+              <a href="mailto:subjective@gmail.com" className="hover:text-primary-green transition-colors">
+                subjective@gmail.com
               </a>
             </div>
           </div>
@@ -164,8 +164,8 @@ export default function Footer() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs sm:text-sm mb-1">E-posta</p>
-                  <a href="mailto:asocialmedianiz@gmail.com" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
-                    asocialmedianiz@gmail.com
+                  <a href="mailto:subjective@gmail.com" className="text-primary-green hover:text-primary-green-light transition-colors text-sm sm:text-base">
+                    subjective@gmail.com
                   </a>
                 </div>
               </li>

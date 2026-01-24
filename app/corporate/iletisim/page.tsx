@@ -22,8 +22,8 @@ export default function IletisimPage() {
                       </div>
                       <div>
                         <h3 className="text-white font-semibold text-base sm:text-lg mb-1">E-posta</h3>
-                        <a href="mailto:asocialmedianiz@gmail.com" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
-                          asocialmedianiz@gmail.com
+                        <a href="mailto:subjective@gmail.com" className="text-primary-green hover:text-primary-green-light transition text-sm sm:text-base">
+                          subjective@gmail.com
                         </a>
                       </div>
                     </div>

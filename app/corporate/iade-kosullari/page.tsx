@@ -75,7 +75,7 @@ export default function IadeKosullariPage() {
                   <section>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">5. İade Süreci</h2>
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                      İade talebi için kullanıcı, <strong className="text-primary-green">asocialmedianiz@gmail.com</strong> adresine e-posta göndermelidir. Talep en geç 3 iş günü içinde değerlendirilir ve uygun görülmesi halinde, ödeme yapılan yöntemle 5 iş günü içerisinde iade gerçekleştirilir.
+                      İade talebi için kullanıcı, <strong className="text-primary-green">subjective@gmail.com</strong> adresine e-posta göndermelidir. Talep en geç 3 iş günü içinde değerlendirilir ve uygun görülmesi halinde, ödeme yapılan yöntemle 5 iş günü içerisinde iade gerçekleştirilir.
                     </p>
                   </section>
 
