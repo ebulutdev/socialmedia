@@ -99,17 +99,6 @@ const servicesData: Service[] = [
         avgTime: '48 saat',
         features: ['99 Gün Telafili ♻️', 'Eski Hesaplar', 'Günlük Hız: 100K'],
       },
-      {
-        id: '9320',
-        name: 'Instagram Premium Türk Takipçi [ 365 Gün Garantili ]',
-        amount: '50 - 1.000.000 Takipçi',
-        price: '24.168₺ / 1K',
-        serviceId: '9320',
-        min: 50,
-        max: 1000000,
-        avgTime: '2 saat 5 dakika',
-        features: ['365 Gün Telafili ♻️', '%100 Türk', 'Saatte 10K', 'Max 100K'],
-      },
     ],
   },
   {
