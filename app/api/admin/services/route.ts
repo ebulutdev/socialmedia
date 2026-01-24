@@ -108,6 +108,19 @@ export async function POST(request: NextRequest) {
         const priceStr = pkg.price.replace(/[^\d,.]/g, '').replace(',', '.')
         pricePer1K = parseFloat(priceStr) || 0
 
+        // Debug: Twitch hizmetlerini logla
+        if (service.id === 'twitch') {
+          console.log('Twitch service found:', {
+            service_id: service.id,
+            service_name: service.name,
+            package_id: pkg.id,
+            package_name: pkg.name,
+            price: pkg.price,
+            parsed_price: pricePer1K,
+            category: pkg.category
+          })
+        }
+
         servicePricesToInsert.push({
           service_id: service.id,
           service_name: service.name,
@@ -118,6 +131,9 @@ export async function POST(request: NextRequest) {
         })
       })
     })
+
+    console.log(`Total services to insert: ${servicePricesToInsert.length}`)
+    console.log(`Twitch services count: ${servicePricesToInsert.filter(s => s.service_id === 'twitch').length}`)
 
     // Önce mevcut kayıtları sil (yeniden yükleme için)
     // Tüm kayıtları silmek için boş bir WHERE koşulu kullanıyoruz
@@ -149,6 +165,68 @@ export async function POST(request: NextRequest) {
     console.error('Admin services POST error:', error)
     return NextResponse.json(
       { error: 'Hizmet fiyatları yüklenirken bir hata oluştu' },
+      { status: 500 }
+    )
+  }
+}
+
+// PATCH: Tek bir hizmet fiyatını güncelle
+export async function PATCH(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Giriş yapmanız gerekiyor' },
+        { status: 401 }
+      )
+    }
+
+    if (!isAdminEmail(user.email)) {
+      return NextResponse.json(
+        { error: 'Yetkisiz erişim' },
+        { status: 403 }
+      )
+    }
+
+    const body = await request.json()
+    const { id, price_per_1k } = body
+
+    if (!id || price_per_1k === undefined || price_per_1k === null) {
+      return NextResponse.json(
+        { error: 'id ve price_per_1k gereklidir' },
+        { status: 400 }
+      )
+    }
+
+    if (typeof price_per_1k !== 'number' || price_per_1k < 0) {
+      return NextResponse.json(
+        { error: 'price_per_1k geçerli bir pozitif sayı olmalıdır' },
+        { status: 400 }
+      )
+    }
+
+    const { data, error } = await supabase
+      .from('service_prices')
+      .update({ price_per_1k })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return NextResponse.json({ 
+      message: 'Fiyat başarıyla güncellendi',
+      service: data
+    })
+  } catch (error) {
+    console.error('Admin services PATCH error:', error)
+    return NextResponse.json(
+      { error: 'Fiyat güncellenirken bir hata oluştu' },
       { status: 500 }
     )
   }

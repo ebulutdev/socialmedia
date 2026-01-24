@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Shield, Package, Clock, CheckCircle2, XCircle, AlertCircle, Loader2, ArrowLeft, ExternalLink, User, Mail, DollarSign, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react'
+import { Shield, Package, Clock, CheckCircle2, XCircle, AlertCircle, Loader2, ArrowLeft, ExternalLink, User, Mail, DollarSign, ChevronDown, ChevronUp, RefreshCw, Edit2, Save, X } from 'lucide-react'
 import { useAuth } from '@/lib/context/AuthContext'
 import Header from '@/components/Header'
 
@@ -64,6 +64,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [servicesLoading, setServicesLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editPrice, setEditPrice] = useState<number>(0)
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   const fetchOrders = async () => {
     try {
@@ -105,6 +108,10 @@ export default function AdminPage() {
 
       setServicePrices(data.services || [])
       setGroupedServices(data.groupedByCategory || {})
+      
+      // Debug: Twitch hizmetlerini kontrol et
+      const twitchServices = (data.services || []).filter((s: ServicePrice) => s.service_id === 'twitch')
+      console.log('Twitch services loaded:', twitchServices.length, twitchServices)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu')
     } finally {
@@ -154,6 +161,69 @@ export default function AdminPage() {
       ...prev,
       [category]: !prev[category]
     }))
+  }
+
+  const startEditing = (service: ServicePrice) => {
+    setEditingId(service.id)
+    setEditPrice(service.price_per_1k)
+  }
+
+  const cancelEditing = () => {
+    setEditingId(null)
+    setEditPrice(0)
+  }
+
+  const updatePrice = async (serviceId: string) => {
+    if (editPrice <= 0) {
+      alert('Fiyat 0\'dan büyük olmalıdır')
+      return
+    }
+
+    try {
+      setUpdatingId(serviceId)
+      setError(null)
+      
+      const response = await fetch('/api/admin/services', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: serviceId,
+          price_per_1k: editPrice
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Fiyat güncellenemedi')
+      }
+
+      // State'i güncelle
+      setServicePrices(prev => 
+        prev.map(sp => sp.id === serviceId ? { ...sp, price_per_1k: editPrice } : sp)
+      )
+
+      // Grouped services'i de güncelle
+      setGroupedServices(prev => {
+        const updated = { ...prev }
+        Object.keys(updated).forEach(category => {
+          updated[category] = updated[category].map(sp => 
+            sp.id === serviceId ? { ...sp, price_per_1k: editPrice } : sp
+          )
+        })
+        return updated
+      })
+
+      setEditingId(null)
+      setEditPrice(0)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fiyat güncellenirken bir hata oluştu')
+      alert('Hata: ' + (err instanceof Error ? err.message : 'Bilinmeyen hata'))
+    } finally {
+      setUpdatingId(null)
+    }
   }
 
   const categoryLabels: Record<string, string> = {
@@ -441,20 +511,84 @@ export default function AdminPage() {
                                   <th className="text-left p-2 text-gray-400 font-medium">Package ID</th>
                                   <th className="text-left p-2 text-gray-400 font-medium">Paket Adı</th>
                                   <th className="text-left p-2 text-gray-400 font-medium">1K Fiyatı</th>
+                                  <th className="text-left p-2 text-gray-400 font-medium">İşlem</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {services.map((service) => (
-                                  <tr key={service.id} className="border-b border-dark-card-light hover:bg-dark-card-light/50 transition-colors">
-                                    <td className="p-2 text-gray-300 text-[11px] font-mono">{service.service_id}</td>
-                                    <td className="p-2 text-white text-[11px]">{service.service_name}</td>
-                                    <td className="p-2 text-gray-300 text-[11px] font-mono">{service.package_id}</td>
-                                    <td className="p-2 text-gray-300 text-[11px]">{service.package_name}</td>
-                                    <td className="p-2 text-primary-green font-semibold text-[11px]">
-                                      {service.price_per_1k.toFixed(2)}₺
-                                    </td>
-                                  </tr>
-                                ))}
+                                {services.map((service) => {
+                                  const isEditing = editingId === service.id
+                                  const isUpdating = updatingId === service.id
+                                  
+                                  return (
+                                    <tr key={service.id} className="border-b border-dark-card-light hover:bg-dark-card-light/50 transition-colors">
+                                      <td className="p-2 text-gray-300 text-[11px] font-mono">{service.service_id}</td>
+                                      <td className="p-2 text-white text-[11px]">{service.service_name}</td>
+                                      <td className="p-2 text-gray-300 text-[11px] font-mono">{service.package_id}</td>
+                                      <td className="p-2 text-gray-300 text-[11px]">{service.package_name}</td>
+                                      <td className="p-2">
+                                        {isEditing ? (
+                                          <div className="flex items-center gap-1">
+                                            <input
+                                              type="number"
+                                              step="0.01"
+                                              min="0"
+                                              value={editPrice}
+                                              onChange={(e) => setEditPrice(parseFloat(e.target.value) || 0)}
+                                              className="w-20 px-2 py-1 bg-dark-card-light border border-primary-green/30 rounded text-[11px] text-white focus:outline-none focus:border-primary-green"
+                                              autoFocus
+                                              onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                  updatePrice(service.id)
+                                                } else if (e.key === 'Escape') {
+                                                  cancelEditing()
+                                                }
+                                              }}
+                                            />
+                                            <span className="text-primary-green text-[11px]">₺</span>
+                                          </div>
+                                        ) : (
+                                          <span className="text-primary-green font-semibold text-[11px]">
+                                            {service.price_per_1k.toFixed(2)}₺
+                                          </span>
+                                        )}
+                                      </td>
+                                      <td className="p-2">
+                                        {isEditing ? (
+                                          <div className="flex items-center gap-1">
+                                            <button
+                                              onClick={() => updatePrice(service.id)}
+                                              disabled={isUpdating}
+                                              className="p-1 bg-primary-green hover:bg-primary-green-light text-white rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                              title="Kaydet"
+                                            >
+                                              {isUpdating ? (
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                              ) : (
+                                                <Save className="w-3 h-3" />
+                                              )}
+                                            </button>
+                                            <button
+                                              onClick={cancelEditing}
+                                              disabled={isUpdating}
+                                              className="p-1 bg-gray-600 hover:bg-gray-500 text-white rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                              title="İptal"
+                                            >
+                                              <X className="w-3 h-3" />
+                                            </button>
+                                          </div>
+                                        ) : (
+                                          <button
+                                            onClick={() => startEditing(service)}
+                                            className="p-1 bg-dark-card-light hover:bg-primary-green/20 text-gray-400 hover:text-primary-green rounded transition-colors"
+                                            title="Düzenle"
+                                          >
+                                            <Edit2 className="w-3 h-3" />
+                                          </button>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  )
+                                })}
                               </tbody>
                             </table>
                           </div>
