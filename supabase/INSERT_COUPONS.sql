@@ -2,6 +2,11 @@
 -- Run this SQL in your Supabase SQL Editor
 -- Make sure COUPON_SCHEMA.sql is run first!
 
+-- 1₺ Test Kuponu
+INSERT INTO public.coupons (value, sophier_link, is_active)
+VALUES (1, 'https://www.shopier.com/subjectivemedia/43568548', true)
+ON CONFLICT (value) DO UPDATE SET sophier_link = EXCLUDED.sophier_link, is_active = EXCLUDED.is_active;
+
 -- 250₺ Kupon
 INSERT INTO public.coupons (value, sophier_link, is_active)
 VALUES (250, 'https://www.shopier.com/subjectivemedia/43528547', true)
