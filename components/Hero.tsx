@@ -36,7 +36,7 @@ export default function Hero() {
                   <span>Kupon Satın Al</span>
                 </Link>
               </div>
-              <p className="text-gray-300 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+              <p className="text-gray-300 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] [text-shadow:_0_2px_8px_rgba(0,0,0,0.9)]">
                 Tamamen otomatik sistem ile siparişleriniz 7 Gün 24 Saat hızlı ve
                 sorunsuz bir şekilde tamamlanmaktadır.
               </p>

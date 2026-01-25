@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, Facebook, Youtube, Music, Twitter, Radio } from 'lucide-react'
+import { Instagram, Facebook, Youtube, Radio } from 'lucide-react'
+import { ServiceLogo } from './ServiceLogos'
 
 const serviceImages = [
   '/images/Ekran Resmi 2026-01-22 01.40.05.png',
@@ -14,12 +15,12 @@ const serviceImages = [
 ]
 
 const services = [
-  { id: 'instagram', name: 'INSTAGRAM', icon: Instagram, color: 'from-pink-500 to-purple-500' },
-  { id: 'tiktok', name: 'TİKTOK', icon: Music, color: 'from-purple-500 to-pink-500' },
-  { id: 'twitter', name: 'TWITTER (X)', icon: Twitter, color: 'from-blue-400 to-blue-600' },
-  { id: 'youtube', name: 'YOUTUBE', icon: Youtube, color: 'from-red-500 to-red-700' },
-  { id: 'facebook', name: 'FACEBOOK', icon: Facebook, color: 'from-blue-600 to-blue-800' },
-  { id: 'twitch', name: 'TWITCH', icon: Radio, color: 'from-purple-600 to-purple-800' },
+  { id: 'instagram', name: 'INSTAGRAM', icon: Instagram, useServiceLogo: false, color: 'from-pink-500 to-purple-500' },
+  { id: 'tiktok', name: 'TİKTOK', icon: null, useServiceLogo: true, color: 'from-purple-500 to-pink-500' },
+  { id: 'twitter', name: 'TWITTER (X)', icon: null, useServiceLogo: true, color: 'from-blue-400 to-blue-600' },
+  { id: 'youtube', name: 'YOUTUBE', icon: Youtube, useServiceLogo: false, color: 'from-red-500 to-red-700' },
+  { id: 'facebook', name: 'FACEBOOK', icon: Facebook, useServiceLogo: false, color: 'from-blue-600 to-blue-800' },
+  { id: 'twitch', name: 'TWITCH', icon: Radio, useServiceLogo: false, color: 'from-purple-600 to-purple-800' },
 ]
 
 export default function Services() {
@@ -50,7 +51,11 @@ export default function Services() {
                 
                 <div className="relative z-10 flex flex-col items-center justify-center h-full">
                   <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-3 sm:mb-4 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center backdrop-blur-sm bg-opacity-90`}>
-                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                    {service.useServiceLogo ? (
+                      <ServiceLogo serviceId={service.id} className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                    ) : (
+                      Icon && <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                    )}
                   </div>
                   <p className="text-white font-bold text-xs sm:text-sm group-hover:text-primary-green transition text-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] line-clamp-2">
                     {service.name}

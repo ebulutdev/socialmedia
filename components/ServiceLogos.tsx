@@ -42,7 +42,7 @@ export function YouTubeLogo({ className }: { className?: string }) {
   )
 }
 
-// TikTok Logo
+// TikTok Logo (Official 2024-2025 - Musical Note)
 export function TikTokLogo({ className }: { className?: string }) {
   return (
     <svg
