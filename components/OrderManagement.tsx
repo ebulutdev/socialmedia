@@ -28,7 +28,7 @@ export default function OrderManagement({}: OrderManagementProps) {
         return
       }
 
-      const statuses = await smmturkClient.getMultipleOrderStatus(apiKey, ids)
+      const statuses = await smmturkClient.getMultipleOrderStatus(ids)
       setOrderStatuses(statuses)
     } catch (error) {
       alert('Sipariş durumu alınırken hata oluştu: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'))

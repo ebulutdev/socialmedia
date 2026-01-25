@@ -83,10 +83,9 @@ export const smmturkClient = {
   /**
    * Create refill for an order
    */
-  async createRefill(apiKey: string, orderId: number): Promise<any> {
+  async createRefill(orderId: number): Promise<any> {
     return apiCall<any>({
       action: 'refill',
-      apiKey,
       order: orderId,
     })
   },
