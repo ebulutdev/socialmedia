@@ -57,14 +57,8 @@ function OrderCard({ order, onRefresh }: { order: Order; onRefresh: () => void }
 
     setIsRefreshing(true)
     try {
-      // Get API key from localStorage or user settings
-      const apiKey = localStorage.getItem('smmturk_api_key') || ''
-      if (!apiKey) {
-        alert('API anahtarı bulunamadı')
-        return
-      }
-
-      const status = await smmturkClient.getOrderStatus(apiKey, order.smmturk_order_id)
+      // API key is handled server-side for security
+      const status = await smmturkClient.getOrderStatus(order.smmturk_order_id)
       
       // Update order status based on SMMTurk status
       let newStatus: Order['status'] = 'processing'

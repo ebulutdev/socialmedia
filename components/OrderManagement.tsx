@@ -5,10 +5,10 @@ import { Loader2, CheckCircle2, XCircle, RefreshCw, X } from 'lucide-react'
 import { smmturkClient } from '@/lib/api/smmturk-client'
 
 interface OrderManagementProps {
-  apiKey: string
+  // API key is handled server-side for security
 }
 
-export default function OrderManagement({ apiKey }: OrderManagementProps) {
+export default function OrderManagement({}: OrderManagementProps) {
   const [orderIds, setOrderIds] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [orderStatuses, setOrderStatuses] = useState<Record<string, any>>({})
@@ -40,7 +40,7 @@ export default function OrderManagement({ apiKey }: OrderManagementProps) {
   const handleGetBalance = async () => {
     setIsLoading(true)
     try {
-      const bal = await smmturkClient.getBalance(apiKey)
+      const bal = await smmturkClient.getBalance()
       setBalance(bal)
     } catch (error) {
       alert('Bakiye bilgisi alınırken hata oluştu: ' + (error instanceof Error ? error.message : 'Bilinmeyen hata'))
@@ -62,14 +62,14 @@ export default function OrderManagement({ apiKey }: OrderManagementProps) {
     setIsLoading(true)
     try {
       const ids = orderIds.split(',').map((id) => parseInt(id.trim())).filter((id) => !isNaN(id))
-      const results = await smmturkClient.cancelOrders(apiKey, ids)
+      const results = await smmturkClient.cancelOrders(ids)
       
       const successCount = results.filter((r: any) => r.cancel === 1).length
       alert(`${successCount}/${results.length} sipariş iptal edildi`)
       
       // Refresh status after cancel
       if (ids.length > 0) {
-        const statuses = await smmturkClient.getMultipleOrderStatus(apiKey, ids)
+        const statuses = await smmturkClient.getMultipleOrderStatus(ids)
         setOrderStatuses(statuses)
       }
     } catch (error) {

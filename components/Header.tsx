@@ -196,7 +196,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <span className="text-gray-400 flex-shrink-0">📧</span>
-            <span className="text-gray-300 hover:text-primary-green transition-colors truncate text-[10px] sm:text-sm">subjective@gmail.com</span>
+            <span className="text-gray-300 hover:text-primary-green transition-colors truncate text-[10px] sm:text-sm">subjecctive@gmail.com</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 sm:gap-5">
             <a href="/#campaigns" className="hover:text-primary-green transition-colors font-medium whitespace-nowrap">Özel Kampanyalar</a>

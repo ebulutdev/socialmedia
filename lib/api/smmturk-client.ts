@@ -27,33 +27,16 @@ async function apiCall<T>(body: Record<string, any>): Promise<T> {
 }
 
 /**
- * Get API key from environment or user input
- * In production, this should be stored securely
- */
-function getApiKey(): string {
-  // For now, we'll use an environment variable
-  // In production, you might want to get this from user settings or a secure storage
-  if (typeof window !== 'undefined') {
-    // Client-side: could be stored in localStorage or fetched from user settings
-    const stored = localStorage.getItem('smmturk_api_key')
-    if (stored) return stored
-  }
-  
-  // Fallback to environment variable (server-side only)
-  return process.env.NEXT_PUBLIC_SMMTURK_API_KEY || ''
-}
-
-/**
  * Client-side functions to interact with SMMTurk API
+ * API key is handled server-side for security
  */
 export const smmturkClient = {
   /**
    * Get list of all services
    */
-  async getServices(apiKey?: string): Promise<any[]> {
+  async getServices(): Promise<any[]> {
     return apiCall<any[]>({
       action: 'services',
-      apiKey: apiKey || getApiKey(),
     })
   },
 
@@ -61,7 +44,6 @@ export const smmturkClient = {
    * Add a new order
    */
   async addOrder(
-    apiKey: string,
     serviceId: number,
     link: string,
     quantity: number,
@@ -70,7 +52,6 @@ export const smmturkClient = {
   ): Promise<{ order: number }> {
     return apiCall<{ order: number }>({
       action: 'add',
-      apiKey,
       service: serviceId,
       link,
       quantity,
@@ -82,10 +63,9 @@ export const smmturkClient = {
   /**
    * Get order status
    */
-  async getOrderStatus(apiKey: string, orderId: number): Promise<any> {
+  async getOrderStatus(orderId: number): Promise<any> {
     return apiCall<any>({
       action: 'status',
-      apiKey,
       order: orderId,
     })
   },
@@ -93,10 +73,9 @@ export const smmturkClient = {
   /**
    * Get multiple orders status
    */
-  async getMultipleOrderStatus(apiKey: string, orderIds: number[]): Promise<any> {
+  async getMultipleOrderStatus(orderIds: number[]): Promise<any> {
     return apiCall<any>({
       action: 'status',
-      apiKey,
       orders: orderIds.join(','),
     })
   },
@@ -115,10 +94,9 @@ export const smmturkClient = {
   /**
    * Create refill for multiple orders
    */
-  async createMultipleRefill(apiKey: string, orderIds: number[]): Promise<any[]> {
+  async createMultipleRefill(orderIds: number[]): Promise<any[]> {
     return apiCall<any[]>({
       action: 'refill',
-      apiKey,
       orders: orderIds.join(','),
     })
   },
@@ -126,10 +104,9 @@ export const smmturkClient = {
   /**
    * Get refill status
    */
-  async getRefillStatus(apiKey: string, refillId: number): Promise<any> {
+  async getRefillStatus(refillId: number): Promise<any> {
     return apiCall<any>({
       action: 'refill_status',
-      apiKey,
       refill: refillId,
     })
   },
@@ -137,10 +114,9 @@ export const smmturkClient = {
   /**
    * Get multiple refills status
    */
-  async getMultipleRefillStatus(apiKey: string, refillIds: number[]): Promise<any[]> {
+  async getMultipleRefillStatus(refillIds: number[]): Promise<any[]> {
     return apiCall<any[]>({
       action: 'refill_status',
-      apiKey,
       refills: refillIds.join(','),
     })
   },
@@ -148,10 +124,9 @@ export const smmturkClient = {
   /**
    * Cancel orders
    */
-  async cancelOrders(apiKey: string, orderIds: number[]): Promise<any[]> {
+  async cancelOrders(orderIds: number[]): Promise<any[]> {
     return apiCall<any[]>({
       action: 'cancel',
-      apiKey,
       orders: orderIds.join(','),
     })
   },
@@ -159,10 +134,9 @@ export const smmturkClient = {
   /**
    * Get user balance
    */
-  async getBalance(apiKey: string): Promise<{ balance: string; currency: string }> {
+  async getBalance(): Promise<{ balance: string; currency: string }> {
     return apiCall<{ balance: string; currency: string }>({
       action: 'balance',
-      apiKey,
     })
   },
 }

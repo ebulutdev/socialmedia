@@ -26,7 +26,7 @@ export default function HizmetSartlariPage() {
                         <strong className="text-white">SATICI:</strong> subjective
                       </p>
                       <p>
-                        <strong className="text-white">E-posta:</strong> subjective@gmail.com
+                        <strong className="text-white">E-posta:</strong> subjecctive@gmail.com
                       </p>
                       <p className="mt-4">
                         <strong className="text-white">Hizmet:</strong> Firma tarafından sunulan sosyal medya etkileşimi artırmaya yönelik dijital hizmetlerdir.
