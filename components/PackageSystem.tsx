@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { ShoppingCart, Check, ArrowLeft } from 'lucide-react'
+import { ShoppingCart, Check, ArrowLeft, BadgePercent, Sparkles } from 'lucide-react'
 import { ServiceLogo } from './ServiceLogos'
 import { useCart } from '@/lib/context/CartContext'
 import { useToast } from '@/lib/context/ToastContext'
@@ -223,36 +223,88 @@ function PackageDetailView({
 
       {/* Miktar Seçenekleri Grid - 3 sütun, kompakt - Mobile Optimized */}
       <div className="grid grid-cols-3 gap-2 sm:gap-1.5">
-        {packageOptions.slice(0, 15).map((option) => {
-          const isSelected = currentSelected === option.amount.toString()
-          return (
-            <button
-              key={option.amount}
-              onClick={() => setSelectedOption(option.amount.toString())}
-              className={`p-2 sm:p-2.5 rounded-lg border-2 transition text-center touch-manipulation min-h-[60px] sm:min-h-[70px] ${
-                isSelected
-                  ? 'border-primary-green bg-primary-green/10'
-                  : 'border-dark-card-light bg-dark-bg active:border-primary-green/50'
-              }`}
-            >
-              <p className="text-white font-semibold text-xs sm:text-sm mb-1">
-                {option.amount.toLocaleString('tr-TR')}
-              </p>
-              <div
-                className={`rounded p-1.5 sm:p-1 mb-1 ${
-                  isSelected ? 'bg-primary-green' : 'bg-dark-card-light'
+        {(() => {
+          // En yüksek fiyatlı seçeneği bul (kampanya için)
+          const campaignOption = packageOptions.reduce((max, opt) => {
+            const maxPrice = parseFloat(max.price.replace(/[^\d,]/g, '').replace(',', '.'))
+            const optPrice = parseFloat(opt.price.replace(/[^\d,]/g, '').replace(',', '.'))
+            return optPrice > maxPrice ? opt : max
+          }, packageOptions[0])
+          
+          return packageOptions.slice(0, 15).map((option) => {
+            const isSelected = currentSelected === option.amount.toString()
+            const isCampaign = option.amount === campaignOption.amount
+            const currentPrice = parseFloat(option.price.replace(/[^\d,]/g, '').replace(',', '.'))
+            const oldPrice = isCampaign ? Math.round(currentPrice / 0.65) : 0
+            
+            const savings = isCampaign ? oldPrice - currentPrice : 0
+            
+            return (
+              <button
+                key={option.amount}
+                onClick={() => setSelectedOption(option.amount.toString())}
+                className={`p-2 sm:p-2.5 rounded-lg border-2 transition-all duration-300 text-center touch-manipulation min-h-[60px] sm:min-h-[70px] relative overflow-hidden ${
+                  isSelected
+                    ? 'border-primary-green bg-primary-green/10 shadow-lg shadow-primary-green/20'
+                    : isCampaign
+                    ? 'border-red-500/60 bg-gradient-to-br from-red-500/15 via-orange-500/10 to-dark-bg shadow-[0_0_25px_rgba(239,68,68,0.4)] hover:shadow-[0_0_35px_rgba(239,68,68,0.6)] ring-2 ring-red-500/30 ring-offset-0'
+                    : 'border-dark-card-light bg-dark-bg active:border-primary-green/50'
                 }`}
               >
-                <p className="text-white font-bold text-[10px] sm:text-xs leading-tight">{option.price}</p>
-              </div>
-              {isSelected && (
-                <div className="flex justify-center mt-1">
-                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary-green" />
+                {/* Üst kampanya şeridi */}
+                {isCampaign && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white py-1 px-2 flex items-center justify-center gap-1.5 z-20">
+                    <Sparkles className="w-3 h-3 animate-pulse" />
+                    <span className="text-[9px] sm:text-[10px] font-black tracking-wide">KAMPANYA · %35 İNDİRİM</span>
+                    <Sparkles className="w-3 h-3 animate-pulse" />
+                  </div>
+                )}
+                
+                {/* Köşe rozeti (ribbon) */}
+                {isCampaign && (
+                  <div className="absolute -top-1 -right-1 z-30 w-16 h-16 overflow-hidden">
+                    <div className="absolute top-3 right-3 w-20 bg-gradient-to-br from-red-500 to-orange-500 text-white text-[9px] font-black py-0.5 px-2 shadow-lg transform rotate-45 translate-x-6 -translate-y-2">
+                      %35
+                    </div>
+                  </div>
+                )}
+                
+                <div className={`${isCampaign ? 'mt-6' : ''}`}>
+                  <p className="text-white font-semibold text-xs sm:text-sm mb-1">
+                    {option.amount.toLocaleString('tr-TR')}
+                  </p>
+                  <div
+                    className={`rounded p-1.5 sm:p-1 mb-1 ${
+                      isSelected ? 'bg-primary-green' : isCampaign ? 'bg-gradient-to-br from-red-500/20 to-orange-500/20' : 'bg-dark-card-light'
+                    }`}
+                  >
+                    {isCampaign ? (
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-center gap-1">
+                          <span className="text-gray-400 text-[10px] sm:text-xs line-through font-semibold">{oldPrice.toLocaleString('tr-TR')}₺</span>
+                          <span className="text-gray-500 text-[8px]">Eski Fiyat</span>
+                        </div>
+                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-orange-400 to-red-400 font-black text-sm sm:text-base animate-pulse leading-tight">
+                          {option.price}
+                        </p>
+                        <div className="flex items-center justify-center gap-1 mt-0.5">
+                          <span className="text-primary-green text-[9px] sm:text-[10px] font-bold">💚 {savings.toLocaleString('tr-TR')}₺ TASARRUF</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-white font-bold text-[10px] sm:text-xs leading-tight">{option.price}</p>
+                    )}
+                  </div>
                 </div>
-              )}
-            </button>
-          )
-        })}
+                {isSelected && (
+                  <div className="flex justify-center mt-1">
+                    <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary-green" />
+                  </div>
+                )}
+              </button>
+            )
+          })
+        })()}
       </div>
 
       {/* Sepete Ekle Butonu */}
