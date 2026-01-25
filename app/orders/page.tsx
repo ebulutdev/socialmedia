@@ -105,11 +105,6 @@ function OrderCard({ order, onRefresh }: { order: Order; onRefresh: () => void }
               <span className={`px-3 py-1 rounded-lg ${config.bgColor} border ${config.borderColor} ${config.color} text-sm font-semibold`}>
                 {config.label}
               </span>
-              {order.smmturk_order_id && (
-                <span className="text-gray-400 text-sm">
-                  SMMTurk ID: <span className="text-white font-mono">{order.smmturk_order_id}</span>
-                </span>
-              )}
             </div>
           </div>
         </div>

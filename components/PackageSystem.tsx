@@ -452,7 +452,7 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
     const priceStr = pkg.price.split('/')[0].trim()
     const numericPrice = parseFloat(priceStr.replace(/[^\d,]/g, '').replace(',', '.'))
     const isFixedPrice = min === max && !pkg.price.includes('/')
-    const maxAmount = Math.min(max, 10000)
+    const maxAmount = Math.min(max, max > 10000 ? 50000 : 10000)
 
     // Sabit miktarlı paketler (etkileşim, canlı yayın vb.): tek seçenek, fiyat aynen
     if (isFixedPrice) {
@@ -460,6 +460,7 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
     }
 
     const amounts: number[] = []
+    if (min <= 20) amounts.push(20)
     if (min <= 50) amounts.push(50)
     if (min <= 100) amounts.push(100)
     if (min <= 250) amounts.push(250)
@@ -470,6 +471,8 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
     if (min <= 5000 && maxAmount >= 5000) amounts.push(5000)
     if (min <= 7500 && maxAmount >= 7500) amounts.push(7500)
     if (min <= 10000 && maxAmount >= 10000) amounts.push(10000)
+    if (min <= 25000 && maxAmount >= 25000) amounts.push(25000)
+    if (min <= 50000 && maxAmount >= 50000) amounts.push(50000)
 
     return amounts
       .filter((a) => a >= min && a <= maxAmount)

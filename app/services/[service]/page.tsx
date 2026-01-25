@@ -41,7 +41,7 @@ function PackageDetail({
     const priceStr = pkg.price.split('/')[0].trim()
     const numericPrice = parseFloat(priceStr.replace(/[^\d,]/g, '').replace(',', '.'))
     const isFixedPrice = min === max && !pkg.price.includes('/')
-    const maxAmount = Math.min(max, 10000)
+    const maxAmount = Math.min(max, max > 10000 ? 50000 : 10000)
 
     // Sabit miktarlı paketler (etkileşim, canlı yayın vb.): tek seçenek, fiyat aynen
     if (isFixedPrice) {
@@ -49,6 +49,7 @@ function PackageDetail({
     }
 
     const amounts: number[] = []
+    if (min <= 20) amounts.push(20)
     if (min <= 50) amounts.push(50)
     if (min <= 100) amounts.push(100)
     if (min <= 250) amounts.push(250)
@@ -59,6 +60,8 @@ function PackageDetail({
     if (min <= 5000 && maxAmount >= 5000) amounts.push(5000)
     if (min <= 7500 && maxAmount >= 7500) amounts.push(7500)
     if (min <= 10000 && maxAmount >= 10000) amounts.push(10000)
+    if (min <= 25000 && maxAmount >= 25000) amounts.push(25000)
+    if (min <= 50000 && maxAmount >= 50000) amounts.push(50000)
 
     return amounts
       .filter((a) => a >= min && a <= maxAmount)
@@ -605,13 +608,13 @@ export default function ServicePage() {
             {/* Example Users */}
             <div className="bg-dark-card rounded-xl p-3 sm:p-4 w-full overflow-hidden">
               <h4 className="text-white font-semibold mb-2 text-xs sm:text-sm">ÖRNEK KULLANICILAR</h4>
-              <div className="flex gap-1.5 sm:gap-2 flex-wrap overflow-x-auto scrollbar-hide -mx-3 sm:-mx-0 px-3 sm:px-0 w-full">
+              <div className="flex gap-2 sm:gap-3 flex-wrap overflow-x-auto scrollbar-hide -mx-3 sm:-mx-0 px-3 sm:px-0 w-full">
                 {exampleUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="relative group flex-shrink-0"
+                    className="flex flex-col items-center flex-shrink-0 min-w-0"
                   >
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-primary-green/30 active:border-primary-green sm:hover:border-primary-green transition-all cursor-pointer touch-manipulation">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-primary-green/30 sm:hover:border-primary-green transition-all flex-shrink-0">
                       <Image
                         src={user.image}
                         alt={user.username}
@@ -620,15 +623,9 @@ export default function ServicePage() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    {/* Tooltip - Hover'da kullanıcı adı göster */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-all duration-200 pointer-events-none z-20">
-                      <div className="bg-dark-card-light text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl border border-primary-green/30 backdrop-blur-sm">
-                        <span className="font-semibold">@{user.username}</span>
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-px">
-                          <div className="w-2 h-2 bg-dark-card-light border-r border-b border-primary-green/30 transform rotate-45"></div>
-                        </div>
-                      </div>
-                    </div>
+                    <span className="text-gray-400 text-[10px] sm:text-xs mt-1 truncate max-w-[56px] sm:max-w-[64px] text-center" title={`@${user.username}`}>
+                      @{user.username}
+                    </span>
                   </div>
                 ))}
               </div>
