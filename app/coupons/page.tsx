@@ -164,7 +164,7 @@ export default function CouponsPage() {
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm font-medium text-amber-200">
               <p className="mb-1">
-                Shopier ödeme sayfasında yazacağınız e-posta adresi, hesabınızdaki e-posta ile <span className="font-semibold text-amber-100">aynen aynı</span> olmalıdır. Aksi halde bakiye yüklenemez.
+                Shopier ödeme sayfasında yazacağınız e-posta adresi, hesabınızdaki e-posta ile <span className="font-semibold text-amber-100">aynı</span> olmalıdır. Aksi halde bakiye yüklenemez.
               </p>
               {user?.email && (
                 <p className="text-amber-100/90 mt-2">

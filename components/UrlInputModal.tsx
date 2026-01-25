@@ -34,8 +34,7 @@ export default function UrlInputModal({
       return false
     }
 
-    // Basit URL kontrolü - http/https ile başlamalı veya www ile başlamalı
-    const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+    // Servis-spesifik URL pattern'leri (query string'leri ve hash'leri de kabul eder)
     const instagramPattern = /^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)/
     const facebookPattern = /^(https?:\/\/)?(www\.)?(facebook\.com|fb\.com)/
     const youtubePattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)/
@@ -44,33 +43,41 @@ export default function UrlInputModal({
 
     const normalizedUrl = urlString.trim().toLowerCase()
     
-    // Genel URL kontrolü
-    if (!urlPattern.test(normalizedUrl)) {
-      setError('Geçerli bir URL giriniz (örn: instagram.com/kullaniciadi)')
-      return false
-    }
-
-    // Servise göre URL kontrolü
+    // Servise göre URL kontrolü (profil, post, video, vs. tüm URL formatlarını kabul eder)
     const serviceLower = serviceName.toLowerCase()
-    if (serviceLower.includes('instagram') && !instagramPattern.test(normalizedUrl)) {
-      setError('Instagram URL\'si giriniz (örn: instagram.com/kullaniciadi)')
-      return false
-    }
-    if (serviceLower.includes('facebook') && !facebookPattern.test(normalizedUrl)) {
-      setError('Facebook URL\'si giriniz (örn: facebook.com/sayfa)')
-      return false
-    }
-    if (serviceLower.includes('youtube') && !youtubePattern.test(normalizedUrl)) {
-      setError('YouTube URL\'si giriniz (örn: youtube.com/channel/...)')
-      return false
-    }
-    if (serviceLower.includes('tiktok') && !tiktokPattern.test(normalizedUrl)) {
-      setError('TikTok URL\'si giriniz (örn: tiktok.com/@kullaniciadi)')
-      return false
-    }
-    if ((serviceLower.includes('twitter') || serviceLower.includes('x')) && !twitterPattern.test(normalizedUrl)) {
-      setError('Twitter/X URL\'si giriniz (örn: twitter.com/kullaniciadi)')
-      return false
+    if (serviceLower.includes('instagram')) {
+      if (!instagramPattern.test(normalizedUrl)) {
+        setError('Instagram URL\'si giriniz (örn: instagram.com/kullaniciadi veya instagram.com/p/...)')
+        return false
+      }
+    } else if (serviceLower.includes('facebook')) {
+      if (!facebookPattern.test(normalizedUrl)) {
+        setError('Facebook URL\'si giriniz (örn: facebook.com/sayfa)')
+        return false
+      }
+    } else if (serviceLower.includes('youtube')) {
+      if (!youtubePattern.test(normalizedUrl)) {
+        setError('YouTube URL\'si giriniz (örn: youtube.com/channel/... veya youtube.com/watch?v=...)')
+        return false
+      }
+    } else if (serviceLower.includes('tiktok')) {
+      if (!tiktokPattern.test(normalizedUrl)) {
+        setError('TikTok URL\'si giriniz (örn: tiktok.com/@kullaniciadi)')
+        return false
+      }
+    } else if (serviceLower.includes('twitter') || serviceLower.includes('x')) {
+      if (!twitterPattern.test(normalizedUrl)) {
+        setError('Twitter/X URL\'si giriniz (örn: twitter.com/kullaniciadi)')
+        return false
+      }
+    } else {
+      // Bilinmeyen servis için genel kontrol
+      try {
+        new URL(normalizedUrl.startsWith('http') ? normalizedUrl : `https://${normalizedUrl}`)
+      } catch {
+        setError('Geçerli bir URL giriniz')
+        return false
+      }
     }
 
     setError('')

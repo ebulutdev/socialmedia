@@ -7,7 +7,6 @@ const partners = [
   {
     id: 1,
     name: 'Doa Çakır',
-    instagram: '@doacakrx',
     image: '/images/EC8E3B01-BDDA-440D-B598-2FC83671400E_1_201_a.jpeg',
     comment: 'subjective ile çalışmaya başladığımdan beri hesabımın büyümesi inanılmaz! Organik görünümlü takipçiler ve gerçek etkileşimler sayesinde markaların dikkatini çekmeye başladım. Profesyonel ekibi ve hızlı teslimatları ile her zaman tercih ediyorum. Kesinlikle tavsiye ederim!',
     rating: 5
@@ -56,15 +55,9 @@ export default function BusinessPartners() {
                   
                   {/* Name Overlay on Image */}
                   <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 className="text-white font-bold text-lg sm:text-xl mb-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                    <h3 className="text-white font-bold text-lg sm:text-xl mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                       {partner.name}
                     </h3>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Instagram className="w-3 h-3 sm:w-4 sm:h-4 text-primary-green drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" />
-                      <span className="text-primary-green text-xs sm:text-sm font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                        {partner.instagram}
-                      </span>
-                    </div>
                     <div className="flex gap-0.5">
                       {[...Array(partner.rating)].map((_, i) => (
                         <Star

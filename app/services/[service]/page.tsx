@@ -128,8 +128,9 @@ function PackageDetail({
           
           return packageOptions.slice(0, 15).map((option) => {
             const isSelected = currentSelected === option.amount.toString()
-            const isCampaign = option.amount === campaignOption.amount
             const currentPrice = parseFloat(option.price.replace(/[^\d,]/g, '').replace(',', '.'))
+            // 200₺ ve altındaki ürünlerde kampanya gösterilmez
+            const isCampaign = option.amount === campaignOption.amount && currentPrice > 200
             const oldPrice = isCampaign ? Math.round(currentPrice / 0.65) : 0
             
             const savings = isCampaign ? oldPrice - currentPrice : 0
