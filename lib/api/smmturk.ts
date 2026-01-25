@@ -74,7 +74,7 @@ async function apiRequest<T>(
     if (errorMessage.toLowerCase().includes('not enough funds') || 
         errorMessage.toLowerCase().includes('insufficient balance') ||
         errorMessage.toLowerCase().includes('yetersiz bakiye')) {
-      throw new Error('Hesabınızda yeterli bakiye bulunmamaktadır. Lütfen hesabınıza bakiye yükleyin.')
+      throw new Error('SMM panelinde yeterli bakiye bulunmamaktadır. Lütfen SMM panel hesabına bakiye yükleyin veya destek ekibiyle iletişime geçin.')
     }
     
     throw new Error(data.error || `API request failed: ${response.status} ${response.statusText}`)
@@ -89,7 +89,7 @@ async function apiRequest<T>(
     if (errorMessage.includes('not enough funds') || 
         errorMessage.includes('insufficient balance') ||
         errorMessage.includes('yetersiz bakiye')) {
-      throw new Error('Hesabınızda yeterli bakiye bulunmamaktadır. Lütfen hesabınıza bakiye yükleyin.')
+      throw new Error('SMM panelinde yeterli bakiye bulunmamaktadır. Lütfen SMM panel hesabına bakiye yükleyin veya destek ekibiyle iletişime geçin.')
     }
     
     throw new Error(data.error)
