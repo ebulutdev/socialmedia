@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Check, Gift, Zap, Users, Lock, CreditCard, Headphones, ArrowLeft, ShoppingCart, BadgePercent, Sparkles } from 'lucide-react'
 import Image from 'next/image'
@@ -276,12 +276,29 @@ function PackageDetail({
 export default function ServicePage() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const serviceId = params.service as string
   const [selectedCategory, setSelectedCategory] = useState<string>('follower')
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null)
   const { addToCart } = useCart()
 
   const service = servicesData.find((s) => s.id === serviceId)
+
+  // URL parametresinden paket ID'sini al ve otomatik seç
+  useEffect(() => {
+    const packageParam = searchParams.get('package')
+    if (packageParam && service) {
+      // Paketin bu hizmette olup olmadığını kontrol et
+      const packageExists = service.packages.find((pkg) => pkg.id === packageParam)
+      if (packageExists) {
+        setSelectedPackageId(packageParam)
+        // Paketin kategorisini bul ve seç
+        if (packageExists.category) {
+          setSelectedCategory(packageExists.category)
+        }
+      }
+    }
+  }, [searchParams, service])
 
   // Her hizmet için farklı random sepet sayısı (serviceId'ye göre deterministik)
   const getCartCount = (serviceId: string): number => {

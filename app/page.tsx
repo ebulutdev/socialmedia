@@ -2,7 +2,6 @@ import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Services from '@/components/Services'
 import Campaigns from '@/components/Campaigns'
-import PackageSystem from '@/components/PackageSystem'
 import PopularProducts from '@/components/PopularProducts'
 import Testimonials from '@/components/Testimonials'
 import BusinessPartners from '@/components/BusinessPartners'
@@ -18,7 +17,6 @@ export default function Home() {
       <Hero />
       <Services />
       <Campaigns />
-      <PackageSystem />
       <PopularProducts />
       <Testimonials />
       <BusinessPartners />

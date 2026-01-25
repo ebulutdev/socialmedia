@@ -31,7 +31,7 @@ export default function Services() {
           <span className="text-xl sm:text-2xl">🔔</span>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">Popüler Platformlar</h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {services.map((service, index) => {
             const Icon = service.icon
             return (
@@ -64,11 +64,6 @@ export default function Services() {
               </Link>
             )
           })}
-        </div>
-        <div className="text-center">
-          <button className="bg-dark-card text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-dark-card-light transition border-2 border-dark-card-light hover:border-primary-green min-h-[44px] text-sm sm:text-base font-medium w-full sm:w-auto">
-            TÜM HİZMETLERİ GÖSTER
-          </button>
         </div>
       </div>
     </section>

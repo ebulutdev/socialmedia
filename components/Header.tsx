@@ -199,7 +199,7 @@ export default function Header() {
             <span className="text-gray-300 hover:text-primary-green transition-colors truncate text-[10px] sm:text-sm">subjecctive@gmail.com</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 sm:gap-5">
-            <a href="/#campaigns" className="hover:text-primary-green transition-colors font-medium whitespace-nowrap">Özel Kampanyalar</a>
+            <a href="/#discovery-packages" className="hover:text-primary-green transition-colors font-medium whitespace-nowrap">Keşfet Paketleri</a>
             <a href="/#popular-products" className="text-primary-green hover:text-primary-green-light transition-colors font-semibold whitespace-nowrap">Popüler Hizmetler</a>
             <button className="flex items-center gap-2 hover:text-primary-green transition-colors min-w-[44px] min-h-[44px] justify-center">
               <span className="text-lg">🌙</span>
@@ -548,8 +548,8 @@ export default function Header() {
           {/* Mobile Menu - Kompakt ve Şık Tasarım */}
           {mobileMenuOpen && (
             <div className="md:hidden mt-2.5 pb-2.5 border-t border-dark-card-light pt-2.5 space-y-1">
-              <a href="/#campaigns" className="block py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium text-[13px] min-h-[32px] flex items-center">
-                Özel Kampanyalar
+              <a href="/#discovery-packages" className="block py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-white font-medium text-[13px] min-h-[32px] flex items-center">
+                Keşfet Paketleri
               </a>
               <a href="/#popular-products" className="block py-1.5 px-2.5 bg-dark-card rounded-lg hover:bg-dark-card-light transition text-primary-green font-semibold text-[13px] min-h-[32px] flex items-center">
                 Popüler Hizmetler

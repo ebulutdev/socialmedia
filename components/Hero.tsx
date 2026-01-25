@@ -97,10 +97,10 @@ export default function Hero() {
             </Link>
 
             {/* Campaign Card 3 */}
-            <Link href="/#campaigns" className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
+            <Link href="/#discovery-packages" className="bg-dark-card rounded-lg relative overflow-hidden aspect-square group cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] transition-transform touch-manipulation block">
               <Image
                 src="/images/Ekran Resmi 2026-01-22 01.41.26.png"
-                alt="Özel Kampanyalar"
+                alt="Keşfet Paketleri"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, 100px"
@@ -108,7 +108,7 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
               
               <div className="absolute bottom-0 left-0 right-0 z-10 p-2 sm:p-2.5">
-                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">ÖZEL KAMPANYALAR</h3>
+                <h3 className="text-[10px] sm:text-xs font-bold text-white drop-shadow-2xl leading-tight mb-1 sm:mb-1.5 line-clamp-2">KEŞFET PAKETLERİ</h3>
                 <div className="bg-white/95 backdrop-blur-sm text-dark-card px-2 sm:px-2.5 py-1.5 rounded hover:bg-white transition-all flex items-center gap-1 w-full justify-center font-semibold text-[9px] sm:text-[10px] shadow-sm min-h-[36px] sm:min-h-[40px]">
                   Hemen İncele
                   <ArrowRight className="w-2 h-2 sm:w-2.5 sm:h-2.5 group-hover:translate-x-0.5 transition-transform" />
