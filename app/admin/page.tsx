@@ -67,6 +67,7 @@ export default function AdminPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editPrice, setEditPrice] = useState<number>(0)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null)
 
   const fetchOrders = async () => {
     try {
@@ -171,6 +172,40 @@ export default function AdminPage() {
   const cancelEditing = () => {
     setEditingId(null)
     setEditPrice(0)
+  }
+
+  const updateOrderStatus = async (orderId: string, newStatus: AdminOrder['status']) => {
+    try {
+      setUpdatingOrderId(orderId)
+      setError(null)
+      
+      const response = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          status: newStatus
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Sipariş durumu güncellenemedi')
+      }
+
+      // State'i güncelle
+      setOrders(prev => 
+        prev.map(order => order.id === orderId ? { ...order, status: newStatus } : order)
+      )
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Sipariş durumu güncellenirken bir hata oluştu')
+      alert('Hata: ' + (err instanceof Error ? err.message : 'Bilinmeyen hata'))
+    } finally {
+      setUpdatingOrderId(null)
+    }
   }
 
   const updatePrice = async (serviceId: string) => {
@@ -375,12 +410,13 @@ export default function AdminPage() {
                     <th className="text-left p-2 text-gray-400 font-medium">Toplam</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Durum</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Link</th>
+                    <th className="text-left p-2 text-gray-400 font-medium">İşlem</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="p-6 text-center text-gray-400 text-xs">
+                      <td colSpan={9} className="p-6 text-center text-gray-400 text-xs">
                         Henüz sipariş yok
                       </td>
                     </tr>
@@ -426,6 +462,22 @@ export default function AdminPage() {
                               <span className="truncate max-w-[100px]">{order.link}</span>
                               <ExternalLink className="w-3 h-3 flex-shrink-0" />
                             </a>
+                          </td>
+                          <td className="p-2">
+                            <select
+                              value={order.status}
+                              onChange={(e) => updateOrderStatus(order.id, e.target.value as AdminOrder['status'])}
+                              disabled={updatingOrderId === order.id}
+                              className={`text-[10px] px-2 py-1 rounded border bg-dark-card-light text-white border-dark-card-light focus:outline-none focus:border-primary-green ${
+                                updatingOrderId === order.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                              }`}
+                            >
+                              <option value="pending">Beklemede</option>
+                              <option value="processing">İşleniyor</option>
+                              <option value="completed">Tamamlandı</option>
+                              <option value="cancelled">İptal</option>
+                              <option value="failed">Başarısız</option>
+                            </select>
                           </td>
                         </tr>
                       )

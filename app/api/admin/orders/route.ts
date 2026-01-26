@@ -113,3 +113,65 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Giriş yapmanız gerekiyor' },
+        { status: 401 }
+      )
+    }
+
+    if (!isAdminEmail(user.email)) {
+      return NextResponse.json(
+        { error: 'Yetkisiz erişim' },
+        { status: 403 }
+      )
+    }
+
+    const body = await request.json()
+    const { orderId, status } = body
+
+    if (!orderId || !status) {
+      return NextResponse.json(
+        { error: 'orderId ve status gereklidir' },
+        { status: 400 }
+      )
+    }
+
+    const validStatuses = ['pending', 'processing', 'completed', 'cancelled', 'failed']
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json(
+        { error: 'Geçersiz durum' },
+        { status: 400 }
+      )
+    }
+
+    const { data: order, error: updateError } = await supabase
+      .from('orders')
+      .update({ status })
+      .eq('id', orderId)
+      .select()
+      .single()
+
+    if (updateError) {
+      throw updateError
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      order 
+    })
+  } catch (error) {
+    console.error('Admin order update error:', error)
+    return NextResponse.json(
+      { error: 'Sipariş durumu güncellenirken bir hata oluştu' },
+      { status: 500 }
+    )
+  }
+}
