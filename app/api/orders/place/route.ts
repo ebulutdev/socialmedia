@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { addOrder, getBalance } from '@/lib/api/smmturk'
+import { addOrder } from '@/lib/api/smmturk'
 import type { Order } from '@/lib/api/orders'
 
 interface CartItem {
@@ -104,44 +104,6 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       )
-    }
-
-    // 6.5. Check SMMTurk API balance before placing orders
-    try {
-      const smmBalanceResponse = await getBalance(apiKey)
-      const smmBalance = parseFloat(smmBalanceResponse.balance || '0')
-      
-      console.log('💰 SMMTurk API Bakiyesi:', {
-        balance: smmBalance,
-        currency: smmBalanceResponse.currency,
-        required: totalAmount
-      })
-
-      if (smmBalance < totalAmount) {
-        const missing = totalAmount - smmBalance
-        console.error('❌ SMMTurk API yetersiz bakiye:', {
-          smmBalance,
-          required: totalAmount,
-          missing
-        })
-        return NextResponse.json(
-          {
-            error: 'SMM panelinde yeterli bakiye bulunmamaktadır',
-            details: {
-              smmBalance: smmBalance.toFixed(2),
-              required: totalAmount.toFixed(2),
-              missing: missing.toFixed(2),
-              currency: smmBalanceResponse.currency
-            }
-          },
-          { status: 400 }
-        )
-      }
-    } catch (smmBalanceError) {
-      console.error('❌ SMMTurk API bakiye kontrolü hatası:', smmBalanceError)
-      // Don't fail the order if balance check fails - let the order attempt proceed
-      // The API will return an error if balance is insufficient anyway
-      console.warn('⚠️ SMMTurk bakiye kontrolü başarısız, sipariş denemesi devam ediyor...')
     }
 
     // 7. Create orders in database (pending status)
