@@ -179,6 +179,9 @@ function PackageDetail({
                   >
                     {isCampaign ? (
                       <div className="space-y-1">
+                        <div className="flex items-center justify-center gap-1 mb-1">
+                          <span className="text-white text-[11px] sm:text-xs font-bold">{option.amount.toLocaleString('tr-TR')} Kişi</span>
+                        </div>
                         <div className="flex items-center justify-center gap-1">
                           <span className="text-gray-400 text-[10px] sm:text-xs line-through font-semibold">{oldPrice.toLocaleString('tr-TR')}₺</span>
                           <span className="text-gray-500 text-[8px]">Eski Fiyat</span>
