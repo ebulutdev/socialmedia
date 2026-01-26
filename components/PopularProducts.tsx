@@ -11,7 +11,7 @@ const getBestPackages = (serviceId: string): Package[] => {
   if (!service) return []
 
   const bestPackageIds: Record<string, string[]> = {
-    instagram: ['9403', '9397', '9336', '9337', '9335'], // 30 Gün Garantili Takipçi, Beğeni, Video İzlenme, Hikaye İzlenme, Türk Repost
+    instagram: ['9403', '9397', '9336', '9337', '5372'], // 30 Gün Garantili Takipçi, Beğeni, Video İzlenme, Hikaye İzlenme, Premium Yorum
     facebook: ['9010', '2815', '1972', '3947', '8971'], // 30 Gün Garantili Takipçi, Beğeni, Canlı Yayın, Türk Beğeni, Beğeni+Takipçi
     youtube: ['9414', '8102', '7272', '9322', '3432'], // 30 Gün Garantili Abone, Gerçek İzlenme, Beğeni, Telafili Beğeni, İzlenme+Beğeni
     tiktok: ['9391', '9395', '9393', '9309', '9394'], // 30 Gün Garantili Takipçi, Beğeni, Video İzlenme, Hızlı Takipçi, Beğeni

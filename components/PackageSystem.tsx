@@ -419,7 +419,7 @@ export default function PackageSystem({ selectedService, onServiceChange }: Pack
         follower: ['9403'], // 30 Gün Garantili
         like: ['9397'], // 30 Gün Garantili Beğeni
         view: ['9336', '9337'], // Video ve Hikaye İzlenme
-        engagement: ['9335'], // Türk Repost
+        engagement: ['5372'], // Premium Yorum
       }
       
       if (activeTab in bestPackages) {

@@ -124,18 +124,6 @@ export const servicesData: Service[] = [
         category: 'view',
       },
       {
-        id: '9335',
-        name: 'Instagram Türk Repost',
-        amount: '10 - 500 Repost',
-        price: '40₺ / 1K',
-        serviceId: '9335',
-        min: 10,
-        max: 500,
-        avgTime: '12 saat 22 dakika',
-        features: ['%100 Gerçek Türk 🇹🇷', 'Hızlı Başlar', 'Maksimum 500'],
-        category: 'engagement',
-      },
-      {
         id: '5372',
         name: 'Instagram Premium Yorum [ 5 Adet ]',
         amount: '1 Adet',
