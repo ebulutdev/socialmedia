@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Shield, Package, Clock, CheckCircle2, XCircle, AlertCircle, Loader2, ArrowLeft, ExternalLink, User, Mail, DollarSign, ChevronDown, ChevronUp, RefreshCw, Edit2, Save, X } from 'lucide-react'
+import { Shield, Package, Clock, CheckCircle2, XCircle, AlertCircle, Loader2, ArrowLeft, ExternalLink, User, Mail, DollarSign, ChevronDown, ChevronUp, RefreshCw, Edit2, Save, X, Phone } from 'lucide-react'
 import { useAuth } from '@/lib/context/AuthContext'
 import Header from '@/components/Header'
 
@@ -11,6 +11,7 @@ interface AdminOrder {
   user_id: string
   user_email: string | null
   user_name: string | null
+  phone: string | null
   service_id: string
   service_name: string
   package_id: string
@@ -404,6 +405,7 @@ export default function AdminPage() {
                   <tr className="bg-dark-card-light border-b border-dark-card-light">
                     <th className="text-left p-2 text-gray-400 font-medium">Tarih</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Kullanıcı</th>
+                    <th className="text-left p-2 text-gray-400 font-medium">Telefon</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Hizmet</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Miktar</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Birim Fiyat</th>
@@ -416,7 +418,7 @@ export default function AdminPage() {
                 <tbody>
                   {orders.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="p-6 text-center text-gray-400 text-xs">
+                      <td colSpan={10} className="p-6 text-center text-gray-400 text-xs">
                         Henüz sipariş yok
                       </td>
                     </tr>
@@ -436,6 +438,12 @@ export default function AdminPage() {
                                 <Mail className="w-3 h-3" />
                                 <span className="text-[10px]">{order.user_email || '-'}</span>
                               </div>
+                            </div>
+                          </td>
+                          <td className="p-2">
+                            <div className="flex items-center gap-1 text-gray-300">
+                              <Phone className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                              <span className="text-[10px]">{order.phone || '-'}</span>
                             </div>
                           </td>
                           <td className="p-2">

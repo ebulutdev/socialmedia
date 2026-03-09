@@ -35,11 +35,19 @@ export async function POST(request: NextRequest) {
 
     // 2. Parse request body
     const body = await request.json()
-    const { items }: { items: CartItem[] } = body
+    const { items, phone }: { items: CartItem[]; phone?: string } = body
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { error: 'Sepet boş' },
+        { status: 400 }
+      )
+    }
+
+    const phoneDigits = (phone || '').replace(/\D/g, '')
+    if (!phone || phoneDigits.length < 10) {
+      return NextResponse.json(
+        { error: 'Sipariş bildirimleri için geçerli bir telefon numarası girmeniz zorunludur.' },
         { status: 400 }
       )
     }
@@ -117,6 +125,7 @@ export async function POST(request: NextRequest) {
       link: item.url,
       price: item.totalPrice / item.amount, // Unit price
       total_price: item.totalPrice,
+      phone: phone.trim(),
       status: 'pending' as const,
     }))
 

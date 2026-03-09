@@ -7,6 +7,7 @@ export interface AdminOrder {
   user_id: string
   user_email: string | null
   user_name: string | null
+  phone: string | null
   service_id: string
   service_name: string
   package_id: string
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest) {
       .select(`
         id,
         user_id,
+        phone,
         service_id,
         service_name,
         package_id,
@@ -90,6 +92,7 @@ export async function GET(request: NextRequest) {
       user_id: order.user_id,
       user_email: order.profiles?.email || null,
       user_name: order.profiles?.full_name || null,
+      phone: order.phone || null,
       service_id: order.service_id,
       service_name: order.service_name,
       package_id: order.package_id,

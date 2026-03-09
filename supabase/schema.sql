@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   link TEXT NOT NULL,
   price DECIMAL(10, 2) NOT NULL,
   total_price DECIMAL(10, 2) NOT NULL,
+  phone TEXT,
   smmturk_order_id INTEGER,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'cancelled', 'failed')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,

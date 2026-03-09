@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle, Gift } from 'lucide-react'
+import { Trash2, Minus, Plus, Package, ChevronRight, Sparkles, ArrowLeft, Loader2, CheckCircle2, XCircle, AlertCircle, Gift, Phone } from 'lucide-react'
 import { useCart, type CartItem } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useToast } from '@/lib/context/ToastContext'
@@ -151,6 +151,7 @@ export default function CartPage() {
   const [orderResults, setOrderResults] = useState<Array<{ orderId: number; success: boolean; error?: string; packageName?: string }>>([])
   const [userBalance, setUserBalance] = useState<number | null>(null)
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
+  const [phone, setPhone] = useState('')
 
   // API key is now handled server-side via environment variable
 
@@ -191,6 +192,12 @@ export default function CartPage() {
       return
     }
 
+    const phoneDigits = phone.replace(/\D/g, '')
+    if (!phone || phoneDigits.length < 10) {
+      showToast('Sipariş bildirimleri için geçerli bir telefon numarası girmeniz zorunludur.', 'error')
+      return
+    }
+
     const itemsWithoutUrl = cartItems.filter(item => !item.url || !item.url.trim())
     if (itemsWithoutUrl.length > 0) {
       showToast('Bazı ürünlerde URL eksik. Lütfen tüm ürünler için URL giriniz.', 'error')
@@ -218,7 +225,7 @@ export default function CartPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items: cartItems }),
+        body: JSON.stringify({ items: cartItems, phone: phone.trim() }),
       })
 
       const result = await response.json()
@@ -352,6 +359,28 @@ export default function CartPage() {
             <div className="lg:col-span-1">
               <div className="bg-dark-card rounded-2xl p-4 sm:p-6 border border-dark-card-light/80 sticky top-24">
                 <h2 className="text-white font-bold text-lg mb-4">Sipariş Özeti</h2>
+
+                {/* Telefon - Zorunlu (Sipariş bildirimi için) */}
+                {user && (
+                  <div className="mb-4">
+                    <label htmlFor="order-phone" className="block text-gray-300 text-sm font-medium mb-2">
+                      <Phone className="w-4 h-4 inline-block mr-1.5 text-primary-green align-middle" />
+                      Telefon Numarası <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      id="order-phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="05XX XXX XX XX"
+                      className="w-full px-4 py-3 rounded-xl bg-dark-bg border border-dark-card-light text-white placeholder-gray-500 focus:outline-none focus:border-primary-green focus:ring-2 focus:ring-primary-green/20 transition-all text-sm"
+                      disabled={isProcessing}
+                    />
+                    <p className="text-gray-500 text-xs mt-1">
+                      Sipariş durumu hakkında bilgilendirilmeniz için zorunludur
+                    </p>
+                  </div>
+                )}
                 
                 {/* Balance Display */}
                 {user && (
@@ -505,6 +534,8 @@ export default function CartPage() {
                       isProcessing || 
                       cartItems.length === 0 || 
                       !user || 
+                      !phone.trim() ||
+                      phone.replace(/\D/g, '').length < 10 ||
                       cartItems.some(item => !item.url || !item.url.trim()) ||
                       (userBalance !== null && userBalance < total)
                     }
@@ -517,6 +548,8 @@ export default function CartPage() {
                       </>
                     ) : !user ? (
                       'Giriş Yapın'
+                    ) : !phone.trim() || phone.replace(/\D/g, '').length < 10 ? (
+                      'Telefon Girin'
                     ) : userBalance !== null && userBalance < total ? (
                       'Yetersiz Bakiye'
                     ) : (
